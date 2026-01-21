@@ -8,7 +8,6 @@ const s3Protocol = s3Url ? s3Url.protocol.replace(":", "") : "https";
 const nextConfig: NextConfig = {
   output: "standalone",
   /* config options here */
-  reactCompiler: true,
   images: {
     qualities: [65, 75],
     loader: "custom",
