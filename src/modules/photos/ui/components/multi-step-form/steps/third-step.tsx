@@ -11,20 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ButtonGroup } from "@/components/ui/button-group";
-
-interface SearchResult {
-  properties: {
-    name: string;
-    place_formatted: string;
-    country?: string;
-    country_code?: string;
-    region?: string;
-    place_name?: string;
-  };
-  geometry: {
-    coordinates: [number, number];
-  };
-}
+import { DUMMY_CITIES, type SearchResult } from "@/modules/photos/lib/dummy-cities";
 
 interface ThirdStepProps extends StepProps {
   onAddressUpdate?: (addressData: any) => void;
@@ -68,14 +55,21 @@ export function ThirdStep({
   const { handleSubmit, formState } = form;
   const { isValid } = formState;
 
-  // Search for places
+  // Search for places from dummy data
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return;
 
     setIsSearching(true);
     try {
-      // Mapbox feature removed
-      setSearchResults([]);
+      // Filter dummy cities based on search query
+      const query = searchQuery.toLowerCase();
+      const filtered = DUMMY_CITIES.filter(
+        (city) =>
+          city.properties.name.toLowerCase().includes(query) ||
+          city.properties.country?.toLowerCase().includes(query) ||
+          city.properties.place_formatted.toLowerCase().includes(query)
+      );
+      setSearchResults(filtered);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);
@@ -93,7 +87,7 @@ export function ThirdStep({
 
     const debounceTimer = setTimeout(() => {
       handleSearch();
-    }, 500); // 500ms delay
+    }, 300); // 300ms delay
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery, handleSearch]);
@@ -103,6 +97,13 @@ export function ThirdStep({
     const [lng, lat] = result.geometry.coordinates;
     setCurrentLocation({ lat, lng });
     
+    // Update search query with selected location
+    setSearchQuery(result.properties.name);
+    setSearchResults([]);
+    
+    // Update form fields
+    form.setValue("city_set", result.properties.name);
+    
     // Update address data when location is selected
     if (onAddressUpdate) {
       onAddressUpdate({
@@ -110,8 +111,10 @@ export function ThirdStep({
         countryCode: result.properties.country_code,
         region: result.properties.region,
         city: result.properties.place_name,
-        fullAddress: result.properties.place_name,
+        fullAddress: result.properties.place_formatted || result.properties.place_name,
         placeFormatted: result.properties.place_formatted || result.properties.place_name,
+        latitude: lat,
+        longitude: lng,
       });
     }
   };
@@ -121,23 +124,12 @@ export function ThirdStep({
     setSearchResults([]);
   };
 
-  // Update address data when coordinates are set
-  useEffect(() => {
-    if (currentLocation.lat !== 0 && currentLocation.lng !== 0 && onAddressUpdate) {
-      // Basic address with just coordinates
-      onAddressUpdate({
-        country: "",
-        countryCode: "",
-        region: "",
-        city: "",
-        district: "",
-        fullAddress: `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`,
-        placeFormatted: `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`,
-        latitude: currentLocation.lat,
-        longitude: currentLocation.lng,
-      });
+  // Show all cities when input is focused but empty
+  const handleInputFocus = () => {
+    if (!searchQuery.trim()) {
+      setSearchResults(DUMMY_CITIES);
     }
-  }, [currentLocation, onAddressUpdate]);
+  };
 
   // Memoize map values to reduce re-renders
   const mapValues = useMemo(() => {
@@ -169,11 +161,12 @@ export function ThirdStep({
   ]);
 
   const onSubmit = (data: ThirdStepData) => {
-    // Include current location in submitted data
+    // Include current location and city_set in submitted data
     onNext({
       ...data,
       latitude: currentLocation.lat || initialLatitude,
       longitude: currentLocation.lng || initialLongitude,
+      city_set: searchQuery || data.city_set,
     });
   };
 
@@ -186,9 +179,10 @@ export function ThirdStep({
           <div className="relative mb-2">
             <ButtonGroup>
               <Input
-                placeholder="Search..."
+                placeholder="Search by city or country..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={handleInputFocus}
               />
               <Button
                 variant="outline"
@@ -237,12 +231,20 @@ export function ThirdStep({
 
           {/* Address Display */}
           <div className="space-y-1 text-sm text-muted-foreground mt-2">
+            {searchQuery && (
+              <div className="flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                <span className="text-xs font-medium text-foreground">
+                  Selected: {searchQuery}
+                </span>
+              </div>
+            )}
             <div className="flex items-center gap-1">
               <MapPin className="h-3 w-3" />
               <span className="text-xs">
                 {currentLocation.lat !== 0 && currentLocation.lng !== 0
                   ? `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`
-                  : "Drag the marker to set location"}
+                  : "Select a city to set location"}
               </span>
             </div>
           </div>
