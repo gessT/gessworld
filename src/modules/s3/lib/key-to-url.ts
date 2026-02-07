@@ -9,8 +9,12 @@ export const keyToUrl = (key: string | undefined | null) => {
     return "";
   }
 
-  // Return the public URL format
-  // Note: For private buckets, you'll need to use getSignedUrl on the server
+  // If it's already a full URL (starts with http/https), return as-is
+  if (key.startsWith("http://") || key.startsWith("https://")) {
+    return key;
+  }
+
+  // Otherwise, it's a key - prepend the BASE_URL
   return `${BASE_URL}/${key}`;
 };
 

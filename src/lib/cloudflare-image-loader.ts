@@ -13,6 +13,11 @@ export default function cloudflareLoader({
   width: number;
   quality?: number;
 }) {
+  // If it's already a full URL (http/https), return as-is
+  if (src.startsWith("http://") || src.startsWith("https://")) {
+    return src;
+  }
+
   if (src.startsWith("/")) {
     return src;
   }

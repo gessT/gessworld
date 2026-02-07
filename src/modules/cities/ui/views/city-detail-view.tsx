@@ -138,6 +138,7 @@ export function CityDetailView({ city }: CityDetailViewProps) {
     );
   }
 
+  console.log("cityData:", cityData);
   return (
     <div className="min-h-screen pb-8">
       <div className="bg-background">
@@ -222,18 +223,19 @@ export function CityDetailView({ city }: CityDetailViewProps) {
           </div>
         </div>
       </div>
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-6">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-6 px-4 md:px-8">
         {cityData.photos.map((photo) => (
           <div key={photo.id} className="space-y-4">
-            <div className="relative space-y-4 flex items-center justify-center bg-gray-50 dark:bg-muted h-[80vh] p-20">
+            <div className="relative group bg-gray-50 dark:bg-muted rounded-lg overflow-hidden aspect-square">
               <FramedPhoto
                 src={photo.url}
-                alt={cityData.city}
+                alt={photo.title}
                 blurhash={photo.blurData!}
                 width={photo.width}
                 height={photo.height}
+                className="w-full h-full"
               />
-              <div className="absolute bottom-3 right-3 flex items-center gap-2">
+              <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button
                   variant="outline"
                   size="icon"
