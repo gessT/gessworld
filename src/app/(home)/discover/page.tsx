@@ -14,6 +14,8 @@ export const metadata = {
     "Explore photos on an interactive map. Discover stunning photography from cities and locations around the world.",
 };
 
+export const dynamic = "force-dynamic";
+
 const page = () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.discover.getManyPhotos.queryOptions({}));

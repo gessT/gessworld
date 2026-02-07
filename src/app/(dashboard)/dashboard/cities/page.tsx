@@ -14,6 +14,8 @@ export const metadata = {
   description: "City Collection",
 };
 
+export const dynamic = "force-dynamic";
+
 const CityPage = async () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.city.getMany.queryOptions());

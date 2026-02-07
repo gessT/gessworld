@@ -14,6 +14,8 @@ export const metadata = {
     "Browse travel photography by city. Explore beautiful destinations and discover photos from around the world.",
 };
 
+export const dynamic = "force-dynamic";
+
 const page = () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.travel.getCitySets.queryOptions());

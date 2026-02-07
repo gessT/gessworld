@@ -13,6 +13,8 @@ import {
   SectionCardsLoading,
 } from "@/modules/dashboard/ui/views/section-cards-view";
 
+export const dynamic = "force-dynamic";
+
 const page = async () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(

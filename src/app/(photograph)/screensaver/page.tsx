@@ -10,6 +10,8 @@ export const metadata = {
   description: "Screensaver",
 };
 
+export const dynamic = "force-dynamic";
+
 const page = () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.discover.getManyPhotos.queryOptions({}));

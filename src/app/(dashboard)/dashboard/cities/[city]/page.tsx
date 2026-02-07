@@ -15,6 +15,8 @@ type Props = {
   }>;
 };
 
+export const dynamic = "force-dynamic";
+
 const CityDetailPage = async ({ params }: Props) => {
   const { city } = await params;
 

@@ -17,6 +17,8 @@ export const metadata = {
   description: "Posts",
 };
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   searchParams: Promise<SearchParams>;
 };

@@ -13,6 +13,8 @@ export const metadata = {
   description: "Blog",
 };
 
+export const dynamic = "force-dynamic";
+
 const page = () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.blog.getMany.queryOptions());

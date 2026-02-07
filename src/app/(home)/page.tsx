@@ -17,6 +17,8 @@ import {
   SliderView,
 } from "@/modules/home/ui/views/slider-view";
 
+export const dynamic = "force-dynamic";
+
 const page = async () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(

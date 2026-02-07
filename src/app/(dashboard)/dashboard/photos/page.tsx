@@ -17,6 +17,8 @@ export const metadata = {
   description: "Photo Collection",
 };
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   searchParams: Promise<SearchParams>;
 };
