@@ -25,6 +25,7 @@ export function FirstStep({
   initialData,
 }: UploadStepProps) {
   const [isCopied, setIsCopied] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   const form = useForm<FirstStepData>({
     resolver: zodResolver(firstStepSchema),
@@ -39,11 +40,33 @@ export function FirstStep({
   const handleCopyUrl = async () => {
     if (!url) return;
     try {
-      await navigator.clipboard.writeText(keyToUrl(url));
+      await navigator.clipboard.writeText(url);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
+    }
+  };
+
+  const getPresignedImageUrl = async (key: string) => {
+    try {
+      // Extract just the key if a full URL is passed
+      let objectKey = key;
+      if (key.startsWith("http")) {
+        // Extract key from URL: https://bucket.s3.region.amazonaws.com/key
+        const url = new URL(key);
+        objectKey = url.pathname.substring(1); // Remove leading slash
+      }
+
+      const response = await fetch(
+        `/api/s3/presigned-url?key=${encodeURIComponent(objectKey)}`
+      );
+      if (!response.ok) throw new Error("Failed to get presigned URL");
+      const data = await response.json();
+      return data.url;
+    } catch (error) {
+      console.error("Error getting presigned URL:", error);
+      return keyToUrl(key); // Fallback to direct URL
     }
   };
 
@@ -64,6 +87,8 @@ export function FirstStep({
                 onUploadSuccess={(url, exif, imageInfo) => {
                   onUploadSuccess(url, exif, imageInfo);
                   form.setValue("url", url, { shouldValidate: true });
+                  // Get presigned URL for preview
+                  getPresignedImageUrl(url).then(setImageUrl);
                 }}
               />
               <FormField
@@ -95,7 +120,7 @@ export function FirstStep({
               <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
                 <BlurImage
                   blurhash={imageInfo.blurhash}
-                  src={keyToUrl(url)}
+                  src={imageUrl || keyToUrl(url)}
                   alt="Uploaded photo"
                   fill
                   className="object-contain w-full h-full"
@@ -105,10 +130,10 @@ export function FirstStep({
 
               {/* URL with copy button */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Image URL</label>
+                <label className="text-sm font-medium">Image Key</label>
                 <InputGroup>
                   <InputGroupInput
-                    value={keyToUrl(url)}
+                    value={url}
                     readOnly
                     className="font-mono text-xs"
                   />
@@ -116,7 +141,7 @@ export function FirstStep({
                     <InputGroupButton
                       onClick={handleCopyUrl}
                       size="icon-xs"
-                      aria-label="Copy URL"
+                      aria-label="Copy key"
                     >
                       {isCopied ? (
                         <Check className="h-3.5 w-3.5" />
