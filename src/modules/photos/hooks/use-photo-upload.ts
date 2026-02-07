@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { s3Client } from "@/modules/s3/lib/upload-client";
 import {
   type TExifData,
   type TImageInfo,
@@ -31,44 +30,46 @@ export function usePhotoUpload({
   const [imageInfo, setImageInfo] = useState<TImageInfo | null>(null);
 
   const trpc = useTRPC();
-  const createPresignedUrl = useMutation(
-    trpc.s3.createPresignedUrl.mutationOptions()
+  const serverUpload = useMutation(
+    trpc.s3.serverUpload.mutationOptions()
   );
 
   const handleUpload = async (file: File) => {
     try {
       setIsUploading(true);
-      const [exifData, imageInfo] = await Promise.all([
+      const [exifData, imgInfo] = await Promise.all([
         getPhotoExif(file),
         getImageInfo(file),
       ]);
       setExif(exifData);
-      setImageInfo(imageInfo);
+      setImageInfo(imgInfo);
 
-      const { publicUrl } = await s3Client.upload({
-        file,
+      // Simulate progress for server upload
+      setUploadProgress(50);
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const extension = file.name.split(".").pop() || "";
+      const baseName = file.name.replace(`.${extension}`, "");
+      const uniqueFilename = `${baseName}-${timestamp}.${extension}`;
+
+      // Convert file to base64
+      const fileBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(fileBuffer);
+      const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
+      const base64String = btoa(binaryString);
+
+      const result = await serverUpload.mutateAsync({
+        filename: uniqueFilename,
+        contentType: file.type,
         folder,
-        onProgress: (progress) => {
-          setUploadProgress(progress);
-        },
-        getUploadUrl: async ({ filename, contentType, folder }) => {
-          const data = await createPresignedUrl.mutateAsync({
-            filename,
-            contentType,
-            size: file.size,
-            folder,
-          });
-
-          return {
-            uploadUrl: data.presignedUrl,
-            publicUrl: data.key,
-          };
-        },
+        fileBuffer: base64String,
       });
 
-      setUploadedImageUrl(publicUrl);
+      setUploadProgress(100);
+      setUploadedImageUrl(result.publicUrl);
       toast.success("Photo uploaded successfully!");
-      onUploadSuccess?.(publicUrl, exifData, imageInfo);
+      onUploadSuccess?.(result.publicUrl, exifData, imgInfo);
     } catch (error) {
       setExif(null);
       setImageInfo(null);
@@ -80,6 +81,7 @@ export function usePhotoUpload({
       );
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 

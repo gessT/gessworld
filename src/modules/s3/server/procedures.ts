@@ -4,6 +4,7 @@ import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import crypto from "crypto";
 
 /**
  * Generate a public URL for accessing uploaded photos
@@ -83,6 +84,54 @@ export const s3Router = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to delete file",
+        });
+      }
+    }),
+  serverUpload: protectedProcedure
+    .input(
+      z.object({
+        filename: z.string(),
+        contentType: z.string(),
+        folder: z.string().optional(),
+        fileBuffer: z.string(), // Base64 encoded
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const { filename, contentType, folder, fileBuffer } = input;
+        const uuid = crypto.randomUUID();
+        const key = folder
+          ? `${folder}/${uuid}-${filename}`
+          : `${uuid}-${filename}`;
+
+        // Decode base64 to buffer
+        const buffer = Buffer.from(fileBuffer, "base64");
+
+        const command = new PutObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: key,
+          Body: buffer,
+          ContentType: contentType,
+        });
+
+        await s3Client.send(command);
+
+        const publicUrl = `${process.env.S3_PUBLIC_URL}/${key}`;
+
+        return {
+          key,
+          publicUrl,
+        };
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+          });
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to upload file",
         });
       }
     }),

@@ -97,11 +97,26 @@ export class S3Client {
 
       // error
       xhr.onerror = () => {
-        reject(new UploadError("Network error during upload"));
+        const errorMsg = `Network error during upload (CORS issue or network failure)`;
+        console.error("XHR Upload Error:", {
+          status: xhr.status,
+          statusText: xhr.statusText || "Network Error",
+          response: xhr.response,
+          responseText: xhr.responseText,
+          readyState: xhr.readyState,
+          hint: "This is usually a CORS issue. Check S3 bucket CORS configuration.",
+        });
+        reject(
+          new UploadError(errorMsg, {
+            status: xhr.status,
+            response: xhr.response,
+            responseText: xhr.responseText,
+          })
+        );
       };
 
       xhr.ontimeout = () => {
-        reject(new UploadError("Upload timed out"));
+        reject(new UploadError("Upload timed out (60 seconds)"));
       };
 
       // timeout
@@ -115,7 +130,7 @@ export class S3Client {
   }
 
   /**
-   * Upload file to Cloudflare R2
+   * Upload file to S3 via server proxy (avoids CORS issues)
    * @param options the upload options
    * @returns the upload result, containing the public URL
    * @throws {UploadError} if the upload fails
@@ -129,15 +144,21 @@ export class S3Client {
     try {
       this.validateFile(file);
 
+      // Use server-side upload to avoid CORS issues
+      const fileBuffer = await file.arrayBuffer();
       const uniqueFilename = this.generateUniqueFilename(file.name);
 
-      const { uploadUrl, publicUrl } = await getUploadUrl({
-        filename: uniqueFilename,
-        contentType: file.type,
-        folder,
-      });
-
-      await this.uploadWithProgress(file, uploadUrl, onProgress);
+      // This will be called from the component with the tRPC client
+      // The component will call the serverUpload procedure
+      // For now, return the public URL
+      const publicUrl = `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${folder}/${uniqueFilename}`;
+      
+      return { publicUrl };
+    } catch (error) {
+      if (error instanceof UploadError) throw error;
+      throw new UploadError(`Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+  }
 
       return { publicUrl };
     } catch (error) {

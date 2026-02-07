@@ -46,7 +46,7 @@ const BlurImageInner = function BlurImageInner({
     return () => window.clearTimeout(timeout);
   }, [imageLoaded]);
 
-  const showBlurhash = showPlaceholder && blurhash && blurhash.length >= 6;
+  const showBlurhash = showPlaceholder && blurhash && blurhash.length >= 6 && !blurhash.includes("data:");
 
   return (
     <div className={containerStyle}>
@@ -63,8 +63,8 @@ const BlurImageInner = function BlurImageInner({
             hash={blurhash}
             width="100%"
             height="100%"
-            resolutionX={16}
-            resolutionY={16}
+            resolutionX={4}
+            resolutionY={3}
             punch={1}
           />
         </div>
