@@ -159,18 +159,6 @@ export class S3Client {
       throw new UploadError(`Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
-
-      return { publicUrl };
-    } catch (error) {
-      if (error instanceof UploadError) {
-        throw error;
-      }
-      throw new UploadError(
-        "Failed to upload file",
-        error instanceof Error ? error : undefined
-      );
-    }
-  }
 }
 
 export const s3Client = new S3Client();

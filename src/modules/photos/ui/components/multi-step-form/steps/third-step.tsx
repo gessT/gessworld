@@ -6,31 +6,20 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, X, MapPin } from "lucide-react";
 import { Form, FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { thirdStepSchema, StepProps, ThirdStepData } from "../types";
-import type { AddressData } from "@/modules/mapbox/hooks/use-get-address";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatGPSCoordinates } from "@/lib/utils";
-import { useGetAddress } from "@/modules/mapbox/hooks/use-get-address";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ButtonGroup } from "@/components/ui/button-group";
 
-const MapboxComponent = dynamic(
-  () => import("@/modules/mapbox/ui/components/map"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="size-full flex items-center justify-center bg-muted">
-        <Skeleton className="h-full w-full" />
-      </div>
-    ),
-  }
-);
-
 interface SearchResult {
   properties: {
     name: string;
     place_formatted: string;
+    country?: string;
+    country_code?: string;
+    region?: string;
+    place_name?: string;
   };
   geometry: {
     coordinates: [number, number];
@@ -38,7 +27,7 @@ interface SearchResult {
 }
 
 interface ThirdStepProps extends StepProps {
-  onAddressUpdate?: (addressData: AddressData | null) => void;
+  onAddressUpdate?: (addressData: any) => void;
 }
 
 export function ThirdStep({
@@ -79,37 +68,14 @@ export function ThirdStep({
   const { handleSubmit, formState } = form;
   const { isValid } = formState;
 
-  // Get address from coordinates using the hook
-  const { data: addressData } = useGetAddress({
-    lat: currentLocation.lat,
-    lng: currentLocation.lng,
-  });
-
-  // Update parent component when address data changes
-  useEffect(() => {
-    if (addressData && onAddressUpdate) {
-      onAddressUpdate(addressData);
-    }
-  }, [addressData, onAddressUpdate]);
-
   // Search for places
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return;
 
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
-          searchQuery
-        )}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}&limit=10`
-      );
-
-      if (!response.ok) {
-        throw new Error("Search failed");
-      }
-
-      const data = await response.json();
-      setSearchResults(data.features || []);
+      // Mapbox feature removed
+      setSearchResults([]);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);
@@ -136,12 +102,42 @@ export function ThirdStep({
   const handleSelectLocation = (result: SearchResult) => {
     const [lng, lat] = result.geometry.coordinates;
     setCurrentLocation({ lat, lng });
+    
+    // Update address data when location is selected
+    if (onAddressUpdate) {
+      onAddressUpdate({
+        country: result.properties.country,
+        countryCode: result.properties.country_code,
+        region: result.properties.region,
+        city: result.properties.place_name,
+        fullAddress: result.properties.place_name,
+        placeFormatted: result.properties.place_formatted || result.properties.place_name,
+      });
+    }
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
     setSearchResults([]);
   };
+
+  // Update address data when coordinates are set
+  useEffect(() => {
+    if (currentLocation.lat !== 0 && currentLocation.lng !== 0 && onAddressUpdate) {
+      // Basic address with just coordinates
+      onAddressUpdate({
+        country: "",
+        countryCode: "",
+        region: "",
+        city: "",
+        district: "",
+        fullAddress: `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`,
+        placeFormatted: `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`,
+        latitude: currentLocation.lat,
+        longitude: currentLocation.lng,
+      });
+    }
+  }, [currentLocation, onAddressUpdate]);
 
   // Memoize map values to reduce re-renders
   const mapValues = useMemo(() => {
@@ -234,18 +230,8 @@ export function ThirdStep({
           </div>
 
           <FormControl>
-            <div className="h-[400px] w-full rounded-md border overflow-hidden">
-              <MapboxComponent
-                draggableMarker
-                markers={mapValues.markers}
-                initialViewState={mapValues.viewState}
-                onMarkerDragEnd={(markerId, lngLat) => {
-                  setCurrentLocation({
-                    lat: lngLat.lat,
-                    lng: lngLat.lng,
-                  });
-                }}
-              />
+            <div className="h-[400px] w-full rounded-md border overflow-hidden flex items-center justify-center bg-muted text-sm text-muted-foreground">
+              Map feature removed
             </div>
           </FormControl>
 
@@ -255,18 +241,10 @@ export function ThirdStep({
               <MapPin className="h-3 w-3" />
               <span className="text-xs">
                 {currentLocation.lat !== 0 && currentLocation.lng !== 0
-                  ? formatGPSCoordinates(
-                      currentLocation.lat,
-                      currentLocation.lng
-                    )
+                  ? `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`
                   : "Drag the marker to set location"}
               </span>
             </div>
-            {addressData?.features?.[0] && (
-              <div className="text-xs">
-                📍 {addressData.features[0].properties.place_formatted}
-              </div>
-            )}
           </div>
         </FormItem>
 

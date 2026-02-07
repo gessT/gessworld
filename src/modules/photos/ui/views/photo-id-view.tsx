@@ -32,18 +32,6 @@ interface PhotoIdViewProps {
   id: string;
 }
 
-const MapboxComponent = dynamic(
-  () => import("@/modules/mapbox/ui/components/map"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-64 w-full rounded-md border flex items-center justify-center bg-muted">
-        <Skeleton className="h-full w-full" />
-      </div>
-    ),
-  }
-);
-
 const formSchema = photosUpdateSchema.extend({
   make: z.string().optional(),
   model: z.string().optional(),
@@ -494,35 +482,9 @@ export const PhotoIdView = ({ id }: PhotoIdViewProps) => {
                     </div>
                   }
                 >
-                  <MapboxComponent
-                    draggableMarker
-                    markers={
-                      currentLocation?.lat != null &&
-                      currentLocation?.lng != null
-                        ? [
-                            {
-                              id: "photo-location",
-                              longitude: currentLocation.lng,
-                              latitude: currentLocation.lat,
-                            },
-                          ]
-                        : []
-                    }
-                    initialViewState={{
-                      longitude: currentLocation?.lng ?? 0,
-                      latitude: currentLocation?.lat ?? 0,
-                      zoom:
-                        currentLocation?.lat != null &&
-                        currentLocation?.lng != null
-                          ? 10
-                          : 2,
-                    }}
-                    onMarkerDragEnd={(markerId, lngLat) => {
-                      setCurrentLocation({ lat: lngLat.lat, lng: lngLat.lng });
-                      form.setValue("latitude", lngLat.lat);
-                      form.setValue("longitude", lngLat.lng);
-                    }}
-                  />
+                  <div className="h-64 w-full rounded-md border flex items-center justify-center bg-muted text-sm text-muted-foreground">
+                    Map feature removed
+                  </div>
                 </Suspense>
               </div>
             </div>

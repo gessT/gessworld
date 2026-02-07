@@ -27,22 +27,10 @@ import { useTRPC } from "@/trpc/client";
 import { useForm } from "react-hook-form";
 import { photosInsertSchema } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGetAddress } from "@/modules/mapbox/hooks/use-get-address";
 import type { TExifData, TImageInfo } from "@/modules/photos/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 
-const MapboxComponent = dynamic(
-  () => import("@/modules/mapbox/ui/components/map"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[300px] w-full rounded-md border flex items-center justify-center bg-muted">
-        <Skeleton className="h-full w-full" />
-      </div>
-    ),
-  }
-);
 
 interface PhotoFormProps {
   exif: TExifData | null;
@@ -65,10 +53,7 @@ export function PhotoForm({
     lng: exif?.longitude ?? 116.4074,
   });
 
-  const { data: address } = useGetAddress({
-    lat: currentLocation.lat,
-    lng: currentLocation.lng,
-  });
+  const [address, setAddress] = useState<any>(null);
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -129,19 +114,13 @@ export function PhotoForm({
   const onSubmit = (values: z.infer<typeof photosInsertSchema>) => {
     const formData = {
       ...values,
-      country: address?.features[0].properties.context.country?.name,
-      countryCode:
-        address?.features[0].properties.context.country?.country_code,
-      region: address?.features[0].properties.context.region?.name,
-      city:
-        address?.features[0].properties.context.country?.country_code ===
-          "JP" ||
-        address?.features[0].properties.context.country?.country_code === "TW"
-          ? address?.features[0].properties.context.region?.name
-          : address?.features[0].properties.context.place?.name,
-      district: address?.features[0].properties.context.locality?.name,
-      fullAddress: address?.features[0].properties.full_address,
-      placeFormatted: address?.features[0].properties.place_formatted,
+      country: address?.country,
+      countryCode: address?.countryCode,
+      region: address?.region,
+      city: address?.city,
+      district: address?.district,
+      fullAddress: address?.fullAddress,
+      placeFormatted: address?.placeFormatted,
     };
 
     createPhoto.mutate(formData);
@@ -224,28 +203,14 @@ export function PhotoForm({
                       </div>
                     }
                   >
-                    <MapboxComponent
-                      draggableMarker
-                      markers={mapValues.markers}
-                      onMarkerDragEnd={(markerId, lngLat) => {
-                        setCurrentLocation({
-                          lat: lngLat.lat,
-                          lng: lngLat.lng,
-                        });
-                        form.setValue("latitude", lngLat.lat);
-                        form.setValue("longitude", lngLat.lng);
-                      }}
-                      initialViewState={{
-                        longitude: currentLocation.lng,
-                        latitude: currentLocation.lat,
-                        zoom: 14,
-                      }}
-                    />
+                    <div className="h-[300px] w-full rounded-md border flex items-center justify-center bg-muted text-sm text-muted-foreground">
+                      Map feature removed
+                    </div>
                   </Suspense>
                 </div>
               </FormControl>
               <FormDescription>
-                {address?.features?.[0]?.properties?.full_address}
+                {address?.fullAddress || address?.placeFormatted || "Set location using coordinates"}
               </FormDescription>
             </FormItem>
 

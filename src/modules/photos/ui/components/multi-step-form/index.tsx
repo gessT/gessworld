@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TExifData, TImageInfo } from "@/modules/photos/lib/utils";
 import { PhotoFormData, INITIAL_FORM_VALUES, STEP_CONFIG } from "./types";
-import type { AddressData } from "@/modules/mapbox/hooks/use-get-address";
 import { FirstStep } from "./steps/first-step";
 import { SecondStep } from "./steps/second-step";
 import { ThirdStep } from "./steps/third-step";
@@ -57,8 +56,8 @@ export default function MultiStepForm({
   const [exif, setExif] = useState<TExifData | null>(null);
   const [imageInfo, setImageInfo] = useState<TImageInfo>();
 
-  // Address state for geocoding
-  const [address, setAddress] = useState<AddressData>(null);
+  // Address state for location data
+  const [address, setAddress] = useState<any>(null);
 
   // ========================================
   // Handlers
@@ -117,7 +116,7 @@ export default function MultiStepForm({
       // Move to next step
       setStep(step + 1);
     } else {
-      // Final submission - integrate all data including address and image info
+      // Final submission - integrate all data including address
       const finalData = {
         ...updatedData,
         url: url || "",
@@ -128,21 +127,14 @@ export default function MultiStepForm({
         width: imageInfo?.width || 0,
         height: imageInfo?.height || 0,
         blurData: imageInfo?.blurhash || "",
-        // Add address data from geocoding if available
-        country: address?.features?.[0]?.properties?.context?.country?.name,
-        countryCode:
-          address?.features?.[0]?.properties?.context?.country?.country_code,
-        region: address?.features?.[0]?.properties?.context?.region?.name,
-        city:
-          address?.features?.[0]?.properties?.context?.country?.country_code ===
-            "JP" ||
-          address?.features?.[0]?.properties?.context?.country?.country_code ===
-            "TW"
-            ? address?.features?.[0]?.properties?.context?.region?.name
-            : address?.features?.[0]?.properties?.context?.place?.name,
-        district: address?.features?.[0]?.properties?.context?.locality?.name,
-        fullAddress: address?.features?.[0]?.properties?.full_address,
-        placeFormatted: address?.features?.[0]?.properties?.place_formatted,
+        // Add address data from location if available
+        country: address?.country,
+        countryCode: address?.countryCode,
+        region: address?.region,
+        city: address?.city,
+        district: address?.district,
+        fullAddress: address?.fullAddress,
+        placeFormatted: address?.placeFormatted,
       };
 
       setIsSubmitting(true);
@@ -197,8 +189,8 @@ export default function MultiStepForm({
     setAddress(null);
   };
 
-  // Handle address update from geocoding
-  const handleAddressUpdate = (addressData: AddressData) => {
+  // Handle address update from location data
+  const handleAddressUpdate = (addressData: any) => {
     setAddress(addressData);
   };
 
