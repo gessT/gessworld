@@ -43,13 +43,14 @@ const Footer = () => {
                 </div>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Capturing the world through the lens of exploration and adventure.
+              A Social Travel Photography Community
+              We travel together. We create together.
               </p>
               <div className="flex gap-3 pt-2">
                 <a href="https://instagram.com/ekkooooooooooo0o0" target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
                   <Instagram className="w-4 h-4" />
                 </a>
-                <a href="mailto:lianshiliang93@gmail.com" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
+                <a href="mailto:tueguosheng@gmail.com" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
                   <Mail className="w-4 h-4" />
                 </a>
               </div>
@@ -83,7 +84,7 @@ const Footer = () => {
               <ul className="space-y-3">
                 <li className="flex items-center gap-2.5 text-gray-300 text-sm">
                   <Mail className="w-4 h-4 text-red-400" />
-                  <span>lianshiliang93@gmail.com</span>
+                  <span>tueguosheng@gmail.com</span>
                 </li>
                 <li className="flex items-center gap-2.5 text-gray-300 text-sm">
                   <MapPin className="w-4 h-4 text-red-400" />

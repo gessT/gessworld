@@ -30,7 +30,7 @@ const ProfileCard = () => {
                 <div className="flex gap-4 items-start">
                   <div className="relative">
                     <Avatar className="size-[72px] border-[3px] border-white/40 shadow-xl">
-                      <AvatarImage src="/avatar.jpg" alt="Avatar" />
+                      <AvatarImage src="/snapandgo.png" alt="Avatar" />
                       <AvatarFallback className="bg-red-700 text-white text-xl">SG</AvatarFallback>
                     </Avatar>
                     <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1.5 shadow-lg">
@@ -53,7 +53,8 @@ const ProfileCard = () => {
               </div>
 
               <p className="text-white/90 text-sm leading-relaxed max-w-md">
-                Capturing authentic moments and telling stories through creative imagery, wherever the journey takes me.
+                A Social Travel Photography Community
+We travel together. We create together.
               </p>
             </div>
 

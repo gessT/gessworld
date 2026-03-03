@@ -11,9 +11,8 @@ const CameraCard = () => {
 
         <div className="font-light">
           <p>
-            I have a passion for photography and camera lenses. I use a variety
-            of lenses to capture the beauty of nature and people in their
-            different moments.
+          A Social Travel Photography Community
+We travel together. We create together.
           </p>
         </div>
       </div>

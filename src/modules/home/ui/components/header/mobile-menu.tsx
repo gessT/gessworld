@@ -2,7 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
-import { X, Camera, Home, Compass, BookOpen, User, LayoutDashboard, Globe, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { X, Home, Compass, BookOpen, User, LayoutDashboard, Globe, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
 
 const menuItems = [
@@ -67,8 +68,13 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
 
               {/* Brand */}
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="bg-white/20 p-1.5 rounded-lg">
-                  <Camera className="w-4 h-4 text-white" />
+                <div className="relative w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
+                  <Image
+                    src="/snapandgo.png"
+                    alt="Snaptogoclub"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
                 <span className="text-white font-bold text-xl tracking-tight">Snaptogoclub</span>
               </div>
