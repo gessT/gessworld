@@ -38,6 +38,7 @@ export default function MultiStepForm({
 
   const createPhoto = useMutation(trpc.photos.create.mutationOptions());
   const removeS3Object = useMutation(trpc.s3.deleteFile.mutationOptions());
+  const uploadToS3 = useMutation(trpc.s3.serverUpload.mutationOptions());
   // ========================================
   // State Management
   // ========================================
@@ -55,6 +56,7 @@ export default function MultiStepForm({
   const [url, setUrl] = useState<string | null>(null);
   const [exif, setExif] = useState<TExifData | null>(null);
   const [imageInfo, setImageInfo] = useState<TImageInfo>();
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   // Address state for location data
   const [address, setAddress] = useState<any>(null);
@@ -63,27 +65,36 @@ export default function MultiStepForm({
   // Handlers
   // ========================================
 
-  // Handle upload success
+  // Handle upload success — stores local blob URL + file; actual S3 upload happens on publish
   const handleUploadSuccess = (
     uploadedUrl: string,
     uploadedExif: TExifData | null,
-    uploadedImageInfo: TImageInfo
+    uploadedImageInfo: TImageInfo,
+    file?: File
   ) => {
     setUrl(uploadedUrl);
     setExif(uploadedExif);
     setImageInfo(uploadedImageInfo);
+    if (file) setPendingFile(file);
   };
 
   // Handle re-upload
-  const handleReupload = (url: string) => {
-    removeS3Object.mutate({ key: url });
+  const handleReupload = (currentUrl: string) => {
+    if (currentUrl.startsWith("blob:")) {
+      // Local preview only — just revoke, nothing on S3 to delete
+      URL.revokeObjectURL(currentUrl);
+    } else {
+      // Already on S3 — delete it
+      removeS3Object.mutate({ key: currentUrl });
+    }
     setUrl(null);
     setExif(null);
     setImageInfo(undefined);
+    setPendingFile(null);
   };
 
   // Handle next step
-  const handleNext = (data: Partial<PhotoFormData>) => {
+  const handleNext = async (data: Partial<PhotoFormData>) => {
     let updatedData = { ...formData, ...data };
 
     // Step 1: Add upload data and EXIF
@@ -139,35 +150,55 @@ export default function MultiStepForm({
 
       setIsSubmitting(true);
 
-      // Use tRPC mutation instead of callback
-      createPhoto.mutate(finalData, {
-        onSuccess: async () => {
-          // Invalidate queries to refetch photos list
-          await queryClient.invalidateQueries(
-            trpc.photos.getMany.queryOptions({})
-          );
-          await queryClient.invalidateQueries(
-            trpc.home.getManyLikePhotos.queryOptions({ limit: 10 })
-          );
-          await queryClient.invalidateQueries(
-            trpc.home.getCitySets.queryOptions({ limit: 9 })
-          );
-          await queryClient.invalidateQueries(trpc.city.getMany.queryOptions());
+      const doCreate = (finalUrl: string) => {
+        createPhoto.mutate({ ...finalData, url: finalUrl }, {
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(trpc.photos.getMany.queryOptions({}));
+            await queryClient.invalidateQueries(trpc.home.getManyLikePhotos.queryOptions({ limit: 10 }));
+            await queryClient.invalidateQueries(trpc.home.getCitySets.queryOptions({ limit: 9 }));
+            await queryClient.invalidateQueries(trpc.city.getMany.queryOptions());
 
-          toast.success("Photo uploaded successfully!");
-          setIsComplete(true);
-          setIsSubmitting(false);
+            // Revoke blob URL now that the real S3 URL is saved
+            if (url?.startsWith("blob:")) URL.revokeObjectURL(url);
 
-          // Also call the optional callback if provided
-          if (onSubmit) {
-            onSubmit(finalData as PhotoFormData);
+            toast.success("Photo published successfully!");
+            setIsComplete(true);
+            setIsSubmitting(false);
+            if (onSubmit) onSubmit(finalData as PhotoFormData);
+          },
+          onError: (error) => {
+            toast.error(error.message);
+            setIsSubmitting(false);
+          },
+        });
+      };
+
+      if (pendingFile) {
+        // Upload to S3 now (deferred from step 1)
+        const timestamp = Date.now();
+        const extension = pendingFile.name.split(".").pop() || "";
+        const baseName = pendingFile.name.replace(`.${extension}`, "");
+        const uniqueFilename = `${baseName}-${timestamp}.${extension}`;
+
+        const fileBuffer = await pendingFile.arrayBuffer();
+        const uint8Array = new Uint8Array(fileBuffer);
+        const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
+        const base64String = btoa(binaryString);
+
+        uploadToS3.mutate(
+          { filename: uniqueFilename, contentType: pendingFile.type, folder: "photos", fileBuffer: base64String },
+          {
+            onSuccess: (result) => doCreate(result.publicUrl),
+            onError: (error) => {
+              toast.error("Upload failed: " + error.message);
+              setIsSubmitting(false);
+            },
           }
-        },
-        onError: (error) => {
-          toast.error(error.message);
-          setIsSubmitting(false);
-        },
-      });
+        );
+      } else {
+        // File was already on S3
+        doCreate(url ?? "");
+      }
     }
   };
 
@@ -183,10 +214,12 @@ export default function MultiStepForm({
     setStep(0);
     setFormData(INITIAL_FORM_VALUES);
     setIsComplete(false);
+    if (url?.startsWith("blob:")) URL.revokeObjectURL(url);
     setUrl(null);
     setExif(null);
     setImageInfo(undefined);
     setAddress(null);
+    setPendingFile(null);
   };
 
   // Handle address update from location data

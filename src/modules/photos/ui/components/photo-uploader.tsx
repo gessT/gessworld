@@ -8,15 +8,18 @@ interface PhotoUploaderProps {
   onUploadSuccess?: (
     url: string,
     exif: TExifData | null,
-    imageInfo: TImageInfo
+    imageInfo: TImageInfo,
+    file?: File
   ) => void;
   folder?: string;
+  deferUpload?: boolean;
   onCreateSuccess?: () => void;
 }
 
-export function PhotoUploader({ onUploadSuccess, folder }: PhotoUploaderProps) {
+export function PhotoUploader({ onUploadSuccess, folder, deferUpload }: PhotoUploaderProps) {
   const { isUploading, handleUpload, uploadProgress } = usePhotoUpload({
     folder,
+    deferUpload,
     onUploadSuccess,
   });
 

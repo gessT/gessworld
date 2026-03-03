@@ -59,7 +59,7 @@ export function FourthStep({
               }}
             >
               <BlurImage
-                src={keyToUrl(initialData.url)}
+                src={initialData.url.startsWith("blob:") ? initialData.url : keyToUrl(initialData.url)}
                 alt={initialData.title || "Preview"}
                 fill
                 blurhash={initialData.imageInfo.blurhash}

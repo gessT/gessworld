@@ -71,10 +71,16 @@ export function FirstStep({
           <>
             <PhotoUploader
               folder={DEFAULT_PHOTOS_UPLOAD_FOLDER}
-              onUploadSuccess={(url, exif, imageInfo) => {
-                onUploadSuccess(url, exif, imageInfo);
+              deferUpload={true}
+              onUploadSuccess={(url, exif, imageInfo, file) => {
+                onUploadSuccess(url, exif, imageInfo, file);
                 form.setValue("url", url, { shouldValidate: true });
-                getPresignedImageUrl(url).then(setImageUrl);
+                // blob: URLs are already local — no presigned URL needed
+                if (url.startsWith("blob:")) {
+                  setImageUrl(url);
+                } else {
+                  getPresignedImageUrl(url).then(setImageUrl);
+                }
               }}
             />
             <FormField
@@ -107,7 +113,7 @@ export function FirstStep({
             <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-white/8 bg-[#141414]">
               <BlurImage
                 blurhash={imageInfo.blurhash}
-                src={imageUrl || keyToUrl(url)}
+                src={imageUrl || (url.startsWith("blob:") ? url : keyToUrl(url))}
                 alt="Uploaded photo"
                 fill
                 className="object-contain w-full h-full"

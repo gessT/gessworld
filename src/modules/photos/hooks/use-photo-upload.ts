@@ -12,15 +12,18 @@ import { useTRPC } from "@/trpc/client";
 
 interface UsePhotoUploadProps {
   folder?: string;
+  deferUpload?: boolean;
   onUploadSuccess?: (
     url: string,
     exif: TExifData | null,
-    imageInfo: TImageInfo
+    imageInfo: TImageInfo,
+    file?: File
   ) => void;
 }
 
 export function usePhotoUpload({
   folder = DEFAULT_PHOTOS_UPLOAD_FOLDER,
+  deferUpload = false,
   onUploadSuccess,
 }: UsePhotoUploadProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -44,32 +47,41 @@ export function usePhotoUpload({
       setExif(exifData);
       setImageInfo(imgInfo);
 
-      // Simulate progress for server upload
-      setUploadProgress(50);
+      if (deferUpload) {
+        // Don't upload to S3 yet — just create a local preview URL
+        const localUrl = URL.createObjectURL(file);
+        setUploadProgress(100);
+        setUploadedImageUrl(localUrl);
+        toast.success("Photo ready!");
+        onUploadSuccess?.(localUrl, exifData, imgInfo, file);
+      } else {
+        // Simulate progress for server upload
+        setUploadProgress(50);
 
-      // Generate unique filename
-      const timestamp = Date.now();
-      const extension = file.name.split(".").pop() || "";
-      const baseName = file.name.replace(`.${extension}`, "");
-      const uniqueFilename = `${baseName}-${timestamp}.${extension}`;
+        // Generate unique filename
+        const timestamp = Date.now();
+        const extension = file.name.split(".").pop() || "";
+        const baseName = file.name.replace(`.${extension}`, "");
+        const uniqueFilename = `${baseName}-${timestamp}.${extension}`;
 
-      // Convert file to base64
-      const fileBuffer = await file.arrayBuffer();
-      const uint8Array = new Uint8Array(fileBuffer);
-      const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
-      const base64String = btoa(binaryString);
+        // Convert file to base64
+        const fileBuffer = await file.arrayBuffer();
+        const uint8Array = new Uint8Array(fileBuffer);
+        const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
+        const base64String = btoa(binaryString);
 
-      const result = await serverUpload.mutateAsync({
-        filename: uniqueFilename,
-        contentType: file.type,
-        folder,
-        fileBuffer: base64String,
-      });
+        const result = await serverUpload.mutateAsync({
+          filename: uniqueFilename,
+          contentType: file.type,
+          folder,
+          fileBuffer: base64String,
+        });
 
-      setUploadProgress(100);
-      setUploadedImageUrl(result.publicUrl);
-      toast.success("Photo uploaded successfully!");
-      onUploadSuccess?.(result.publicUrl, exifData, imgInfo);
+        setUploadProgress(100);
+        setUploadedImageUrl(result.publicUrl);
+        toast.success("Photo uploaded successfully!");
+        onUploadSuccess?.(result.publicUrl, exifData, imgInfo);
+      }
     } catch (error) {
       setExif(null);
       setImageInfo(null);
