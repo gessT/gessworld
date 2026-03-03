@@ -23,7 +23,7 @@ const Footer = () => {
           links={[
             { title: "Home", href: "/" },
             { title: "Travel", href: "/travel" },
-            { title: "Discover", href: "/discover" },
+            // { title: "Discover", href: "/discover" },
             { title: "Blog", href: "/blog" },
             { title: "About", href: "/about" },
           ]}
@@ -32,14 +32,14 @@ const Footer = () => {
           title="CMS"
           links={[{ title: "Dashboard", href: "/dashboard" }]}
         />
-        <FooterNav
+        {/* <FooterNav
           title="Utility"
           links={[{ title: "Screensaver", href: "/screensaver" }]}
-        />
+        /> */}
       </div>
 
       {/* Attribution */}
-      <div className="text-xs md:text-sm text-center md:text-left">
+      {/* <div className="text-xs md:text-sm text-center md:text-left">
         <p>
           <span className="opacity-60">© Design by </span>
           <a
@@ -60,7 +60,7 @@ const Footer = () => {
             ECarry
           </a>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

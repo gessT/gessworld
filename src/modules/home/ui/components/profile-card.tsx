@@ -48,12 +48,12 @@ const ProfileCard = () => {
           href="https://instagram.com/ekkooooooooooo0o0"
         />
 
-        <ContactCard title="GitHub" href="https://github.com/ecarry" />
+        {/* <ContactCard title="GitHub" href="https://github.com/ecarry" />
 
         <ContactCard
           title="Xiaohongshu"
           href="https://www.xiaohongshu.com/user/profile/66c84ba2000000001b01b3f1"
-        />
+        /> */}
 
         <ContactCard
           title="Contact me"
