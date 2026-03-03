@@ -6,7 +6,7 @@ import { Form } from "@/components/ui/form";
 import { thirdStepSchema, StepProps, ThirdStepData } from "../types";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DUMMY_CITIES, type SearchResult } from "@/modules/photos/lib/dummy-cities";
+import { POPULAR_CITIES, searchCities, type SearchResult } from "@/modules/photos/lib/dummy-cities";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -81,14 +81,8 @@ export function ThirdStep({
     if (!searchQuery.trim()) return;
     setIsSearching(true);
     try {
-      const q = searchQuery.toLowerCase();
-      const filtered = DUMMY_CITIES.filter(
-        (c) =>
-          c.properties.name.toLowerCase().includes(q) ||
-          c.properties.country?.toLowerCase().includes(q) ||
-          c.properties.place_formatted.toLowerCase().includes(q)
-      );
-      setSearchResults(filtered);
+      const results = await searchCities(searchQuery);
+      setSearchResults(results);
     } catch {
       setSearchResults([]);
     } finally {
@@ -268,7 +262,7 @@ export function ThirdStep({
                   placeholder="Search by city or country..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => { if (!searchQuery.trim()) setSearchResults(DUMMY_CITIES); }}
+                  onFocus={() => { if (!searchQuery.trim()) setSearchResults(POPULAR_CITIES); }}
                   className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-white/25 focus-visible:ring-red-500 focus-visible:border-red-500/40 rounded-lg h-9 text-sm"
                 />
                 {isSearching && (

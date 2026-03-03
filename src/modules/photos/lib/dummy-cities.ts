@@ -1,7 +1,6 @@
 /**
- * Dummy city search results data
- * Used for testing and UI development
- * Format matches SearchResult interface for location search
+ * SearchResult — matches the shape returned by the Photon geocoding API
+ * (https://photon.komoot.io) and used throughout the location-search UI.
  */
 
 export interface SearchResult {
@@ -18,7 +17,43 @@ export interface SearchResult {
   };
 }
 
-export const DUMMY_CITIES: SearchResult[] = [
+// ---------------------------------------------------------------------------
+// searchCities — queries the Photon geocoding API (free, no API key needed).
+// Returns results mapped to the SearchResult shape.
+// ---------------------------------------------------------------------------
+export async function searchCities(query: string): Promise<SearchResult[]> {
+  if (!query.trim()) return [];
+
+  const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=8&lang=en`;
+  const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+  if (!res.ok) return [];
+
+  const json = await res.json();
+  const features: any[] = json.features ?? [];
+
+  return features
+    .filter((f) =>
+      ["city", "town", "village", "district", "municipality"].includes(
+        f.properties?.osm_value ?? ""
+      )
+    )
+    .map((f) => ({
+      properties: {
+        name: f.properties.name,
+        place_formatted: `${f.properties.name}, ${f.properties.country ?? ""}`.trim().replace(/,$/, ""),
+        country: f.properties.country,
+        country_code: f.properties.countrycode,
+        region: f.properties.state ?? f.properties.county,
+        place_name: f.properties.name,
+      },
+      geometry: {
+        coordinates: f.geometry.coordinates as [number, number],
+      },
+    }));
+}
+
+// Keep a small set of popular defaults shown when the input is focused.
+export const POPULAR_CITIES: SearchResult[] = [
   {
     properties: {
       name: "Paris",
@@ -28,9 +63,7 @@ export const DUMMY_CITIES: SearchResult[] = [
       region: "Île-de-France",
       place_name: "Paris",
     },
-    geometry: {
-      coordinates: [2.3522, 48.8566],
-    },
+    geometry: { coordinates: [2.3522, 48.8566] },
   },
   {
     properties: {
@@ -41,9 +74,7 @@ export const DUMMY_CITIES: SearchResult[] = [
       region: "Tokyo",
       place_name: "Tokyo",
     },
-    geometry: {
-      coordinates: [139.6917, 35.6895],
-    },
+    geometry: { coordinates: [139.6917, 35.6895] },
   },
   {
     properties: {
@@ -54,9 +85,7 @@ export const DUMMY_CITIES: SearchResult[] = [
       region: "New York",
       place_name: "New York",
     },
-    geometry: {
-      coordinates: [-74.006, 40.7128],
-    },
+    geometry: { coordinates: [-74.006, 40.7128] },
   },
   {
     properties: {
@@ -67,9 +96,7 @@ export const DUMMY_CITIES: SearchResult[] = [
       region: "England",
       place_name: "London",
     },
-    geometry: {
-      coordinates: [-0.1276, 51.5074],
-    },
+    geometry: { coordinates: [-0.1276, 51.5074] },
   },
   {
     properties: {
