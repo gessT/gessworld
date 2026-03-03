@@ -70,7 +70,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                 <div className="bg-white/20 p-1.5 rounded-lg">
                   <Camera className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-white font-bold text-xl tracking-tight">ECarry</span>
+                <span className="text-white font-bold text-xl tracking-tight">Snaptogoclub</span>
               </div>
 
               {/* Tagline */}
@@ -162,7 +162,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                 Dashboard
               </button>
               <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-600">
-                © 2026 ECarry Photography
+                © 2026 Snaptogoclub
               </p>
             </div>
           </motion.aside>

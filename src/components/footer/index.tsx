@@ -39,7 +39,7 @@ const Footer = () => {
                   <Camera className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">ECarry</h2>
+                  <h2 className="text-xl font-bold">Snaptogoclub</h2>
                 </div>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
@@ -97,10 +97,10 @@ const Footer = () => {
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-gray-500 text-sm">
-                © 2026 ECarry Photography. All rights reserved.
+                © 2026 Snaptogoclub. All rights reserved.
               </p>
               <div className="flex items-center gap-1 text-gray-500 text-sm">
-                Made with <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> by ECarry
+                Made with <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> by Snaptogoclub
               </div>
               <div className="flex gap-6 text-sm">
                 <a href="#" className="text-gray-500 hover:text-red-400 transition-colors">Privacy</a>

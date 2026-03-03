@@ -31,7 +31,7 @@ const ProfileCard = () => {
                   <div className="relative">
                     <Avatar className="size-[72px] border-[3px] border-white/40 shadow-xl">
                       <AvatarImage src="/avatar.jpg" alt="Avatar" />
-                      <AvatarFallback className="bg-red-700 text-white text-xl">EC</AvatarFallback>
+                      <AvatarFallback className="bg-red-700 text-white text-xl">SG</AvatarFallback>
                     </Avatar>
                     <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1.5 shadow-lg">
                       <Camera className="w-3 h-3 text-white" />
@@ -39,7 +39,7 @@ const ProfileCard = () => {
                   </div>
 
                   <div className="pt-1">
-                    <h1 className="text-2xl font-bold tracking-tight">ECarry</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Snaptogoclub</h1>
                     <p className="text-white/80 text-sm font-medium flex items-center gap-1.5 mt-0.5">
                       <Globe className="w-3.5 h-3.5" />
                       Travel Photographer
