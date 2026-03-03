@@ -35,7 +35,6 @@ import { YoutubeExtension } from "./extensions/youtube";
 import TextAlign from "@tiptap/extension-text-align";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
-import { s3Client } from "@/modules/s3/lib/upload-client";
 import { toast } from "sonner";
 import { ToolbarProvider } from "./toolbars/toolbar-provider";
 import { HeadingToolbar } from "./toolbars/heading";
@@ -47,9 +46,7 @@ interface TiptapEditorProps {
 
 const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
   const trpc = useTRPC();
-  const createPresignedUrl = useMutation(
-    trpc.s3.createPresignedUrl.mutationOptions()
-  );
+  const serverUpload = useMutation(trpc.s3.serverUpload.mutationOptions());
 
   const extensions = useMemo(
     () =>
@@ -109,38 +106,38 @@ const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
             if (!file) return;
 
             try {
-              const { publicUrl } = await s3Client.upload({
-                file,
-                folder: "posts",
-                getUploadUrl: async ({ filename, contentType, folder }) => {
-                  const data = await createPresignedUrl.mutateAsync({
-                    filename,
-                    contentType,
-                    size: file.size,
-                    folder,
-                  });
+              // Upload via server (avoids S3 CORS on presigned PUT)
+              const timestamp = Date.now();
+              const extension = file.name.split(".").pop() || "";
+              const baseName = file.name.replace(`.${extension}`, "");
+              const uniqueFilename = `${baseName}-${timestamp}.${extension}`;
 
-                  return {
-                    uploadUrl: data.presignedUrl,
-                    publicUrl: data.key,
-                  };
-                },
+              const fileBuffer = await file.arrayBuffer();
+              const uint8Array = new Uint8Array(fileBuffer);
+              const binaryString = uint8Array.reduce(
+                (acc, byte) => acc + String.fromCharCode(byte),
+                ""
+              );
+              const base64String = btoa(binaryString);
+
+              const result = await serverUpload.mutateAsync({
+                filename: uniqueFilename,
+                contentType: file.type,
+                folder: "posts",
+                fileBuffer: base64String,
               });
 
-              editor.chain().focus().setImage({ src: publicUrl }).run();
-
+              editor.chain().focus().setImage({ src: result.publicUrl }).run();
               toast.success("Image uploaded successfully");
             } catch (error) {
               toast.error(
-                error instanceof Error
-                  ? error.message
-                  : "Failed to upload image"
+                error instanceof Error ? error.message : "Failed to upload image"
               );
             }
           },
         }),
       ] as Extension[],
-    [createPresignedUrl]
+    [serverUpload]
   );
 
   const editor = useEditor({
