@@ -1,4 +1,3 @@
-import MobileMenuButton from "./mobile-menu-button";
 import Navbar from "./navbar";
 
 const Header = () => {
@@ -7,7 +6,6 @@ const Header = () => {
       <div className="max-w-7xl mx-auto">
         <Navbar />
       </div>
-      <MobileMenuButton />
     </header>
   );
 };

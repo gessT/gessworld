@@ -1,21 +1,15 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowRight, X, Camera } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { X, Camera, Home, Compass, BookOpen, User, LayoutDashboard, Globe, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
 
-interface MenuItem {
-  label: string;
-  href: string;
-}
-
-const menuItems: MenuItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Travel", href: "/travel" },
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
+const menuItems = [
+  { label: "Home", href: "/", icon: Home, desc: "Start here" },
+  { label: "Travel", href: "/travel", icon: Compass, desc: "Explore destinations" },
+  { label: "Blog", href: "/blog", icon: BookOpen, desc: "Stories & journal" },
+  { label: "About", href: "/about", icon: User, desc: "About me" },
 ];
 
 interface Props {
@@ -25,6 +19,7 @@ interface Props {
 
 export default function MobileMenu({ isOpen, onClose }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleNavigation = (href: string) => {
     router.push(href);
@@ -32,85 +27,146 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 lg:hidden bg-background"
-        >
-          <div className="h-full flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 h-16 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="bg-red-500 p-1.5 rounded-lg">
-                  <Camera className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-bold text-lg">ECarry</span>
-              </div>
+        <>
+          {/* Dark backdrop — tap to close */}
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            onClick={onClose}
+            className="fixed inset-0 z-40 bg-black/70 lg:hidden"
+          />
+
+          {/* Slide-in drawer */}
+          <motion.aside
+            key="drawer"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.9 }}
+            className="fixed inset-y-0 left-0 z-50 w-72 flex flex-col lg:hidden bg-white dark:bg-zinc-900 overflow-hidden"
+          >
+            {/* ── Red header bar ── */}
+            <div className="relative bg-red-500 px-5 pt-12 pb-7 flex-shrink-0">
+              {/* Close button */}
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl bg-muted hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
-            </div>
 
-            {/* Profile */}
-            <div className="px-5 py-6 border-b border-border">
-              <div className="flex gap-4 items-center">
-                <Avatar className="size-14 border-2 border-red-200">
-                  <AvatarImage src="/avatar.jpg" alt="Avatar" />
-                  <AvatarFallback className="bg-red-100 text-red-600">EC</AvatarFallback>
-                </Avatar>
-                <div>
-                  <h1 className="text-lg font-semibold">ECarry</h1>
-                  <p className="text-sm text-muted-foreground">Travel Photographer</p>
+              {/* Brand */}
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="bg-white/20 p-1.5 rounded-lg">
+                  <Camera className="w-4 h-4 text-white" />
                 </div>
+                <span className="text-white font-bold text-xl tracking-tight">ECarry</span>
+              </div>
+
+              {/* Tagline */}
+              <div className="flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5 text-red-200" />
+                <p className="text-red-100 text-xs font-medium">Travel · Photography · Stories</p>
               </div>
             </div>
 
-            {/* Menu Items */}
-            <div className="flex-1 overflow-y-auto px-5 py-4">
-              {menuItems.map((item, index) => (
-                <motion.button
-                  key={item.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  onClick={() => handleNavigation(item.href)}
-                  className="w-full text-left px-4 py-4 rounded-xl mb-2 flex items-center justify-between hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors group"
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <span className="font-medium">{item.label}</span>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-red-500 group-hover:translate-x-1 transition-all" />
-                </motion.button>
-              ))}
-            </div>
+            {/* ── Navigation links ── */}
+            <nav className="flex-1 py-3 overflow-hidden">
+              <p className="px-5 pt-2 pb-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Menu
+              </p>
 
-            {/* Bottom CTA */}
-            <div className="px-5 py-6 border-t border-border">
+              {menuItems.map((item, i) => {
+                const Icon = item.icon;
+                const active =
+                  pathname === item.href ||
+                  (item.href !== "/" && pathname.startsWith(item.href));
+
+                return (
+                  <motion.button
+                    key={item.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.06 + i * 0.06 }}
+                    onClick={() => handleNavigation(item.href)}
+                    whileTap={{ scale: 0.98 }}
+                    className={`
+                      relative w-full flex items-center gap-3.5 px-5 py-3.5 transition-all
+                      ${
+                        active
+                          ? "bg-red-50 dark:bg-red-500/10"
+                          : "hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                      }
+                    `}
+                  >
+                    {/* Active indicator */}
+                    {active && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-8 bg-red-500 rounded-r-full" />
+                    )}
+
+                    {/* Icon box */}
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        active
+                          ? "bg-red-500 shadow-md shadow-red-200 dark:shadow-red-900"
+                          : "bg-zinc-100 dark:bg-zinc-800"
+                      }`}
+                    >
+                      <Icon
+                        size={17}
+                        className={active ? "text-white" : "text-zinc-500 dark:text-zinc-400"}
+                      />
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1 text-left">
+                      <p
+                        className={`text-sm font-semibold leading-none mb-0.5 ${
+                          active ? "text-red-600 dark:text-red-400" : "text-zinc-900 dark:text-zinc-100"
+                        }`}
+                      >
+                        {item.label}
+                      </p>
+                      <p className="text-[11px] text-zinc-400 dark:text-zinc-500">{item.desc}</p>
+                    </div>
+
+                    <ChevronRight
+                      size={14}
+                      className={active ? "text-red-400" : "text-zinc-300 dark:text-zinc-600"}
+                    />
+                  </motion.button>
+                );
+              })}
+            </nav>
+
+            {/* ── Divider ── */}
+            <div className="mx-5 h-px bg-zinc-100 dark:bg-zinc-800 flex-shrink-0" />
+
+            {/* ── Bottom actions ── */}
+            <div className="px-5 py-5 flex-shrink-0 space-y-2.5">
               <button
                 onClick={() => handleNavigation("/dashboard")}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white py-3 rounded-xl font-semibold text-sm transition-colors shadow-md shadow-red-200 dark:shadow-red-900/40"
               >
+                <LayoutDashboard size={15} />
                 Dashboard
               </button>
+              <p className="text-center text-[11px] text-zinc-400 dark:text-zinc-600">
+                © 2026 ECarry Photography
+              </p>
             </div>
-          </div>
-        </motion.div>
+          </motion.aside>
+        </>
       )}
     </AnimatePresence>
   );
