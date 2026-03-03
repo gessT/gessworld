@@ -132,7 +132,7 @@ export const SignInView = () => {
           </Form>
           <div className="col-span-2 bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
             <Image
-              src="/bg.jpg"
+              src="/aboutbg.png"
               alt="Better nextjs"
               width={1920}
               height={1080}

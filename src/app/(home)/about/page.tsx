@@ -56,7 +56,7 @@ const AboutPage = () => {
       <section className="relative h-[90vh] flex items-end overflow-hidden">
         {/* Background image */}
         <div
-          className="absolute inset-0 bg-[url(/bg.jpg)] bg-cover bg-center scale-105"
+          className="absolute inset-0 bg-[url(/aboutbg.png)] bg-cover bg-center scale-105"
           style={{ transformOrigin: "center" }}
         />
         {/* Gradient overlays */}
@@ -152,7 +152,7 @@ const AboutPage = () => {
           <div className="relative h-[500px] hidden lg:block">
             <div className="absolute inset-0 rounded-2xl overflow-hidden">
               <div
-                className="w-full h-full bg-[url(/bg.jpg)] bg-cover bg-center"
+                className="w-full h-full bg-[url(/aboutbg.png)] bg-cover bg-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/60 to-transparent" />
             </div>
@@ -187,7 +187,7 @@ const AboutPage = () => {
       {/* ── FULL BLEED QUOTE ───────────────────────────────────────── */}
       <section className="relative py-32 overflow-hidden">
         <div
-          className="absolute inset-0 bg-[url(/bg.jpg)] bg-cover bg-center bg-fixed opacity-20"
+          className="absolute inset-0 bg-[url(/aboutbg.png)] bg-cover bg-center bg-fixed opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0e0e0e] via-transparent to-[#0e0e0e]" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-12 text-center">
@@ -234,7 +234,7 @@ const AboutPage = () => {
       <section className="px-6 sm:px-12 lg:px-20 pb-24 max-w-7xl mx-auto">
         <div className="relative bg-gradient-to-br from-red-600/20 to-red-900/10 border border-red-500/20 rounded-3xl p-12 sm:p-16 overflow-hidden text-center">
           {/* Background texture */}
-          <div className="absolute inset-0 opacity-5 bg-[url(/bg.jpg)] bg-cover bg-center rounded-3xl" />
+          <div className="absolute inset-0 opacity-5 bg-[url(/aboutbg.png)] bg-cover bg-center rounded-3xl" />
           <div className="relative z-10">
             <h2 className="text-4xl sm:text-5xl font-black mb-4">
               Ready to start your story?
