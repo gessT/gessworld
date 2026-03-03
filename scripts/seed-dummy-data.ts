@@ -19,16 +19,24 @@ async function seedData() {
     const rawData = fs.readFileSync(dataFilePath, "utf-8");
     const dummyData: DummyData = JSON.parse(rawData);
 
+    // Convert dateTimeOriginal strings to Date objects
+    const photosWithDates = dummyData.photos.map((photo) => ({
+      ...photo,
+      dateTimeOriginal: photo.dateTimeOriginal
+        ? new Date(photo.dateTimeOriginal)
+        : null,
+    }));
+
     // Create sample photos first (required for city_sets)
     const samplePhotos = await db
       .insert(photos)
-      .values(dummyData.photos)
+      .values(photosWithDates)
       .returning();
 
     console.log(`✅ Created ${samplePhotos.length} sample photos`);
 
     // Create city sets with the photo IDs
-    const citySetData = dummyData.photos.map((photo, index) => ({
+    const citySetData = photosWithDates.map((photo, index) => ({
       city: photo.city,
       country: photo.country,
       countryCode: photo.countryCode,
