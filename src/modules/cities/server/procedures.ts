@@ -8,6 +8,8 @@ import {
 import { citySets, photos } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "@/modules/s3/lib/server-client";
 
 export const cityRouter = createTRPCRouter({
   // Get all city sets
@@ -161,5 +163,154 @@ export const cityRouter = createTRPCRouter({
         .returning();
 
       return updatedCitySet;
+    }),
+
+  // Create a new city album with a cover image
+  create: protectedProcedure
+    .input(
+      z.object({
+        city: z.string().min(1),
+        country: z.string().min(1),
+        countryCode: z.string().min(1).max(4),
+        description: z.string().optional(),
+        coverImageBase64: z.string().min(1),
+        coverImageType: z.string().min(1),
+        coverImageName: z.string().min(1),
+        coverImageWidth: z.number().optional(),
+        coverImageHeight: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const {
+        city,
+        country,
+        countryCode,
+        description,
+        coverImageBase64,
+        coverImageType,
+        coverImageName,
+        coverImageWidth,
+        coverImageHeight,
+      } = input;
+
+      // Strip data URL prefix if present
+      const base64Data = coverImageBase64.includes(",")
+        ? coverImageBase64.split(",")[1]!
+        : coverImageBase64;
+
+      const buffer = Buffer.from(base64Data, "base64");
+      const uuid = crypto.randomUUID();
+      const key = `cities/${uuid}-${coverImageName}`;
+
+      // Upload cover image to S3
+      try {
+        const command = new PutObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: key,
+          Body: buffer,
+          ContentType: coverImageType,
+          ContentLength: buffer.length,
+        });
+        await s3Client.send(command);
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error instanceof Error ? error.message : "Failed to upload cover image",
+        });
+      }
+
+      const width = coverImageWidth ?? 1200;
+      const height = coverImageHeight ?? 800;
+      const aspectRatio = width / height;
+
+      // Insert photo record
+      const [newPhoto] = await db
+        .insert(photos)
+        .values({
+          url: key,
+          title: city,
+          description: "",
+          visibility: "public",
+          aspectRatio,
+          width,
+          height,
+          blurData: "",
+          city,
+          country,
+          countryCode,
+        })
+        .returning();
+
+      if (!newPhoto) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create photo record",
+        });
+      }
+
+      // Insert city set
+      const [newCitySet] = await db
+        .insert(citySets)
+        .values({
+          city,
+          country,
+          countryCode,
+          description: description ?? null,
+          coverPhotoId: newPhoto.id,
+        })
+        .returning();
+
+      if (!newCitySet) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create city album",
+        });
+      }
+
+      return newCitySet;
+    }),
+
+  // Delete a city album (and its cover photo record + S3 object)
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .mutation(async ({ input }) => {
+      const { id } = input;
+
+      const [citySet] = await db
+        .select()
+        .from(citySets)
+        .where(eq(citySets.id, id));
+
+      if (!citySet) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "City not found" });
+      }
+
+      // Get the cover photo's S3 key before deletion
+      const [coverPhoto] = await db
+        .select({ url: photos.url })
+        .from(photos)
+        .where(eq(photos.id, citySet.coverPhotoId));
+
+      // Delete the city set
+      await db.delete(citySets).where(eq(citySets.id, id));
+
+      // Delete the cover photo record
+      await db.delete(photos).where(eq(photos.id, citySet.coverPhotoId));
+
+      // Try to delete the S3 object (non-fatal)
+      if (coverPhoto?.url) {
+        try {
+          await s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.S3_BUCKET_NAME,
+              Key: coverPhoto.url,
+            })
+          );
+        } catch {
+          // ignore S3 cleanup errors
+        }
+      }
+
+      return { id };
     }),
 });
