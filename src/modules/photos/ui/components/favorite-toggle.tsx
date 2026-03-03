@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
@@ -14,14 +14,23 @@ interface FavoriteToggleProps {
 }
 
 export function FavoriteToggle({ photoId, initialValue }: FavoriteToggleProps) {
-  const [isFavorite, setIsFavorite] = useState(initialValue);
+  const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+
+  // Initialize state after hydration to prevent mismatch
+  useEffect(() => {
+    setIsFavorite(initialValue);
+    setIsMounted(true);
+  }, [initialValue]);
 
   const updatePhoto = useMutation(trpc.photos.update.mutationOptions());
 
   const handleToggle = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent row click if table has row click handler
+
+    if (isFavorite === null) return;
 
     const newValue = !isFavorite;
 
@@ -51,6 +60,18 @@ export function FavoriteToggle({ photoId, initialValue }: FavoriteToggleProps) {
       }
     );
   };
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!isMounted || isFavorite === null) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        disabled
+        className="h-8 w-8 bg-muted rounded animate-pulse"
+      />
+    );
+  }
 
   return (
     <Button

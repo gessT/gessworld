@@ -18,8 +18,9 @@ export const CityView = ({ city }: Props) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.travel.getOne.queryOptions({ city }));
 
+  //can add privacy
   const coverPhoto = data.photos.find((item) => data.coverPhotoId === item.id);
-
+  console.log(data)
   return (
     <div className="size-full">
       <div className="flex flex-col gap-3 lg:gap-0 lg:flex-row w-full">

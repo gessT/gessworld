@@ -28,10 +28,10 @@ const Footer = () => {
             { title: "About", href: "/about" },
           ]}
         />
-        {/* <FooterNav
+        <FooterNav
           title="CMS"
           links={[{ title: "Dashboard", href: "/dashboard" }]}
-        /> */}
+        />
         {/* <FooterNav
           title="Utility"
           links={[{ title: "Screensaver", href: "/screensaver" }]}

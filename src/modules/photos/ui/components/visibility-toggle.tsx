@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -16,9 +16,16 @@ export function VisibilityToggle({
   photoId,
   initialValue,
 }: VisibilityToggleProps) {
-  const [visibility, setVisibility] = useState(initialValue);
+  const [visibility, setVisibility] = useState<"public" | "private" | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+
+  // Initialize state after hydration to prevent mismatch
+  useEffect(() => {
+    setVisibility(initialValue);
+    setIsMounted(true);
+  }, [initialValue]);
 
   const updatePhoto = useMutation(trpc.photos.update.mutationOptions());
 
@@ -51,6 +58,17 @@ export function VisibilityToggle({
       }
     );
   };
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!isMounted || visibility === null) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="h-4 w-4 bg-muted rounded animate-pulse" />
+        <div className="w-[44px] h-6 bg-muted rounded-full animate-pulse" />
+        <div className="text-sm text-muted-foreground min-w-[50px] bg-muted rounded animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <div

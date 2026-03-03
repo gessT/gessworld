@@ -59,6 +59,8 @@ export const homeRouter = createTRPCRouter({
         where: and(eq(photos.id, id), eq(photos.visibility, "public")),
       });
 
+      console.log('ss',data);
+      
       if (!data) {
         throw new TRPCError({
           code: "NOT_FOUND",
