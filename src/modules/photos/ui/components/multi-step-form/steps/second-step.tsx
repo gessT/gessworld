@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, ArrowLeft, Eye, EyeOff, Heart, Camera } from "lucide-react";
+import { ArrowRight, ArrowLeft, Eye, EyeOff, Heart, Camera, Sparkles, Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -22,6 +22,9 @@ import { ShutterSpeedSelector } from "../../shutter-speed-selector";
 import { ISOSelector } from "../../iso-selector";
 import { ExposureCompensationSelector } from "../../exposure-compensation-selector";
 import { secondStepSchema, SecondStepData, MetadataStepProps } from "../types";
+import { useMutation } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
+import { toast } from "sonner";
 
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
@@ -42,6 +45,10 @@ export function SecondStep({
   isSubmitting,
 }: MetadataStepProps) {
   const [cameraOpen, setCameraOpen] = useState(false);
+  const trpc = useTRPC();
+
+  const generateTitle = useMutation(trpc.ai.generateTitle.mutationOptions());
+  const generateDescription = useMutation(trpc.ai.generateDescription.mutationOptions());
 
   const form = useForm<SecondStepData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,6 +73,42 @@ export function SecondStep({
     mode: "onChange",
   });
 
+  const getExifPayload = () => {
+    const v = form.getValues();
+    return {
+      make: v.make || exif?.make,
+      model: v.model || exif?.model,
+      lensModel: v.lensModel || exif?.lensModel,
+      focalLength35mm: v.focalLength35mm ?? exif?.focalLength35mm,
+      fNumber: v.fNumber ?? exif?.fNumber,
+      exposureTime: v.exposureTime ?? exif?.exposureTime,
+      iso: v.iso ?? exif?.iso,
+    };
+  };
+
+  const handleGenerateTitle = async () => {
+    try {
+      const result = await generateTitle.mutateAsync(getExifPayload());
+      if (result.title) form.setValue("title", result.title, { shouldValidate: true });
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Title generation failed");
+    }
+  };
+
+  const handleGenerateDescription = async () => {
+    const title = form.getValues("title");
+    if (!title?.trim()) {
+      toast.error("Enter a title first so AI can write a matching description.");
+      return;
+    }
+    try {
+      const result = await generateDescription.mutateAsync({ ...getExifPayload(), title });
+      if (result.description) form.setValue("description", result.description, { shouldValidate: true });
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Description generation failed");
+    }
+  };
+
   const { handleSubmit, formState, watch } = form;
   const { isValid } = formState;
   const visibility = watch("visibility");
@@ -85,7 +128,19 @@ export function SecondStep({
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FieldLabel required>Title</FieldLabel>
+                <div className="flex items-center justify-between mb-1">
+                  <FieldLabel required>Title</FieldLabel>
+                  <button
+                    type="button"
+                    onClick={handleGenerateTitle}
+                    disabled={generateTitle.isPending}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-white/30 hover:text-red-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {generateTitle.isPending
+                      ? <><Loader2 className="w-3 h-3 animate-spin" /> Generating...</>
+                      : <><Sparkles className="w-3 h-3" /> AI</>}
+                  </button>
+                </div>
                 <FormControl>
                   <Input {...field} placeholder="Give your photo a name" className={inputCls} />
                 </FormControl>
@@ -99,7 +154,19 @@ export function SecondStep({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FieldLabel required>Description</FieldLabel>
+                <div className="flex items-center justify-between mb-1">
+                  <FieldLabel required>Description</FieldLabel>
+                  <button
+                    type="button"
+                    onClick={handleGenerateDescription}
+                    disabled={generateDescription.isPending}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-white/30 hover:text-red-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {generateDescription.isPending
+                      ? <><Loader2 className="w-3 h-3 animate-spin" /> Generating...</>
+                      : <><Sparkles className="w-3 h-3" /> AI from title</>}
+                  </button>
+                </div>
                 <FormControl>
                   <Textarea {...field} rows={3} placeholder="What's the story behind this shot?" className={textareaCls} />
                 </FormControl>
