@@ -3,37 +3,57 @@
 import { useState } from "react";
 import Footer from "@/components/footer";
 import { CoverPhoto } from "../components/cover-photo";
-import { Introduction } from "../components/introduction";
 import { CityItem } from "../components/city-item";
 import { CitySetWithPhotos } from "@/db/schema";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MapPin } from "lucide-react";
 
 export const TravelView = () => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.travel.getCitySets.queryOptions());
 
-  // Initialize with first city directly, no useEffect needed
   const [activeCity, setActiveCity] = useState<CitySetWithPhotos | null>(
     () => data?.[0] ?? null
   );
 
-  return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full">
-      <CoverPhoto citySet={activeCity || data[0]} citySets={data} />
+  const active = activeCity ?? data[0];
 
-      {/* Spacer for fixed left content */}
+  return (
+    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-[#0e0e0e]">
+      {/* LEFT — Cinematic full-screen photo panel */}
+      <CoverPhoto citySet={active} citySets={data} />
+
+      {/* Spacer for fixed left panel */}
       <div className="hidden lg:block lg:w-1/2" />
 
-      {/* RIGHT CONTENT - Scrollable */}
-      <div className="w-full mt-3 lg:mt-0 lg:w-1/2 space-y-3 pb-3">
-        <Introduction />
-        <div className="space-y-3">
+      {/* RIGHT — Dark editorial destination list */}
+      <div className="w-full lg:w-1/2 flex flex-col min-h-screen bg-[#0e0e0e]">
+        {/* Header */}
+        <div className="sticky top-16 z-20 bg-[#0e0e0e]/95 backdrop-blur-sm border-b border-white/8 px-8 py-6">
+          <div className="flex items-center gap-2 text-red-500 text-[11px] font-bold tracking-[0.25em] uppercase mb-2">
+            <MapPin className="w-3 h-3" />
+            {data.length} Destinations
+          </div>
+          <h1 className="text-3xl lg:text-4xl font-black text-white leading-none">
+            Where to{" "}
+            <span className="text-white/25">next?</span>
+          </h1>
+        </div>
+
+        {/* City list */}
+        <div className="flex-1 flex flex-col divide-y divide-white/8">
           {data.map((city) => (
-            <CityItem key={city.id} city={city} onMouseEnter={setActiveCity} />
+            <CityItem
+              key={city.id}
+              city={city}
+              activeId={active.id}
+              onMouseEnter={setActiveCity}
+            />
           ))}
         </div>
+
         <Footer />
       </div>
     </div>
@@ -42,24 +62,31 @@ export const TravelView = () => {
 
 export const LoadingStatus = () => {
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full">
-      {/* LEFT CONTENT - Fixed cover photo skeleton */}
-      <div className="w-full h-[70vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen p-0 lg:p-3">
-        <Skeleton className="w-full h-full rounded-xl" />
+    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-[#0e0e0e]">
+      {/* LEFT skeleton */}
+      <div className="w-full h-[70vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
+        <Skeleton className="w-full h-full" />
       </div>
 
-      {/* Spacer for fixed left content */}
       <div className="hidden lg:block lg:w-1/2" />
 
-      {/* RIGHT CONTENT - Scrollable */}
-      <div className="w-full mt-3 lg:mt-0 lg:w-1/2 space-y-3 pb-3">
-        <Introduction />
-        <div className="space-y-3">
-          <Skeleton className="w-full h-12 rounded-lg" />
-          <Skeleton className="w-full h-12 rounded-lg" />
-          <Skeleton className="w-full h-12 rounded-lg" />
-          <Skeleton className="w-full h-12 rounded-lg" />
-          <Skeleton className="w-full h-12 rounded-lg" />
+      {/* RIGHT skeleton */}
+      <div className="w-full lg:w-1/2 flex flex-col bg-[#0e0e0e]">
+        <div className="px-8 py-6 border-b border-white/8">
+          <Skeleton className="h-3 w-28 mb-3 bg-white/10" />
+          <Skeleton className="h-9 w-48 bg-white/10" />
+        </div>
+        <div className="flex flex-col divide-y divide-white/8">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="flex items-center gap-5 px-8 py-5">
+              <Skeleton className="w-16 h-16 rounded-xl flex-shrink-0 bg-white/10" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-5 w-32 bg-white/10" />
+                <Skeleton className="h-3 w-20 bg-white/10" />
+              </div>
+              <Skeleton className="h-6 w-12 rounded-full bg-white/10" />
+            </div>
+          ))}
         </div>
         <Footer />
       </div>

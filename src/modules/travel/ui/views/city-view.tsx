@@ -2,13 +2,12 @@
 
 import BlurImage from "@/components/blur-image";
 import Footer from "@/components/footer";
-import { FramedPhoto } from "@/components/framed-photo";
-import VectorCombined from "@/components/vector-combined";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Link from "next/link";
+import { ArrowLeft, Camera, MapPin, Calendar, Globe } from "lucide-react";
 
 interface Props {
   city: string;
@@ -18,116 +17,164 @@ export const CityView = ({ city }: Props) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.travel.getOne.queryOptions({ city }));
 
-  //can add privacy
   const coverPhoto = data.photos.find((item) => data.coverPhotoId === item.id);
-  console.log(data)
+  const year = coverPhoto?.dateTimeOriginal
+    ? new Date(coverPhoto.dateTimeOriginal).getFullYear()
+    : null;
+
   return (
-    <div className="size-full">
-      <div className="flex flex-col gap-3 lg:gap-0 lg:flex-row w-full">
-        {/* LEFT CONTENT - Fixed */}
-        <div className="w-full h-[70vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen p-0 lg:p-3">
-          <div className="w-full h-full relative">
+    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-[#0e0e0e] text-white">
+      {/* ── LEFT — Cinematic fixed cover ─────────────────────────── */}
+      <div className="w-full h-[75vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
+        <div className="relative w-full h-full overflow-hidden">
+          {coverPhoto && (
             <BlurImage
-              src={keyToUrl(coverPhoto?.url) || "/placeholder.svg"}
+              src={keyToUrl(coverPhoto.url)}
               alt={data.city}
               fill
-              quality={75}
-              blurhash={coverPhoto?.blurData || ""}
-              sizes="75vw"
-              className="object-cover rounded-xl overflow-hidden"
+              quality={80}
+              blurhash={coverPhoto.blurData || ""}
+              sizes="50vw"
+              className="object-cover scale-105"
             />
-            <div className="absolute right-0 bottom-0">
-              <VectorCombined title={data.city} position="bottom-right" />
+          )}
+          {/* Gradients */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0e0e0e]/30" />
+
+          {/* City name overlay */}
+          <div className="absolute bottom-0 left-0 z-10 p-8 lg:p-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-white/60 text-xs font-bold tracking-[0.2em] uppercase">
+                {data.country}
+              </span>
+            </div>
+            <h1 className="text-5xl lg:text-7xl font-black leading-none mb-3">
+              {data.city}
+            </h1>
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5">
+                <Camera className="w-3.5 h-3.5 text-red-400" />
+                <span className="text-xs font-semibold">{data.photos.length} Photos</span>
+              </div>
+              {year && (
+                <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-red-400" />
+                  <span className="text-xs font-semibold">{year}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Back button */}
+          <div className="absolute top-6 left-6 z-10">
+            <Link
+              href="/travel"
+              className="inline-flex items-center gap-2 bg-[#0e0e0e]/70 backdrop-blur-sm hover:bg-[#0e0e0e]/90 border border-white/15 text-white rounded-full px-4 py-2 text-xs font-bold tracking-wide transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              All Destinations
+            </Link>
+          </div>
+
+          {/* Brand pill */}
+          <div className="absolute top-6 right-6 z-10">
+            <div className="bg-red-600/90 backdrop-blur-sm rounded-full px-3 py-1">
+              <span className="text-white text-[10px] font-black tracking-widest uppercase">
+                Snaptogoclub
+              </span>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Spacer for fixed left content */}
-        <div className="hidden lg:block lg:w-1/2" />
+      {/* Spacer */}
+      <div className="hidden lg:block lg:w-1/2" />
 
-        {/* RIGHT CONTENT - Scrollable */}
-        <div className="w-full lg:w-1/2 space-y-3 pb-3">
-          {/* CITY INFO CARD  */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3 gap-4 items-stretch">
-            <div className="col-span-1 md:col-span-2 lg:col-span-1 2xl:col-span-2">
-              <div className="flex flex-col p-8 md:p-10 gap-8 bg-card border border-border rounded-2xl shadow-sm h-full">
-                <div className="flex items-center gap-3">
-                  <div className="bg-red-50 dark:bg-red-500/10 p-2.5 rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                  </div>
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold">
-                      {data.city}
-                    </h1>
-                    <p className="text-sm text-muted-foreground">{data.countryCode}</p>
-                  </div>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  {data.description}
-                </p>
-              </div>
-            </div>
+      {/* ── RIGHT — Scrollable content ───────────────────────────── */}
+      <div className="w-full lg:w-1/2 flex flex-col bg-[#0e0e0e]">
 
-            <div className="col-span-1 md:col-span-1 lg:col-span-1 2xl:col-span-1 flex flex-col gap-3">
-              <div className="w-full h-full p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">
-                <p className="text-xs text-muted-foreground font-medium">Country</p>
-                <p className="text-xs font-semibold">{data.country}</p>
-              </div>
-
-              <div className="w-full h-full p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">
-                <p className="text-xs text-muted-foreground font-medium">City</p>
-                <p className="text-xs font-semibold">{data.city}</p>
-              </div>
-
-              <div className="w-full h-full p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">
-                <p className="text-xs text-muted-foreground font-medium">Year</p>
-                <p className="text-xs font-semibold">
-                  {coverPhoto?.dateTimeOriginal
-                    ? String(new Date(coverPhoto.dateTimeOriginal).getFullYear())
-                    : "—"}
-                </p>
-              </div>
-
-              <div className="w-full h-full p-4 bg-card border border-border rounded-xl flex justify-between items-center shadow-sm">
-                <p className="text-xs text-muted-foreground font-medium">Photos</p>
-                <p className="text-xs font-semibold text-red-500">{data.photos?.length}</p>
-              </div>
-            </div>
+        {/* Sticky sub-header */}
+        <div className="sticky top-16 z-20 bg-[#0e0e0e]/95 backdrop-blur-sm border-b border-white/8 px-8 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-white/40 text-[10px] font-bold tracking-[0.2em] uppercase">Destination</p>
+            <h2 className="text-white font-black text-lg leading-tight">{data.city}</h2>
           </div>
+          <div className="text-right">
+            <p className="text-white/40 text-[10px] font-bold tracking-[0.2em] uppercase">Photos</p>
+            <p className="text-red-500 font-black text-lg leading-tight">{data.photos.length}</p>
+          </div>
+        </div>
 
-          {/* IMAGES  */}
-          <div className="w-full space-y-4">
-            {data.photos?.map((photo) => (
+        {/* Stats strip */}
+        <div className="grid grid-cols-3 divide-x divide-white/8 border-b border-white/8">
+          {[
+            { icon: Globe, label: "Country", value: data.country },
+            { icon: MapPin, label: "City", value: data.city },
+            { icon: Calendar, label: "Year", value: year ? String(year) : "—" },
+          ].map(({ icon: Icon, label, value }) => (
+            <div key={label} className="flex flex-col items-center justify-center py-6 px-4 gap-1">
+              <Icon className="w-4 h-4 text-red-500/70 mb-1" />
+              <span className="text-white font-bold text-sm truncate max-w-full text-center">{value}</span>
+              <span className="text-white/30 text-[10px] uppercase tracking-wider font-medium">{label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Description */}
+        {data.description && (
+          <div className="px-8 py-8 border-b border-white/8">
+            <p className="text-white/50 text-[10px] font-bold tracking-[0.2em] uppercase mb-3">About this place</p>
+            <p className="text-white/70 leading-relaxed text-sm">{data.description}</p>
+          </div>
+        )}
+
+        {/* Photo feed */}
+        <div className="flex-1 px-6 py-6">
+          <p className="text-white/30 text-[10px] font-bold tracking-[0.2em] uppercase mb-4">
+            {data.photos.length} shots from {data.city}
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {data.photos.map((photo, index) => (
               <Link
                 href={`/p/${photo.id}`}
                 key={photo.id}
-                className="space-y-3 group block"
+                className="group block"
               >
-                <div className="flex items-center justify-center bg-card border border-border p-4 rounded-2xl shadow-sm group-hover:shadow-md group-hover:border-red-200 dark:group-hover:border-red-500/20 transition-all duration-200">
-                  <FramedPhoto
-                    src={photo.url}
+                <div className="relative overflow-hidden rounded-xl bg-[#141414] border border-white/8 group-hover:border-red-500/40 transition-all duration-300 aspect-square">
+                  <BlurImage
+                    src={keyToUrl(photo.url)}
                     alt={photo.title}
-                    blurhash={photo.blurData!}
-                    width={photo.width}
-                    height={photo.height}
+                    fill
+                    blurhash={photo.blurData || ""}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <p className="text-sm font-semibold text-center group-hover:text-red-500 transition-colors">
-                    {photo.title}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {photo.dateTimeOriginal
-                      ? format(photo.dateTimeOriginal, "d MMM yyyy")
-                      : ""}
-                  </p>
+                  {/* Hover overlay with title */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/90 via-[#0e0e0e]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
+                    <p className="text-white font-bold text-xs leading-tight line-clamp-2">
+                      {photo.title}
+                    </p>
+                    {photo.dateTimeOriginal && (
+                      <p className="text-white/50 text-[10px] mt-0.5 font-medium">
+                        {format(photo.dateTimeOriginal, "d MMM yyyy")}
+                      </p>
+                    )}
+                  </div>
+                  {/* Index badge */}
+                  <div className="absolute top-2 right-2 bg-[#0e0e0e]/60 backdrop-blur-sm rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <span className="text-white/70 text-[9px] font-black">
+                      {index + 1}
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
-          {/* FOOTER  */}
-          {/* <Footer /> */}
         </div>
+
+        <Footer />
       </div>
     </div>
   );
