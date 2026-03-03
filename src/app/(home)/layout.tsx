@@ -8,7 +8,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
       {/* MobileMenuButton must live outside <header> so the drawer
           is not trapped inside the header's stacking context */}
       <MobileMenuButton />
-      <main className="pt-16">{children}</main>
+      <main>{children}</main>
     </>
   );
 };
