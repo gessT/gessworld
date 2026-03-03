@@ -6,6 +6,8 @@ import { PhotoPreviewCard } from "@/modules/photos/ui/components/photo-preview-c
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 
 interface PhotographViewProps {
   id: string;
@@ -13,6 +15,7 @@ interface PhotographViewProps {
 
 export const PhotographView = ({ id }: PhotographViewProps) => {
   const trpc = useTRPC();
+  const router = useRouter();
   const { data } = useSuspenseQuery(
     trpc.home.getPhotoById.queryOptions({ id })
   );
@@ -25,6 +28,15 @@ export const PhotographView = ({ id }: PhotographViewProps) => {
 
   return (
     <div className="h-screen flex justify-center items-center relative overflow-hidden">
+      {/* Close / back button */}
+      <button
+        onClick={() => router.back()}
+        className="absolute top-4 right-4 z-50 w-9 h-9 rounded-full bg-background/70 hover:bg-background/90 backdrop-blur-sm border border-white/10 flex items-center justify-center text-foreground transition-all hover:scale-105 active:scale-95"
+        aria-label="Close"
+      >
+        <X className="w-4 h-4" />
+      </button>
+
       <div className="absolute inset-0 -z-10">
         <BlurImage
           src={keyToUrl(data.url)}
