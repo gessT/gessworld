@@ -1,0 +1,119 @@
+{
+  "photos": [
+    {
+      "url": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80",
+      "title": "Eiffel Tower at Golden Hour",
+      "description": "Warm golden-hour light bathing the Eiffel Tower with soft Parisian hues.",
+      "aspectRatio": 1.5,
+      "width": 1600,
+      "height": 1066,
+      "blurData": "data:image/jpeg;base64,...",
+      "city": "Paris",
+      "country": "France",
+      "countryCode": "FR",
+      "latitude": 48.8584,
+      "longitude": 2.2945
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80",
+      "title": "Tokyo Shibuya Crossing",
+      "description": "Dynamic evening scene of Shibuya Crossing under neon city lights.",
+      "aspectRatio": 1.5,
+      "width": 1600,
+      "height": 1066,
+      "blurData": "data:image/jpeg;base64,...",
+      "city": "Tokyo",
+      "country": "Japan",
+      "countryCode": "JP",
+      "latitude": 35.6595,
+      "longitude": 139.7005
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80",
+      "title": "New York Midtown Skyline",
+      "description": "A breathtaking night view of Manhattan’s illuminated skyline.",
+      "aspectRatio": 1.5,
+      "width": 1600,
+      "height": 1066,
+      "blurData": "data:image/jpeg;base64,...",
+      "city": "New York",
+      "country": "United States",
+      "countryCode": "US",
+      "latitude": 40.7549,
+      "longitude": -73.9840
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?auto=format&fit=crop&w=1600&q=80",
+      "title": "London Westminster at Dusk",
+      "description": "Big Ben and Westminster glowing in warm evening tones along the Thames.",
+      "aspectRatio": 1.5,
+      "width": 1600,
+      "height": 1066,
+      "blurData": "data:image/jpeg;base64,...",
+      "city": "London",
+      "country": "United Kingdom",
+      "countryCode": "GB",
+      "latitude": 51.5007,
+      "longitude": -0.1246
+    }
+  ],
+  "categories": [
+    { "name": "Travel" },
+    { "name": "Photography Tips" },
+    { "name": "Destination Guide" },
+    { "name": "Behind the Scenes" },
+    { "name": "Gear Reviews" }
+  ],
+  "posts": [
+    {
+      "title": "The Ultimate Photographer’s Guide to Paris",
+      "slug": "ultimate-paris-photographers-guide",
+      "categoryIndex": 2,
+      "visibility": "public",
+      "tags": ["paris", "france", "travel", "photo-spots"],
+      "description": "A curated guide to the most photogenic places in Paris.",
+      "content": "<p>Paris offers endless photography opportunities—from classic landmarks to hidden alleyways. Here’s how to capture them beautifully.</p>",
+      "readingTimeMinutes": 6
+    },
+    {
+      "title": "10 Photography Tips Every Beginner Must Know",
+      "slug": "10-photography-tips-beginners",
+      "categoryIndex": 1,
+      "visibility": "public",
+      "tags": ["photography", "learning", "techniques"],
+      "description": "Improve your photography with these practical beginner-friendly tips.",
+      "content": "<p>Mastering the basics of exposure, composition, and lighting will instantly elevate your photography quality.</p>",
+      "readingTimeMinutes": 7
+    },
+    {
+      "title": "Tokyo Nights: Capturing Neon City Streets",
+      "slug": "tokyo-nights-neon-streets",
+      "categoryIndex": 0,
+      "visibility": "public",
+      "tags": ["tokyo", "night", "urban", "travel"],
+      "description": "How to photograph Tokyo’s vibrant neon landscapes after dark.",
+      "content": "<p>Tokyo transforms into a glowing metropolis at night. Here’s a guide to capturing its electrifying atmosphere.</p>",
+      "readingTimeMinutes": 6
+    },
+    {
+      "title": "A Day in the Life of a Travel Photographer",
+      "slug": "day-in-life-travel-photographer",
+      "categoryIndex": 3,
+      "visibility": "public",
+      "tags": ["behind-the-scenes", "workflow", "lifestyle"],
+      "description": "Go behind the scenes as I explore, scout, shoot, and edit in a single day.",
+      "content": "<p>From early‑morning location scouting to late‑night editing, here’s how I craft my travel photography stories.</p>",
+      "readingTimeMinutes": 8
+    },
+    {
+      "title": "My Essential Travel Photography Gear (2026 Edition)",
+      "slug": "travel-photography-gear-2026",
+      "categoryIndex": 4,
+      "visibility": "public",
+      "tags": ["gear", "camera", "lenses", "equipment"],
+      "description": "A breakdown of the gear I bring on every international photography trip.",
+      "content": "<p>Choosing the right camera gear helps you stay light while maximizing image quality. Here’s my 2026 travel setup.</p>",
+      "readingTimeMinutes": 5
+    }
+  ]
+}

@@ -81,7 +81,9 @@ export const CityView = ({ city }: Props) => {
               <div className="w-full h-full p-3 lg:p-5 bg-muted rounded-xl flex justify-between items-center">
                 <p className="text-xs text-text-muted">Year</p>
                 <p className="text-xs">
-                  {new Date(coverPhoto?.dateTimeOriginal || "").getFullYear()}
+                  {coverPhoto?.dateTimeOriginal
+                    ? String(new Date(coverPhoto.dateTimeOriginal).getFullYear())
+                    : "—"}
                 </p>
               </div>
 
@@ -123,7 +125,7 @@ export const CityView = ({ city }: Props) => {
             ))}
           </div>
           {/* FOOTER  */}
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </div>
     </div>
