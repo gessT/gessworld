@@ -81,7 +81,7 @@ We travel together. We create together.
       <div className="col-span-1 flex flex-col gap-4">
         {/* Instagram Card */}
         <Link
-          href="https://instagram.com/ekkooooooooooo0o0"
+          href="https://www.instagram.com/gess.tue/"
           target="_blank"
           rel="noopener noreferrer"
           className="group relative overflow-hidden rounded-2xl p-6 h-full bg-gradient-to-br from-red-400 to-rose-500 hover:shadow-xl hover:shadow-red-200/30 transition-all duration-300 cursor-pointer hover:-translate-y-1"
@@ -92,7 +92,7 @@ We travel together. We create together.
               <Instagram className="w-6 h-6 mb-3" />
               <h3 className="text-lg font-bold">Instagram</h3>
             </div>
-            <p className="text-sm text-white/80">@ekkooooooooooo0o0</p>
+            <p className="text-sm text-white/80">Snap To Go</p>
           </div>
         </Link>
 

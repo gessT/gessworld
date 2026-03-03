@@ -47,7 +47,7 @@ const Footer = () => {
               We travel together. We create together.
               </p>
               <div className="flex gap-3 pt-2">
-                <a href="https://instagram.com/ekkooooooooooo0o0" target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
+                <a href="https://www.instagram.com/gess.tue/" target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
                   <Instagram className="w-4 h-4" />
                 </a>
                 <a href="mailto:tueguosheng@gmail.com" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
