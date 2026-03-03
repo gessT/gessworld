@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BlurImage from "@/components/blur-image";
-import { Button } from "@/components/ui/button";
-import { CheckCircle2, Copy, Check, ArrowRight } from "lucide-react";
+import { CheckCircle2, Copy, Check, ArrowRight, RefreshCw } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -29,9 +28,7 @@ export function FirstStep({
 
   const form = useForm<FirstStepData>({
     resolver: zodResolver(firstStepSchema),
-    defaultValues: {
-      url: initialData?.url || "",
-    },
+    defaultValues: { url: initialData?.url || "" },
     mode: "onChange",
   });
 
@@ -50,116 +47,100 @@ export function FirstStep({
 
   const getPresignedImageUrl = async (key: string) => {
     try {
-      // Extract just the key if a full URL is passed
       let objectKey = key;
       if (key.startsWith("http")) {
-        // Extract key from URL: https://bucket.s3.region.amazonaws.com/key
-        const url = new URL(key);
-        objectKey = url.pathname.substring(1); // Remove leading slash
+        const u = new URL(key);
+        objectKey = u.pathname.substring(1);
       }
-
-      const response = await fetch(
-        `/api/s3/presigned-url?key=${encodeURIComponent(objectKey)}`
-      );
+      const response = await fetch(`/api/s3/presigned-url?key=${encodeURIComponent(objectKey)}`);
       if (!response.ok) throw new Error("Failed to get presigned URL");
       const data = await response.json();
       return data.url;
-    } catch (error) {
-      console.error("Error getting presigned URL:", error);
-      return keyToUrl(key); // Fallback to direct URL
+    } catch {
+      return keyToUrl(key);
     }
   };
 
-  const onSubmit = (data: FirstStepData) => {
-    onNext(data);
-  };
-
+  const onSubmit = (data: FirstStepData) => onNext(data);
   const isStepValid = !!url;
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          {!url || !imageInfo ? (
-            <>
-              <PhotoUploader
-                folder={DEFAULT_PHOTOS_UPLOAD_FOLDER}
-                onUploadSuccess={(url, exif, imageInfo) => {
-                  onUploadSuccess(url, exif, imageInfo);
-                  form.setValue("url", url, { shouldValidate: true });
-                  // Get presigned URL for preview
-                  getPresignedImageUrl(url).then(setImageUrl);
-                }}
-              />
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ fieldState }) => (
-                  <FormItem>{fieldState.error && <FormMessage />}</FormItem>
-                )}
-              />
-            </>
-          ) : (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-green-600 text-sm">
-                  <CheckCircle2 className="h-4 w-4" />
-                  <span>Photo uploaded successfully</span>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onReupload(url)}
-                >
-                  Re-upload
-                </Button>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {!url || !imageInfo ? (
+          <>
+            <PhotoUploader
+              folder={DEFAULT_PHOTOS_UPLOAD_FOLDER}
+              onUploadSuccess={(url, exif, imageInfo) => {
+                onUploadSuccess(url, exif, imageInfo);
+                form.setValue("url", url, { shouldValidate: true });
+                getPresignedImageUrl(url).then(setImageUrl);
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ fieldState }) => (
+                <FormItem>{fieldState.error && <FormMessage />}</FormItem>
+              )}
+            />
+          </>
+        ) : (
+          <div className="space-y-4">
+            {/* Success badge */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-red-400 text-xs font-bold uppercase tracking-widest">
+                <CheckCircle2 className="h-4 w-4" />
+                Upload complete
               </div>
+              <button
+                type="button"
+                onClick={() => onReupload(url)}
+                className="flex items-center gap-1.5 text-white/40 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Re-upload
+              </button>
+            </div>
 
-              {/* Image preview */}
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-                <BlurImage
-                  blurhash={imageInfo.blurhash}
-                  src={imageUrl || keyToUrl(url)}
-                  alt="Uploaded photo"
-                  fill
-                  className="object-contain w-full h-full"
-                  unoptimized
-                />
-              </div>
-
-              {/* URL with copy button */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Image Key</label>
-                <InputGroup>
-                  <InputGroupInput
-                    value={url}
-                    readOnly
-                    className="font-mono text-xs"
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={handleCopyUrl}
-                      size="icon-xs"
-                      aria-label="Copy key"
-                    >
-                      {isCopied ? (
-                        <Check className="h-3.5 w-3.5" />
-                      ) : (
-                        <Copy className="h-3.5 w-3.5" />
-                      )}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
+            {/* Preview */}
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-white/8 bg-[#141414]">
+              <BlurImage
+                blurhash={imageInfo.blurhash}
+                src={imageUrl || keyToUrl(url)}
+                alt="Uploaded photo"
+                fill
+                className="object-contain w-full h-full"
+                unoptimized
+              />
+              <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm rounded-md px-2 py-1 text-white/60 text-[10px] font-mono">
+                {imageInfo.width} × {imageInfo.height}px
               </div>
             </div>
-          )}
-        </div>
 
-        <div className="flex justify-end pt-4">
-          <Button type="submit" disabled={!isStepValid}>
-            Next <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+            {/* Key */}
+            {/* <div className="space-y-1.5">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-white/40">S3 Key</label>
+              <InputGroup>
+                <InputGroupInput value={url} readOnly className="font-mono text-xs bg-white/5 border-white/10 text-white/60" />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton onClick={handleCopyUrl} size="icon-xs" aria-label="Copy key">
+                    {isCopied ? <Check className="h-3.5 w-3.5 text-red-400" /> : <Copy className="h-3.5 w-3.5" />}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
+            </div> */}
+          </div>
+        )}
+
+        <div className="flex justify-end pt-2">
+          <button
+            type="submit"
+            disabled={!isStepValid}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors"
+          >
+            Continue <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </form>
     </Form>

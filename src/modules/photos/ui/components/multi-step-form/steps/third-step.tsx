@@ -2,15 +2,11 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState, useEffect, useCallback } from "react";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, X, MapPin } from "lucide-react";
-import { Form, FormControl, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormItem } from "@/components/ui/form";
 import { thirdStepSchema, StepProps, ThirdStepData } from "../types";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { DUMMY_CITIES, type SearchResult } from "@/modules/photos/lib/dummy-cities";
 
 interface ThirdStepProps extends StepProps {
@@ -172,91 +168,90 @@ export function ThirdStep({
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <FormItem>
-          <FormLabel>Search for a place</FormLabel>
-          {/* Search Input */}
-          <div className="relative mb-2">
-            <ButtonGroup>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div className="relative">
+          <label className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-1.5 block">
+            City / Location
+          </label>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
               <Input
                 placeholder="Search by city or country..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={handleInputFocus}
+                className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-white/25 focus-visible:ring-red-500 focus-visible:border-red-500/40 rounded-lg h-9 text-sm"
               />
-              <Button
-                variant="outline"
-                aria-label="Search"
-                onClick={handleClearSearch}
-                disabled={!searchQuery || isSearching}
-              >
-                <X />
-              </Button>
-            </ButtonGroup>
-
-            {/* Search Results */}
-            {searchResults.length > 0 && (
-              <Card className="absolute z-10 w-full mt-1 p-0 shadow-lg">
-                <ScrollArea className="h-[200px]">
-                  <div className="p-0">
-                    {searchResults.map((result, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className="w-full text-left px-4 py-2 hover:bg-accent transition-colors flex items-start gap-2 border-b last:border-b-0"
-                        onClick={() => handleSelectLocation(result)}
-                      >
-                        <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">
-                            {result.properties.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {result.properties.place_formatted}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </Card>
-            )}
-          </div>
-
-          <FormControl>
-            <div className="h-[400px] w-full rounded-md border overflow-hidden flex items-center justify-center bg-muted text-sm text-muted-foreground">
-              Map feature removed
             </div>
-          </FormControl>
-
-          {/* Address Display */}
-          <div className="space-y-1 text-sm text-muted-foreground mt-2">
             {searchQuery && (
-              <div className="flex items-center gap-1">
-                <MapPin className="h-3 w-3" />
-                <span className="text-xs font-medium text-foreground">
-                  Selected: {searchQuery}
-                </span>
-              </div>
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="px-3 h-9 rounded-lg border border-white/10 bg-white/5 text-white/40 hover:text-white hover:bg-white/8 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
             )}
-            <div className="flex items-center gap-1">
-              <MapPin className="h-3 w-3" />
-              <span className="text-xs">
-                {currentLocation.lat !== 0 && currentLocation.lng !== 0
-                  ? `${currentLocation.lat.toFixed(4)}, ${currentLocation.lng.toFixed(4)}`
-                  : "Select a city to set location"}
-              </span>
+          </div>
+
+          {/* Dropdown results */}
+          {searchResults.length > 0 && (
+            <div className="absolute z-20 w-full mt-1 rounded-xl border border-white/10 bg-[#1a1a1a] shadow-xl overflow-hidden">
+              <ScrollArea className="h-[220px]">
+                {searchResults.map((result, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors flex items-start gap-3 border-b border-white/5 last:border-b-0"
+                    onClick={() => handleSelectLocation(result)}
+                  >
+                    <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-red-400" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm text-white truncate">{result.properties.name}</p>
+                      <p className="text-xs text-white/40 truncate">{result.properties.place_formatted}</p>
+                    </div>
+                  </button>
+                ))}
+              </ScrollArea>
+            </div>
+          )}
+        </div>
+
+        {/* Selected Location Summary */}
+        {searchQuery && (
+          <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl border border-red-500/20 bg-red-600/5">
+            <div className="w-6 h-6 rounded-full bg-red-600/20 border border-red-500/30 flex items-center justify-center flex-shrink-0">
+              <MapPin className="h-3 h-3 text-red-400" />
+            </div>
+            <div>
+              <p className="text-white text-sm font-bold">{searchQuery}</p>
+              {currentLocation.lat !== 0 && currentLocation.lng !== 0 && (
+                <p className="text-white/40 text-xs font-mono">
+                  {currentLocation.lat.toFixed(4)}, {currentLocation.lng.toFixed(4)}
+                </p>
+              )}
             </div>
           </div>
-        </FormItem>
+        )}
 
-        <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onBack}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
-          </Button>
-          <Button type="submit" disabled={isSubmitting || !isValid}>
-            Next <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+        {!searchQuery && (
+          <div className="flex flex-col items-center justify-center py-10 rounded-xl border border-dashed border-white/8 bg-white/2 text-center">
+            <MapPin className="h-8 w-8 text-white/15 mb-2" />
+            <p className="text-white/30 text-sm">Search for a city to tag this photo</p>
+            <p className="text-white/20 text-xs mt-0.5">Optional — you can skip this step</p>
+          </div>
+        )}
+
+        <div className="flex justify-between pt-2">
+          <button type="button" onClick={onBack}
+            className="flex items-center gap-2 text-white/40 hover:text-white text-sm font-bold uppercase tracking-wide px-4 py-2.5 rounded-lg border border-white/10 hover:border-white/20 transition-colors">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </button>
+          <button type="submit" disabled={isSubmitting}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors">
+            Continue <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </form>
     </Form>

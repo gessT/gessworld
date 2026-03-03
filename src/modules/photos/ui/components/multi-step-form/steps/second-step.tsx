@@ -1,23 +1,38 @@
+﻿import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, Eye, EyeOff, Heart, Camera } from "lucide-react";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ApertureSelector } from "../../aperture-selector";
 import { ShutterSpeedSelector } from "../../shutter-speed-selector";
 import { ISOSelector } from "../../iso-selector";
 import { ExposureCompensationSelector } from "../../exposure-compensation-selector";
 import { secondStepSchema, SecondStepData, MetadataStepProps } from "../types";
+
+function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
+  return (
+    <label className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-1 block">
+      {children}{required && <span className="text-red-500 ml-0.5">*</span>}
+    </label>
+  );
+}
+
+const inputCls = "bg-white/5 border-white/10 text-white placeholder:text-white/25 focus-visible:ring-red-500 focus-visible:border-red-500/40 rounded-lg h-9 text-sm";
+const textareaCls = "bg-white/5 border-white/10 text-white placeholder:text-white/25 focus-visible:ring-red-500 focus-visible:border-red-500/40 rounded-lg text-sm resize-none";
 
 export function SecondStep({
   exif,
@@ -26,6 +41,8 @@ export function SecondStep({
   initialData,
   isSubmitting,
 }: MetadataStepProps) {
+  const [cameraOpen, setCameraOpen] = useState(false);
+
   const form = useForm<SecondStepData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(secondStepSchema) as any,
@@ -49,268 +66,230 @@ export function SecondStep({
     mode: "onChange",
   });
 
-  const { handleSubmit, formState } = form;
+  const { handleSubmit, formState, watch } = form;
   const { isValid } = formState;
+  const visibility = watch("visibility");
+  const isFavorite = watch("isFavorite");
 
-  const onSubmit = (data: SecondStepData) => {
-    onNext(data);
-  };
+  const onSubmit = (data: SecondStepData) => onNext(data);
 
   return (
+    <>
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="gap-6">
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Photo title" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
+        {/* Basic info */}
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel required>Title</FieldLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Give your photo a name" className={inputCls} />
+                </FormControl>
+                <FormMessage className="text-red-400 text-xs" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel required>Description</FieldLabel>
+                <FormControl>
+                  <Textarea {...field} rows={3} placeholder="What's the story behind this shot?" className={textareaCls} />
+                </FormControl>
+                <FormMessage className="text-red-400 text-xs" />
+              </FormItem>
+            )}
+          />
+
+          {/* Visibility + Favorite row */}
+          <div className="flex items-center gap-3">
             <FormField
               control={form.control}
               name="visibility"
               render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel>Visibility</FormLabel>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">
-                        {field.value === "public" ? "Public" : "Private"}
-                      </span>
-                      <FormControl>
-                        <Switch
-                          checked={field.value === "public"}
-                          onCheckedChange={(checked) =>
-                            field.onChange(checked ? "public" : "private")
-                          }
-                        />
-                      </FormControl>
-                    </div>
-                  </div>
-                  <FormMessage />
+                <FormItem className="flex-1">
+                  <button
+                    type="button"
+                    onClick={() => field.onChange(field.value === "public" ? "private" : "public")}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg border text-sm font-bold transition-colors ${
+                      field.value === "public"
+                        ? "border-red-500/40 bg-red-600/10 text-red-400"
+                        : "border-white/10 bg-white/5 text-white/40 hover:border-white/20"
+                    }`}
+                  >
+                    {field.value === "public" ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                    {field.value === "public" ? "Public" : "Private"}
+                  </button>
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="description"
+              name="isFavorite"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      rows={5}
-                      className="resize-none"
-                      placeholder="Photo description"
-                    />
-                  </FormControl>
-                  <FormMessage />
+                  <button
+                    type="button"
+                    onClick={() => field.onChange(!field.value)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-bold transition-colors ${
+                      field.value
+                        ? "border-red-500/40 bg-red-600/10 text-red-400"
+                        : "border-white/10 bg-white/5 text-white/40 hover:border-white/20"
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${field.value ? "fill-red-400" : ""}`} />
+                    Favorite
+                  </button>
                 </FormItem>
               )}
             />
-
-            {/* Camera Parameters Section */}
-            <div className="space-y-4 border-t pt-4">
-              <div>
-                <h3 className="text-sm font-semibold">Camera Parameters</h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {exif
-                    ? "Auto-filled from EXIF data. You can edit these values."
-                    : "No EXIF data found. Please fill in manually."}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="make"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Camera Make</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="e.g., Canon" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="model"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Camera Model</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="e.g., EOS R5" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="lensModel"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Lens Model</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="e.g., RF 24-70mm f/2.8L" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="focalLength"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Focal Length (mm)</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          step="0.1"
-                          placeholder="50"
-                          value={field.value ?? ""}
-                          onChange={(e) => {
-                            const val = e.target.value
-                              ? parseFloat(e.target.value)
-                              : undefined;
-                            field.onChange(val);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="focalLength35mm"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>35mm Equivalent (mm)</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          step="0.1"
-                          placeholder="50"
-                          value={field.value ?? ""}
-                          onChange={(e) => {
-                            const val = e.target.value
-                              ? parseFloat(e.target.value)
-                              : undefined;
-                            field.onChange(val);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-4 gap-4">
-                <FormField
-                  control={form.control}
-                  name="fNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Aperture</FormLabel>
-                      <FormControl>
-                        <ApertureSelector
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="exposureTime"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Shutter Speed</FormLabel>
-                      <FormControl>
-                        <ShutterSpeedSelector
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="iso"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ISO</FormLabel>
-                      <FormControl>
-                        <ISOSelector
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="exposureCompensation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>EV</FormLabel>
-                      <FormControl>
-                        <ExposureCompensationSelector
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onBack}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
-          </Button>
-          <Button type="submit" disabled={isSubmitting || !isValid}>
-            Next <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+
+        {/* Camera params trigger */}
+        <div className="border-t border-white/8 pt-5">
+          <button
+            type="button"
+            onClick={() => setCameraOpen(true)}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white/8 group-hover:bg-white/12 transition-colors">
+                <Camera className="w-3.5 h-3.5 text-white/50" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-bold uppercase tracking-widest text-white/60">Camera Parameters</p>
+                <p className="text-[10px] text-white/25 mt-0.5">Make, model, lens, aperture, shutter, ISO...</p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-white/25 group-hover:text-white/40 transition-colors" />
+          </button>
+        </div>
+
+        <div className="flex justify-between pt-2">
+          <button type="button" onClick={onBack}
+            className="flex items-center gap-2 text-white/40 hover:text-white text-sm font-bold uppercase tracking-wide px-4 py-2.5 rounded-lg border border-white/10 hover:border-white/20 transition-colors">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </button>
+          <button type="submit" disabled={isSubmitting || !isValid}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors">
+            Continue <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </form>
     </Form>
+
+    <Dialog open={cameraOpen} onOpenChange={setCameraOpen}>
+      <DialogContent className="bg-[#141414] border-white/10 text-white max-w-lg">
+        <DialogHeader>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/8">
+              <Camera className="w-4 h-4 text-white/60" />
+            </div>
+            <DialogTitle className="text-sm font-black uppercase tracking-tight text-white">
+              Camera Parameters
+            </DialogTitle>
+          </div>
+          {exif && (
+            <p className="text-white/25 text-xs mt-2 pl-11">Auto-filled from EXIF - edit as needed</p>
+          )}
+        </DialogHeader>
+
+        <Form {...form}>
+          <div className="space-y-4 mt-2">
+            <div className="grid grid-cols-2 gap-3">
+              <FormField control={form.control} name="make" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>Make</FieldLabel>
+                  <FormControl><Input {...field} placeholder="Canon" className={inputCls} /></FormControl>
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="model" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>Model</FieldLabel>
+                  <FormControl><Input {...field} placeholder="EOS R5" className={inputCls} /></FormControl>
+                </FormItem>
+              )} />
+            </div>
+
+            <FormField control={form.control} name="lensModel" render={({ field }) => (
+              <FormItem>
+                <FieldLabel>Lens</FieldLabel>
+                <FormControl><Input {...field} placeholder="RF 24-70mm f/2.8L" className={inputCls} /></FormControl>
+              </FormItem>
+            )} />
+
+            <div className="grid grid-cols-2 gap-3">
+              <FormField control={form.control} name="focalLength" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>Focal Length (mm)</FieldLabel>
+                  <FormControl>
+                    <Input {...field} type="number" step="0.1" placeholder="50" value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                      className={inputCls} />
+                  </FormControl>
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="focalLength35mm" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>35mm Equiv.</FieldLabel>
+                  <FormControl>
+                    <Input {...field} type="number" step="0.1" placeholder="50" value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                      className={inputCls} />
+                  </FormControl>
+                </FormItem>
+              )} />
+            </div>
+
+            <div className="grid grid-cols-4 gap-3">
+              <FormField control={form.control} name="fNumber" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>Aperture</FieldLabel>
+                  <FormControl><ApertureSelector value={field.value} onChange={field.onChange} /></FormControl>
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="exposureTime" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>Shutter</FieldLabel>
+                  <FormControl><ShutterSpeedSelector value={field.value} onChange={field.onChange} /></FormControl>
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="iso" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>ISO</FieldLabel>
+                  <FormControl><ISOSelector value={field.value} onChange={field.onChange} /></FormControl>
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="exposureCompensation" render={({ field }) => (
+                <FormItem>
+                  <FieldLabel>EV</FieldLabel>
+                  <FormControl><ExposureCompensationSelector value={field.value} onChange={field.onChange} /></FormControl>
+                </FormItem>
+              )} />
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setCameraOpen(false)}
+                className="w-full py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-sm font-bold uppercase tracking-wide transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </Form>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
