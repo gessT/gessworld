@@ -7,7 +7,6 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { useTRPC } from "@/trpc/client";
 import { useMutation } from "@tanstack/react-query";
-import { s3Client } from "@/modules/s3/lib/upload-client";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -40,9 +39,7 @@ const FileUploader = ({
   const [deletedKey, setDeletedKey] = useState<string | null>(null);
 
   const trpc = useTRPC();
-  const createPresignedUrl = useMutation(
-    trpc.s3.createPresignedUrl.mutationOptions()
-  );
+  const serverUpload = useMutation(trpc.s3.serverUpload.mutationOptions());
 
   const deleteFile = useMutation(trpc.s3.deleteFile.mutationOptions());
 
@@ -53,27 +50,26 @@ const FileUploader = ({
       );
 
       try {
-        const { publicUrl } = await s3Client.upload({
-          file,
-          folder,
-          onProgress: (progress) => {
-            setFiles((prev) =>
-              prev.map((f) => (f.id === fileId ? { ...f, progress } : f))
-            );
-          },
-          getUploadUrl: async ({ filename, contentType, folder }) => {
-            const data = await createPresignedUrl.mutateAsync({
-              filename,
-              contentType,
-              size: file.size,
-              folder,
-            });
+        // Simulate progress while encoding
+        setFiles((prev) =>
+          prev.map((f) => (f.id === fileId ? { ...f, progress: 20 } : f))
+        );
 
-            return {
-              uploadUrl: data.presignedUrl,
-              publicUrl: data.key,
-            };
-          },
+        // Convert file to base64 for server-side upload (avoids S3 CORS)
+        const arrayBuffer = await file.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
+        const base64 = btoa(binaryString);
+
+        setFiles((prev) =>
+          prev.map((f) => (f.id === fileId ? { ...f, progress: 50 } : f))
+        );
+
+        const { key } = await serverUpload.mutateAsync({
+          filename: file.name,
+          contentType: file.type,
+          folder,
+          fileBuffer: base64,
         });
 
         setFiles((prev) =>
@@ -84,16 +80,15 @@ const FileUploader = ({
                   uploading: false,
                   progress: 100,
                   error: false,
-                  key: publicUrl,
+                  key,
                 }
               : f
           )
         );
 
         toast.success("File uploaded successfully");
-        // new successful upload, clear any previously deleted key marker
         setDeletedKey(null);
-        onUploadSuccess?.(publicUrl);
+        onUploadSuccess?.(key);
       } catch (error) {
         setFiles((prev) =>
           prev.map((f) =>
@@ -115,7 +110,7 @@ const FileUploader = ({
         );
       }
     },
-    [createPresignedUrl, onUploadSuccess, folder]
+    [serverUpload, onUploadSuccess, folder]
   );
 
   const onDrop = useCallback(

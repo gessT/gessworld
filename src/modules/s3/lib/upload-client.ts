@@ -130,9 +130,9 @@ export class S3Client {
   }
 
   /**
-   * Upload file to S3 via server proxy (avoids CORS issues)
+   * Upload file to S3 using a presigned URL obtained from the server.
    * @param options the upload options
-   * @returns the upload result, containing the public URL
+   * @returns the upload result, containing the public URL / key
    * @throws {UploadError} if the upload fails
    */
   async upload({
@@ -144,15 +144,16 @@ export class S3Client {
     try {
       this.validateFile(file);
 
-      // Use server-side upload to avoid CORS issues
-      const fileBuffer = await file.arrayBuffer();
-      const uniqueFilename = this.generateUniqueFilename(file.name);
+      // 1. Get a presigned PUT URL from the server
+      const { uploadUrl, publicUrl } = await getUploadUrl({
+        filename: this.generateUniqueFilename(file.name),
+        contentType: file.type,
+        folder,
+      });
 
-      // This will be called from the component with the tRPC client
-      // The component will call the serverUpload procedure
-      // For now, return the public URL
-      const publicUrl = `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${folder}/${uniqueFilename}`;
-      
+      // 2. PUT the file directly to S3 via the presigned URL
+      await this.uploadWithProgress(file, uploadUrl, onProgress);
+
       return { publicUrl };
     } catch (error) {
       if (error instanceof UploadError) throw error;

@@ -157,7 +157,7 @@ export const PostForm = ({ post }: PostFormProps) => {
               name="coverImage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Cover Image</FormLabel>
+                  <FormLabel>Coverss Image</FormLabel>
                   <FormControl>
                     <FileUploader
                       onUploadSuccess={(key) => {
