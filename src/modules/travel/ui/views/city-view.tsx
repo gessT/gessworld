@@ -17,6 +17,8 @@ export const CityView = ({ city }: Props) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.travel.getOne.queryOptions({ city }));
 
+  if (!data) return null;
+
   const coverPhoto = data.photos.find((item) => data.coverPhotoId === item.id);
   const year = coverPhoto?.dateTimeOriginal
     ? new Date(coverPhoto.dateTimeOriginal).getFullYear()

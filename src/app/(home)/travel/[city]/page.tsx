@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { trpc } from "@/trpc/server";
 import { getQueryClient } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -29,11 +30,11 @@ const Page = async ({ params }: Props) => {
   const decodedCity = decodeURIComponent(city);
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(
-    trpc.travel.getOne.queryOptions({
-      city: decodedCity,
-    })
-  );
+  const cityData = await queryClient
+    .fetchQuery(trpc.travel.getOne.queryOptions({ city: decodedCity }))
+    .catch(() => null);
+
+  if (!cityData) notFound();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

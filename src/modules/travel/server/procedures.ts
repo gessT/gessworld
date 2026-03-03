@@ -3,7 +3,6 @@ import { db } from "@/db";
 import { createTRPCRouter, baseProcedure } from "@/trpc/init";
 import { desc, eq, and } from "drizzle-orm";
 import { citySets, photos } from "@/db/schema";
-import { TRPCError } from "@trpc/server";
 
 export const travelRouter = createTRPCRouter({
   getCitySets: baseProcedure.query(async () => {
@@ -32,12 +31,7 @@ export const travelRouter = createTRPCRouter({
         .from(citySets)
         .where(and(eq(citySets.city, city)));
 
-      if (!citySet) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "City not found",
-        });
-      }
+      if (!citySet) return null;
 
       // Get all photos in this city
       const cityPhotos = await db
