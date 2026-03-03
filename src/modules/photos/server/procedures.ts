@@ -99,98 +99,88 @@ export const photosRouter = createTRPCRouter({
           });
         }
 
-        // city set related
-        if (photo.country && photo.city) {
-          const [citySet] = await db
-            .select()
-            .from(citySets)
-            .where(
-              and(
-                eq(citySets.country, photo.country),
-                eq(citySets.city, photo.city)
+        // ── Step 1: Resolve any citySet that uses this photo as its cover ──
+        // Must do this BEFORE deleting the photo row to avoid FK violation.
+        const coverCitySets = await db
+          .select()
+          .from(citySets)
+          .where(eq(citySets.coverPhotoId, id));
+
+        for (const citySet of coverCitySets) {
+          if (citySet.photoCount <= 1) {
+            // Only photo in the set — delete the entire set
+            await db.delete(citySets).where(eq(citySets.id, citySet.id));
+          } else {
+            // Find a replacement cover photo from the same city
+            const [newCover] = await db
+              .select()
+              .from(photos)
+              .where(
+                and(
+                  eq(photos.country, citySet.country),
+                  eq(photos.city, citySet.city),
+                  sql`${photos.id} != ${id}`
+                )
               )
-            );
+              .limit(1);
 
-          if (citySet) {
-            // if city set photo count is 1, delete the city set
-            if (citySet.photoCount === 1) {
-              await db.delete(citySets).where(eq(citySets.id, citySet.id));
-            } else if (citySet.coverPhotoId === photo.id) {
-              // if this is the cover photo, find a new cover photo
-              const [newCoverPhoto] = await db
-                .select()
-                .from(photos)
-                .where(
-                  and(
-                    eq(photos.country, photo.country),
-                    eq(photos.city, photo.city),
-                    sql`${photos.id} != ${photo.id}`
-                  )
-                );
-
-              // Update citySet with new cover photo or just decrease count
-              await db
-                .update(citySets)
-                .set({
-                  photoCount: sql`${citySets.photoCount} - 1`,
-                  ...(newCoverPhoto ? { coverPhotoId: newCoverPhoto.id } : {}),
-                  updatedAt: new Date(),
-                })
-                .where(
-                  and(
-                    eq(citySets.country, photo.country),
-                    eq(citySets.city, photo.city)
-                  )
-                );
-            } else {
-              // not a cover photo, just update the count
-              await db
-                .update(citySets)
-                .set({
-                  photoCount: sql`${citySets.photoCount} - 1`,
-                  updatedAt: new Date(),
-                })
-                .where(
-                  and(
-                    eq(citySets.country, photo.country),
-                    eq(citySets.city, photo.city)
-                  )
-                );
-            }
+            await db
+              .update(citySets)
+              .set({
+                coverPhotoId: newCover?.id ?? citySet.coverPhotoId, // keep old only if no replacement (shouldn't happen)
+                photoCount: sql`${citySets.photoCount} - 1`,
+                updatedAt: new Date(),
+              })
+              .where(eq(citySets.id, citySet.id));
           }
         }
 
-        // delete cloudflare r2 file & database record
+        // ── Step 2: Decrement count on city sets linked by country/city (non-cover photos) ──
+        if (photo.country && photo.city) {
+          await db
+            .update(citySets)
+            .set({
+              photoCount: sql`${citySets.photoCount} - 1`,
+              updatedAt: new Date(),
+            })
+            .where(
+              and(
+                eq(citySets.country, photo.country),
+                eq(citySets.city, photo.city),
+                sql`${citySets.coverPhotoId} != ${id}` // cover already handled above
+              )
+            );
+        }
+
+        // ── Step 3: Delete photo DB record (FK is now clear) ──
+        await db.delete(photos).where(eq(photos.id, id));
+
+        // Attempt S3 deletion — extract key from URL if needed, don't block on failure
         try {
-          // photo.url is stored as S3 key directly in database
-          const key = photo.url;
+          const rawUrl = photo.url;
+          const key = rawUrl.startsWith("http")
+            ? new URL(rawUrl).pathname.replace(/^\//, "")
+            : rawUrl;
 
-          const command = new DeleteObjectCommand({
-            Bucket: process.env.S3_BUCKET_NAME,
-            Key: key,
-          });
-          await s3Client.send(command);
-
-          await db.delete(photos).where(eq(photos.id, id));
-        } catch (error) {
-          if (error instanceof Error) {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: error.message,
-            });
-          }
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to delete photo",
-          });
+          await s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.S3_BUCKET_NAME,
+              Key: key,
+            })
+          );
+        } catch (s3Err) {
+          // S3 cleanup failed — log but don't fail the request (DB record is already gone)
+          console.error("S3 delete failed (non-fatal):", s3Err);
         }
 
         return photo;
       } catch (error) {
+        // Re-throw TRPCErrors as-is so callers get correct status codes
+        if (error instanceof TRPCError) throw error;
         console.error("Photo deletion error:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to delete photo",
+          message: error instanceof Error ? error.message : "Failed to delete photo",
         });
       }
     }),
