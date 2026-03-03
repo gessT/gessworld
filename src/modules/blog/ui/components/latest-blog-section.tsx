@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { postsGetMany } from "@/modules/blog/types";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 interface LatestPostSectionProps {
   data?: postsGetMany[0];
@@ -24,32 +24,49 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
       href={`/blog/${data.slug}`}
       className="block w-full h-full relative overflow-hidden group cursor-pointer"
     >
+      {/* Image */}
       <Image
         src={keyToUrl(data.coverImage) || "/placeholder.svg"}
-        alt={data.title || "Blog post"}
+        alt={data.title || ""}
         fill
         unoptimized
         priority
-        className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out scale-105"
+        className="object-cover group-hover:scale-[1.03] transition-transform duration-[1200ms] ease-out"
       />
 
-      {/* Dark vignette — heavier at bottom, lighter at top */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/40 to-[#0e0e0e]/10" />
+      {/* Bottom heavy vignette */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/50 to-transparent" />
+      {/* Left vignette */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0e0e0e]/60 via-transparent to-transparent" />
 
-      {/* Centered editorial text layout */}
-      <div className="absolute inset-0 flex flex-col items-center justify-end pb-16 px-6 sm:px-16 text-center z-10">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-white/60 text-xs font-bold tracking-[0.25em] uppercase">Cover Story</span>
+      {/* ── Bottom-left editorial block (Highsnobiety style) ── */}
+      <div className="absolute bottom-0 left-0 p-8 sm:p-12 lg:p-16 z-10 max-w-3xl">
+        {/* Label row */}
+        <div className="flex items-center gap-3 mb-5">
+          <span className="bg-red-600 text-white text-[10px] font-black tracking-[0.2em] uppercase px-3 py-1.5 rounded-sm">
+            Cover Story
+          </span>
+          <span className="text-white/40 text-[10px] font-bold tracking-[0.15em] uppercase">
+            #01
+          </span>
         </div>
-        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-tight mb-6 max-w-4xl">
+
+        {/* Headline — massive Hypebeast-style */}
+        <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight mb-8 uppercase">
           {data.title}
         </h2>
-        <div className="inline-flex items-center gap-2 text-white font-bold text-sm bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 group-hover:bg-red-600 group-hover:border-red-500 transition-all duration-300">
-          <BookOpen className="w-3.5 h-3.5" />
-          Read story
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+
+        {/* CTA pill */}
+        <div className="inline-flex items-center gap-2 border border-white/30 text-white font-black text-sm uppercase tracking-widest px-6 py-3 rounded-sm group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300">
+          Read now
+          <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </div>
+      </div>
+
+      {/* Top-right issue number */}
+      <div className="absolute top-8 right-8 z-10 text-right">
+        <p className="text-white/20 text-[10px] font-black tracking-[0.3em] uppercase">Issue</p>
+        <p className="text-white/50 text-4xl font-black leading-none">01</p>
       </div>
     </Link>
   );
