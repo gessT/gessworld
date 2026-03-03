@@ -30,23 +30,35 @@ const page = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="flex flex-col lg:flex-row min-h-screen w-full">
-        {/* LEFT CONTENT - Fixed */}
-        <div className="w-full lg:w-1/2 h-[70vh] lg:fixed lg:top-0 lg:left-0 lg:h-screen p-0 lg:p-3 rounded-xl">
+      <div className="min-h-screen w-full">
+        {/* HERO SECTION - Full width photo slider */}
+        <div className="relative w-full h-[75vh] lg:h-[85vh]">
           <Suspense fallback={<SliderViewLoadingStatus />}>
             <ErrorBoundary fallback={<p>Something went wrong</p>}>
               <SliderView />
             </ErrorBoundary>
           </Suspense>
+
+          {/* Hero overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-background pointer-events-none" />
+
+          {/* Hero text overlay */}
+          <div className="absolute bottom-16 left-0 right-0 text-center pointer-events-none">
+            <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg">
+              Discover the World
+            </h1>
+            <p className="mt-3 text-lg md:text-xl text-white/80 drop-shadow">
+              Travel photography that tells a story
+            </p>
+          </div>
         </div>
-        {/* Spacer for fixed left content */}
-        <div className="hidden lg:block lg:w-1/2" />
-        {/* RIGHT CONTENT - Scrollable */}
-        <div className="w-full mt-3 lg:mt-0 lg:w-1/2 space-y-3 pb-3">
+
+        {/* MAIN CONTENT */}
+        <div className="max-w-7xl mx-auto px-4 md:px-8 -mt-12 relative z-10 space-y-16 pb-16">
           {/* PROFILE CARD  */}
           <ProfileCard />
 
-          {/* LAST TRAVEL CARD  */}
+          {/* LATEST TRAVEL  */}
           <LatestTravelCard />
 
           {/* CITY SETS CARD  */}
@@ -55,9 +67,9 @@ const page = async () => {
               <CitiesView />
             </ErrorBoundary>
           </Suspense>
-
-          <Footer />
         </div>
+
+        <Footer />
       </div>
     </HydrationBoundary>
   );

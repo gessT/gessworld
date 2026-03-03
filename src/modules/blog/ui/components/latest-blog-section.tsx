@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { postsGetMany } from "@/modules/blog/types";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
+import { ArrowRight } from "lucide-react";
 
 interface LatestPostSectionProps {
   data?: postsGetMany[0];
@@ -32,21 +33,23 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
         fill
         unoptimized
         priority
-        className="object-cover group-hover:blur-xs transition-[filter] duration-300 ease-out"
+        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
       />
 
-      <div className="absolute w-full bottom-0 p-3">
-        <div className="bg-background backdrop-blur-xs p-3 rounded-lg flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Badge>
-              <span className="text-xs font-light">New</span>
-            </Badge>
-            <h2 className="font-light">{data.title}</h2>
-          </div>
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-          <div className="relative mr-2">
-            <span className="text-sm font-light">Read</span>
-            <div className="absolute bottom-[2px] left-0 w-full h-px bg-black dark:bg-white transition-all duration-300 transform ease-in-out group-hover:w-1/3"></div>
+      <div className="absolute w-full bottom-0 p-4 md:p-6">
+        <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+          <div className="flex items-center gap-3 mb-2">
+            <Badge className="bg-red-500 text-white hover:bg-red-600 border-0">
+              New
+            </Badge>
+            <h2 className="font-semibold text-white text-lg">{data.title}</h2>
+          </div>
+          <div className="flex items-center gap-1.5 text-red-300 text-sm font-medium">
+            <span>Read article</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </div>

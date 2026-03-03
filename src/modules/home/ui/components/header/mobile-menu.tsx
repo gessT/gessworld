@@ -2,9 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import Graphic from "../../../../../components/graphic";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, X, Camera } from "lucide-react";
 import { useEffect } from "react";
 
 interface MenuItem {
@@ -15,7 +14,6 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { label: "Home", href: "/" },
   { label: "Travel", href: "/travel" },
-  // { label: "Discover", href: "/discover" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
 ];
@@ -51,54 +49,65 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 lg:hidden bg-background p-3"
+          className="fixed inset-0 z-50 lg:hidden bg-background"
         >
-          <div className="bg-muted h-full flex flex-col justify-between rounded-[18px]">
+          <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="relative p-6">
-              {/* CLOSE BUTTON  */}
+            <div className="flex items-center justify-between px-5 h-16 border-b border-border">
+              <div className="flex items-center gap-2">
+                <div className="bg-red-500 p-1.5 rounded-lg">
+                  <Camera className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-bold text-lg">ECarry</span>
+              </div>
               <button
                 onClick={onClose}
-                className="fixed top-3 right-3 z-50 bg-background rounded-bl-[18px] cursor-pointer select-none"
+                className="p-2 rounded-xl bg-muted hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
               >
-                <div className="relative pb-3 px-4">
-                  <h1 className="text-sm font-light">Close</h1>
-                  <Graphic className="absolute -bottom-4 right-0 rotate-90" />
-                  <Graphic className="absolute -left-4 top-0 rotate-90" />
-                </div>
+                <X className="w-5 h-5" />
               </button>
+            </div>
 
+            {/* Profile */}
+            <div className="px-5 py-6 border-b border-border">
               <div className="flex gap-4 items-center">
-                {/* AVATAR  */}
-                <Avatar className="size-[60px]">
-                  <AvatarImage
-                    src="https://avatars.githubusercontent.com/u/16572906?s=400&u=a304af70d12572524d540553425d78ff4d1a101a&v=4"
-                    alt="Avatar"
-                  />
-                  <AvatarFallback>EC</AvatarFallback>
+                <Avatar className="size-14 border-2 border-red-200">
+                  <AvatarImage src="/avatar.jpg" alt="Avatar" />
+                  <AvatarFallback className="bg-red-100 text-red-600">EC</AvatarFallback>
                 </Avatar>
-
-                {/* NAME  */}
-                <div className="flex flex-col">
-                  <h1 className="text-lg">ECarry</h1>
-                  <p className="text-sm text-text-muted">Photographer</p>
+                <div>
+                  <h1 className="text-lg font-semibold">ECarry</h1>
+                  <p className="text-sm text-muted-foreground">Travel Photographer</p>
                 </div>
               </div>
             </div>
 
             {/* Menu Items */}
-            <div className="overflow-y-auto px-4 py-2 scrollbar-none">
-              {menuItems.map((item) => (
+            <div className="flex-1 overflow-y-auto px-5 py-4">
+              {menuItems.map((item, index) => (
                 <motion.button
                   key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
                   onClick={() => handleNavigation(item.href)}
-                  className="w-full text-left p-4 rounded-xl mb-3 flex items-center justify-between bg-muted-hover text-text-muted text-sm"
+                  className="w-full text-left px-4 py-4 rounded-xl mb-2 flex items-center justify-between hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors group"
                   whileTap={{ scale: 0.98 }}
                 >
-                  {item.label}
-                  <ArrowRight size={18} />
+                  <span className="font-medium">{item.label}</span>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-red-500 group-hover:translate-x-1 transition-all" />
                 </motion.button>
               ))}
+            </div>
+
+            {/* Bottom CTA */}
+            <div className="px-5 py-6 border-t border-border">
+              <button
+                onClick={() => handleNavigation("/dashboard")}
+                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition-colors"
+              >
+                Dashboard
+              </button>
             </div>
           </div>
         </motion.div>

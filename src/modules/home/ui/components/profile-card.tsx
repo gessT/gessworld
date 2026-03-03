@@ -2,64 +2,113 @@
 import Link from "next/link";
 
 // Internal dependencies - UI Components
-import ContactCard from "../../../../components/contact-card";
-import { PiArrowUpRight } from "react-icons/pi";
+import { ArrowUpRight, Instagram, Mail, MapPin, Camera, Globe, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ProfileCard = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-4 items-stretch">
-      <div className="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-2">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+      {/* Main Profile Card */}
+      <div className="col-span-1 md:col-span-2">
         <Link
           href="/about"
-          className="flex flex-col justify-between gap-6 p-6 lg:p-10 xl:gap-0 bg-muted hover:bg-muted-foreground/10 transition-all duration-150 ease-[cubic-bezier(0.22, 1, 0.36, 1)] rounded-xl font-light relative group h-full"
+          className="relative overflow-hidden rounded-2xl group cursor-pointer h-full block"
         >
-          <div className="flex gap-4 items-center">
-            {/* AVATAR  */}
-            <Avatar className="size-[60px]">
-              <AvatarImage src="/avatar.jpg" alt="Avatar" />
-              <AvatarFallback>EC</AvatarFallback>
-            </Avatar>
+          {/* Background Gradient - Red theme */}
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500 via-rose-500 to-red-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-500" />
+          <div className="absolute -bottom-12 -left-12 w-36 h-36 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-500" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-red-400/20 rounded-full blur-3xl" />
 
-            {/* NAME  */}
-            <div className="flex flex-col gap-[2px]">
-              <h1 className="text-lg">ECarry</h1>
-              <p className="text-sm text-text-muted">Photographer</p>
+          {/* Content */}
+          <div className="relative flex flex-col justify-between p-8 lg:p-10 h-full text-white min-h-[280px]">
+            {/* Top */}
+            <div className="space-y-5">
+              <div className="flex items-start justify-between">
+                <div className="flex gap-4 items-start">
+                  <div className="relative">
+                    <Avatar className="size-[72px] border-[3px] border-white/40 shadow-xl">
+                      <AvatarImage src="/avatar.jpg" alt="Avatar" />
+                      <AvatarFallback className="bg-red-700 text-white text-xl">EC</AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1.5 shadow-lg">
+                      <Camera className="w-3 h-3 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="pt-1">
+                    <h1 className="text-2xl font-bold tracking-tight">ECarry</h1>
+                    <p className="text-white/80 text-sm font-medium flex items-center gap-1.5 mt-0.5">
+                      <Globe className="w-3.5 h-3.5" />
+                      Travel Photographer
+                    </p>
+                  </div>
+                </div>
+
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                  <ArrowUpRight className="w-5 h-5" />
+                </div>
+              </div>
+
+              <p className="text-white/90 text-sm leading-relaxed max-w-md">
+                Capturing authentic moments and telling stories through creative imagery, wherever the journey takes me.
+              </p>
             </div>
-          </div>
 
-          <div className="lg:mt-4 xl:mt-0">
-            <p className="text-text-muted text-[15px]">
-              I&apos;m ECarry, a photographer dedicated to capturing authentic
-              moments and telling stories through creative and emotional
-              imagery, wherever my journey takes me.
-            </p>
-          </div>
-
-          <div className="absolute top-8 right-8 opacity-0 group-hover:top-6 group-hover:right-6 group-hover:opacity-100 transition-all duration-300 ease-in-out">
-            <PiArrowUpRight size={18} />
+            {/* Stats */}
+            <div className="flex gap-8 pt-6 mt-auto border-t border-white/20">
+              <div>
+                <p className="text-2xl font-bold">100+</p>
+                <p className="text-white/60 text-xs">Destinations</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">500+</p>
+                <p className="text-white/60 text-xs">Photos</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">50K</p>
+                <p className="text-white/60 text-xs">Followers</p>
+              </div>
+            </div>
           </div>
         </Link>
       </div>
 
-      <div className="col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1 flex flex-col justify-between gap-3">
-        <ContactCard
-          title="Instagram"
+      {/* Contact Cards */}
+      <div className="col-span-1 flex flex-col gap-4">
+        {/* Instagram Card */}
+        <Link
           href="https://instagram.com/ekkooooooooooo0o0"
-        />
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative overflow-hidden rounded-2xl p-6 h-full bg-gradient-to-br from-red-400 to-rose-500 hover:shadow-xl hover:shadow-red-200/30 transition-all duration-300 cursor-pointer hover:-translate-y-1"
+        >
+          <div className="absolute inset-0 bg-white/5 group-hover:bg-white/15 transition-colors duration-300" />
+          <div className="relative flex flex-col h-full justify-between text-white">
+            <div>
+              <Instagram className="w-6 h-6 mb-3" />
+              <h3 className="text-lg font-bold">Instagram</h3>
+            </div>
+            <p className="text-sm text-white/80">@ekkooooooooooo0o0</p>
+          </div>
+        </Link>
 
-        {/* <ContactCard title="GitHub" href="https://github.com/ecarry" />
-
-        <ContactCard
-          title="Xiaohongshu"
-          href="https://www.xiaohongshu.com/user/profile/66c84ba2000000001b01b3f1"
-        /> */}
-
-        <ContactCard
-          title="Contact me"
+        {/* Contact Me Card */}
+        <Link
           href="mailto:lianshiliang93@gmail.com"
-          className="bg-primary text-white dark:text-black hover:bg-primary"
-        />
+          className="group relative overflow-hidden rounded-2xl p-6 h-full bg-gradient-to-br from-rose-600 to-red-700 hover:shadow-xl hover:shadow-red-200/30 transition-all duration-300 cursor-pointer hover:-translate-y-1"
+        >
+          <div className="absolute inset-0 bg-white/5 group-hover:bg-white/15 transition-colors duration-300" />
+          <div className="relative flex flex-col h-full justify-between text-white">
+            <div>
+              <Mail className="w-6 h-6 mb-3" />
+              <h3 className="text-lg font-bold">Get in Touch</h3>
+            </div>
+            <p className="text-sm text-white/80">Let&apos;s collaborate</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

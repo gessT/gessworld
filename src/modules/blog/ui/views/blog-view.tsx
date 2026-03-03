@@ -8,6 +8,7 @@ import ContactCard from "@/components/contact-card";
 import { PostsSection } from "../components/blog-items";
 import { LatestPostSection } from "../components/latest-blog-section";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BookOpen } from "lucide-react";
 
 export const BlogView = () => {
   const trpc = useTRPC();
@@ -24,12 +25,17 @@ export const BlogView = () => {
       <div className="hidden lg:block lg:w-1/2" />
 
       {/* RIGHT CONTENT - Scrollable */}
-      <div className="w-full lg:w-1/2 space-y-3 pb-3">
+      <div className="w-full lg:w-1/2 space-y-4 pb-3 pt-3 lg:pt-0">
         {/* DESCRIPTION CARD  */}
         <CardContainer>
-          <div className="flex flex-col p-12 gap-[128px]">
-            <h1 className="text-3xl">Blog</h1>
-            <div className="flex flex-col gap-4 font-light">
+          <div className="flex flex-col p-8 md:p-12 gap-8">
+            <div className="flex items-center gap-3">
+              <div className="bg-red-50 dark:bg-red-500/10 p-2.5 rounded-xl">
+                <BookOpen className="w-6 h-6 text-red-500" />
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold">Blog</h1>
+            </div>
+            <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
               <p>
                 Welcome to my blog, where I share my thoughts, experiences, and
                 insights on a wide range of topics. Whether you&apos;re a
@@ -42,17 +48,15 @@ export const BlogView = () => {
         </CardContainer>
 
         {/* POST LIST  */}
-
         <PostsSection data={data} />
 
         {/* CONTACT CARDS  */}
         <div className="w-full grid grid-cols-2 gap-3 mt-3">
           <ContactCard title="Instagram" />
-          {/* <ContactCard title="GitHub" /> */}
           <ContactCard title="X" />
           <ContactCard
             title="Contact me"
-            className="bg-primary hover:bg-primary-hover text-white dark:text-black"
+            className="bg-red-500 hover:bg-red-600 text-white border-red-500 hover:border-red-600"
           />
         </div>
 
@@ -75,28 +79,25 @@ export const BlogViewLoadingStatus = () => {
       <div className="hidden lg:block lg:w-1/2" />
 
       {/* RIGHT CONTENT - Scrollable */}
-      <div className="w-full lg:w-1/2 space-y-3 pb-3">
+      <div className="w-full lg:w-1/2 space-y-4 pb-3 pt-3 lg:pt-0">
         {/* DESCRIPTION CARD SKELETON */}
         <CardContainer>
-          <div className="flex flex-col p-12 gap-[128px]">
-            <h1 className="text-3xl">Blog</h1>
-            <div className="flex flex-col gap-4 font-light">
-              <p>
-                Welcome to my blog, where I share my thoughts, experiences, and
-                insights on a wide range of topics. Whether you&apos;re a
-                photographer, a traveler, or simply someone who appreciates the
-                beauty of life, my blog is a place to connect with others who
-                share my passion for capturing moments and telling stories.
-              </p>
+          <div className="flex flex-col p-8 md:p-12 gap-8">
+            <div className="flex items-center gap-3">
+              <Skeleton className="w-11 h-11 rounded-xl" />
+              <Skeleton className="h-8 w-20" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
             </div>
           </div>
         </CardContainer>
 
         {/* POST LIST SKELETON */}
-
-        <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-3">
+        <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="aspect-3/4 rounded-xl overflow-hidden">
+            <div key={index} className="aspect-3/4 rounded-2xl overflow-hidden">
               <Skeleton className="w-full h-full" />
             </div>
           ))}
@@ -105,11 +106,10 @@ export const BlogViewLoadingStatus = () => {
         {/* CONTACT CARDS  */}
         <div className="w-full grid grid-cols-2 gap-3 mt-3">
           <ContactCard title="Instagram" />
-          <ContactCard title="GitHub" />
           <ContactCard title="X" />
           <ContactCard
             title="Contact me"
-            className="bg-primary hover:bg-primary-hover text-white dark:text-black"
+            className="bg-red-500 hover:bg-red-600 text-white border-red-500 hover:border-red-600"
           />
         </div>
 

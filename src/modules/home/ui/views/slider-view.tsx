@@ -36,7 +36,7 @@ export const SliderView = () => {
 
   return (
     <Carousel
-      className="absolute top-0 left-0 w-full h-full rounded-xl"
+      className="absolute top-0 left-0 w-full h-full"
       containerClassName="h-full"
     >
       {photos.map((photo, index) => {
@@ -48,7 +48,7 @@ export const SliderView = () => {
               src={keyToUrl(photo.url)}
               alt={photo.title}
               fill
-              sizes="(max-width: 1023px) 100vw, 50vw"
+              sizes="100vw"
               loading={isFirstSlide ? "eager" : "lazy"}
               fetchPriority={isFirstSlide ? "high" : undefined}
               blurhash={photo.blurData}
@@ -63,7 +63,7 @@ export const SliderView = () => {
 
 export const SliderViewLoadingStatus = () => {
   return (
-    <div className="w-full lg:w-1/2 h-[70vh] lg:fixed lg:top-0 lg:left-0 lg:h-screen p-0 lg:p-3 rounded-xl">
+    <div className="w-full h-full">
       <Skeleton className="w-full h-full" />
     </div>
   );
