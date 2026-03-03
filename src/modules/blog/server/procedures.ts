@@ -29,7 +29,10 @@ export const blogRouter = createTRPCRouter({
         .where(and(eq(posts.slug, input.slug), eq(posts.visibility, "public")));
 
       if (!data) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post not found",
+        });
       }
 
       return data;

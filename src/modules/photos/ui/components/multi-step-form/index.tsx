@@ -251,34 +251,41 @@ export default function MultiStepForm({
 
   return (
     <div className={cn("mx-auto w-full", className)}>
-      {!isComplete ? (
-        <>
-          <ProgressBar currentStep={step} totalSteps={STEP_CONFIG.length} />
-          <StepIndicator steps={STEP_CONFIG} currentStep={step} />
+      <ProgressBar currentStep={step} totalSteps={STEP_CONFIG.length} />
+      <StepIndicator steps={STEP_CONFIG} currentStep={step} />
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={variants}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="mb-6">
-                <h2 className="text-xl font-bold">{STEP_CONFIG[step].title}</h2>
-                <p className="text-muted-foreground text-sm">
-                  {STEP_CONFIG[step].description}
-                </p>
-              </div>
+      <AnimatePresence mode="wait">
+        {!isComplete ? (
+          <motion.div
+            key={`step-${step}`}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={variants}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="mb-6">
+              <h2 className="text-xl font-bold">{STEP_CONFIG[step].title}</h2>
+              <p className="text-muted-foreground text-sm">
+                {STEP_CONFIG[step].description}
+              </p>
+            </div>
 
-              {renderStep()}
-            </motion.div>
-          </AnimatePresence>
-        </>
-      ) : (
-        <SuccessScreen onReset={handleReset} />
-      )}
+            {renderStep()}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="success"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={variants}
+            transition={{ duration: 0.3 }}
+          >
+            <SuccessScreen onReset={handleReset} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

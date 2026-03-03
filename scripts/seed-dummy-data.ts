@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { db } from "@/db";
-import { photos, citySets } from "@/db/schema";
+import { photos, citySets, categories, posts } from "@/db/schema";
 
 async function seedData() {
   try {
@@ -105,6 +105,68 @@ async function seedData() {
       .returning();
 
     console.log(`✅ Created ${citySetsCreated.length} city sets`);
+
+    // Create categories
+    const categoriesCreated = await db
+      .insert(categories)
+      .values([
+        { name: "Travel" },
+        { name: "Photography Tips" },
+        { name: "Destination Guide" },
+        { name: "Behind the Scenes" },
+      ])
+      .returning();
+
+    console.log(`✅ Created ${categoriesCreated.length} categories`);
+
+    // Create dummy posts
+    const postsCreated = await db
+      .insert(posts)
+      .values([
+        {
+          title: "Exploring Paris: A Photographer's Guide",
+          slug: "exploring-paris-photographers-guide",
+          categoryId: categoriesCreated[2].id,
+          visibility: "public",
+          tags: ["paris", "travel", "photography", "france"],
+          description: "Discover the best photo spots in Paris",
+          content: "<p>Paris is a photographer's paradise...</p>",
+          readingTimeMinutes: 5,
+        },
+        {
+          title: "5 Essential Photography Tips",
+          slug: "5-essential-photography-tips",
+          categoryId: categoriesCreated[1].id,
+          visibility: "public",
+          tags: ["photography", "tips", "beginner"],
+          description: "Learn the fundamentals of photography",
+          content: "<p>Whether you're a beginner or an experienced photographer...</p>",
+          readingTimeMinutes: 8,
+        },
+        {
+          title: "Tokyo After Dark: Urban Photography",
+          slug: "tokyo-after-dark-urban-photography",
+          categoryId: categoriesCreated[0].id,
+          visibility: "public",
+          tags: ["tokyo", "travel", "urban", "night"],
+          description: "Capturing the neon-lit streets of Tokyo",
+          content: "<p>Tokyo transforms after sunset...</p>",
+          readingTimeMinutes: 6,
+        },
+        {
+          title: "Behind the Scenes: A Day in My Life",
+          slug: "behind-the-scenes-day-in-my-life",
+          categoryId: categoriesCreated[3].id,
+          visibility: "public",
+          tags: ["behind-the-scenes", "lifestyle"],
+          description: "An insider's look at my photography process",
+          content: "<p>Many people ask what a typical day looks like for a photographer...</p>",
+          readingTimeMinutes: 7,
+        },
+      ])
+      .returning();
+
+    console.log(`✅ Created ${postsCreated.length} dummy posts`);
     console.log("🎉 Seed completed successfully!");
   } catch (error) {
     console.error("❌ Seed failed:", error);

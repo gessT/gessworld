@@ -38,8 +38,10 @@ export function DeletePostButton({ postId, postTitle }: DeletePostButtonProps) {
           );
           toast.success("Post deleted successfully");
         },
-        onError: (error) => {
-          toast.error(error.message || "Failed to delete post");
+        onError: (error: any) => {
+          console.error("Delete post error:", error);
+          const message = error?.message || error?.data?.message || "Failed to delete post";
+          toast.error(message);
         },
       }
     );

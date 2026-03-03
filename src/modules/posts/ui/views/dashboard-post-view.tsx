@@ -37,8 +37,10 @@ export const DashboardPostView = ({ slug }: { slug: string }) => {
         );
         router.push("/dashboard/posts");
       },
-      onError: (error) => {
-        toast.error(error.message);
+      onError: (error: any) => {
+        console.error("Delete post error:", error);
+        const message = error?.message || error?.data?.message || "Failed to delete post";
+        toast.error(message);
       },
     })
   );

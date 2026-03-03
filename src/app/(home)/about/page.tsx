@@ -39,12 +39,12 @@ const AboutPage = () => {
         <AboutCard />
 
         {/* TECH CARD  */}
-        <TechMarquee />
+        {/* <TechMarquee /> */}
 
         {/* CAMERA CARD  */}
-        <CameraCard />
+        {/* <CameraCard /> */}
 
-        <CardContainer>
+        {/* <CardContainer>
           <div className="flex items-center justify-between p-6">
             <h1 className="text-lg">SONY</h1>
             <p className="text-sm">Alpha 7RⅡ</p>
@@ -77,7 +77,7 @@ const AboutPage = () => {
             <h1 className="text-lg">Viltrox</h1>
             <p className="text-sm">AF 40mm F/2.5 FE</p>
           </div>
-        </CardContainer>
+        </CardContainer> */}
 
         <Footer />
       </div>
