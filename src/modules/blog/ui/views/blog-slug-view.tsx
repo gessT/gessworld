@@ -1,11 +1,10 @@
 "use client";
 
-import VectorCombined from "@/components/vector-combined";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowDownIcon } from "lucide-react";
+import { ArrowLeft, Clock, Tag, ChevronDown, Mail, Instagram } from "lucide-react";
 import Image from "next/image";
-import ContactCard from "@/components/contact-card";
+import Link from "next/link";
 import Footer from "@/components/footer";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 import RichTextViewer from "@/components/editor/rich-text-viewer";
@@ -14,84 +13,158 @@ export const BlogSlugView = ({ slug }: { slug: string }) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.blog.getOne.queryOptions({ slug }));
 
-  return (
-    <div className="flex flex-col gap-3 lg:gap-0 lg:flex-row w-full">
-      {/* LEFT CONTENT - Fixed */}
-      <div className="w-full h-[50vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 md:h-[80vh] lg:h-screen p-0 lg:p-3 group">
-        <div className="block w-full h-full relative rounded-xl overflow-hidden">
-          <Image
-            src={keyToUrl(data.coverImage) || "/placeholder.svg"}
-            alt="Image"
-            fill
-            quality={75}
-            className="object-cover"
-          />
+  const tag = Array.isArray(data.tags) ? data.tags[0] : data.tags;
 
-          <div className="absolute right-0 bottom-0">
-            <VectorCombined
-              title={data.tags?.[0] || ""}
-              position="bottom-right"
-            />
+  return (
+    <div className="min-h-screen bg-[#0e0e0e] text-white">
+
+      {/* ── FULL-BLEED HERO ───────────────────────────────────────── */}
+      <div className="relative w-full" style={{ height: "100vh" }}>
+        {/* Cover image */}
+        <Image
+          src={keyToUrl(data.coverImage) || "/placeholder.svg"}
+          alt={data.title || "Article cover"}
+          fill
+          priority
+          quality={85}
+          className="object-cover"
+        />
+
+        {/* Multi-layer gradients */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/40 to-[#0e0e0e]/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0e0e0e]/50 via-transparent to-transparent" />
+
+        {/* Back button */}
+        <div className="absolute top-6 left-6 z-10">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 bg-[#0e0e0e]/60 backdrop-blur-sm hover:bg-[#0e0e0e]/80 border border-white/15 text-white rounded-full px-4 py-2 text-xs font-bold tracking-wide transition-all"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to Stories
+          </Link>
+        </div>
+
+        {/* Brand pill */}
+        <div className="absolute top-6 right-6 z-10">
+          <div className="bg-red-600/90 backdrop-blur-sm rounded-full px-3 py-1">
+            <span className="text-white text-[10px] font-black tracking-widest uppercase">
+              Snaptogoclub
+            </span>
+          </div>
+        </div>
+
+        {/* Hero bottom content */}
+        <div className="absolute bottom-0 left-0 z-10 w-full px-6 sm:px-12 lg:px-20 pb-16">
+          {/* Meta pills */}
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            {tag && (
+              <span className="inline-flex items-center gap-1.5 bg-red-600/90 backdrop-blur-sm text-white text-[10px] font-black tracking-[0.2em] uppercase px-3 py-1.5 rounded-sm">
+                <Tag className="w-2.5 h-2.5" />
+                {tag}
+              </span>
+            )}
+            {data.readingTimeMinutes && (
+              <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-[10px] font-bold tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm">
+                <Clock className="w-2.5 h-2.5" />
+                {data.readingTimeMinutes} min read
+              </span>
+            )}
+          </div>
+
+          {/* Title */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tight uppercase max-w-4xl mb-5">
+            {data.title}
+          </h1>
+
+          {/* Description */}
+          {data.description && (
+            <p className="text-white/60 text-base sm:text-lg max-w-2xl leading-relaxed mb-8">
+              {data.description}
+            </p>
+          )}
+
+          {/* Scroll hint */}
+          <div className="flex items-center gap-2 text-white/30 text-xs font-bold tracking-[0.2em] uppercase">
+            <ChevronDown className="w-4 h-4 animate-bounce" />
+            Scroll to read
           </div>
         </div>
       </div>
 
-      {/* Spacer for fixed left content */}
-      <div className="hidden lg:block lg:w-1/2" />
-
-      {/* RIGHT CONTENT - Scrollable */}
-      <div className="w-full lg:w-1/2 space-y-3 pb-3">
-        {/* CONTENT  */}
-        <div className="bg-muted rounded-xl p-10 md:p-12 md:h-[calc(100vh-24px)] flex flex-col">
-          <div className="mb-10">
-            <span className="bg-muted-hover rounded-sm py-1 px-2 text-xs text-text-muted font-light">
-              March 2024
-            </span>
-          </div>
-
-          <div className="mt-auto flex flex-col gap-3">
-            <h1 className="text-4xl">{data.title}</h1>
-            <h2 className="font-light">{data.description}</h2>
-
-            <div className="mt-8">
-              <button className="bg-background hover:bg-muted duration-150 transition-all flex items-center gap-1 py-[10px] pr-3 pl-[14px] rounded-lg">
-                <span className="text-sm font-light">Read Article</span>{" "}
-                <ArrowDownIcon size={14} />
-              </button>
+      {/* ── ARTICLE BODY ─────────────────────────────────────────── */}
+      <div className="relative">
+        {/* Sticky reading bar */}
+        <div className="sticky top-16 z-20 bg-[#0e0e0e]/95 backdrop-blur-sm border-b border-white/8">
+          <div className="max-w-3xl mx-auto px-6 sm:px-10 h-10 flex items-center justify-between">
+            <p className="text-white/40 text-[10px] font-black tracking-[0.2em] uppercase line-clamp-1 flex-1 pr-4">
+              {data.title}
+            </p>
+            <div className="flex items-center gap-4 flex-shrink-0">
+              {data.readingTimeMinutes && (
+                <span className="text-white/25 text-[10px] font-bold tracking-wider hidden sm:block">
+                  {data.readingTimeMinutes} min
+                </span>
+              )}
+              {tag && (
+                <span className="text-red-500 text-[10px] font-black tracking-[0.15em] uppercase">
+                  {tag}
+                </span>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-          <div className="bg-muted rounded-xl p-5 w-full flex justify-between">
-            <p className="text-text-muted">Category</p>
-            <p>{data.tags}</p>
+        {/* Article content */}
+        <div className="max-w-3xl mx-auto px-6 sm:px-10 py-16">
+          {/* Drop cap intro line */}
+          <div className="border-l-2 border-red-500 pl-6 mb-12">
+            <p className="text-white/50 text-sm font-bold tracking-[0.15em] uppercase">
+              Snaptogoclub · Travel Stories
+            </p>
           </div>
 
-          <div className="bg-muted rounded-xl p-5 w-full flex justify-between">
-            <p className="text-text-muted">Reading Time</p>
-            <p>{data.readingTimeMinutes} Min</p>
-          </div>
-
-          <div className="bg-muted rounded-xl p-5 w-full flex justify-between">
-            <p className="text-text-muted">Date</p>
-            <p>March 2024</p>
+          {/* Rich text */}
+          <div className="prose-invert">
+            <RichTextViewer content={data.content || ""} />
           </div>
         </div>
 
-        {/* POST PREVIEW */}
-        <RichTextViewer content={data.content || ""} />
-
-        {/* CONTACT CARD  */}
-        <ContactCard
-          title="Contact me"
-          href="mailto:lianshiliang93@gmail.com"
-          className="bg-primary text-white hover:text-black dark:text-black dark:hover:text-white h-14"
-        />
-
-        {/* FOOTER  */}
-        <Footer />
+        {/* ── END OF ARTICLE STRIP ─────────────────────────────── */}
+        <div className="border-t border-white/8 max-w-3xl mx-auto px-6 sm:px-10 py-12">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-1 h-5 bg-red-500 rounded-full" />
+            <p className="text-white font-black text-lg tracking-tight">
+              Follow the journey
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="https://instagram.com"
+              target="_blank"
+              className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/70 hover:text-white rounded-xl py-4 text-sm font-bold transition-all duration-200"
+            >
+              <Instagram className="w-4 h-4" />
+              Instagram
+            </Link>
+            <Link
+              href="mailto:hello@snaptogoclub.com"
+              className="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 border border-red-500 text-white rounded-xl py-4 text-sm font-bold transition-all duration-200"
+            >
+              <Mail className="w-4 h-4" />
+              Get in touch
+            </Link>
+            <Link
+              href="/blog"
+              className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/70 hover:text-white rounded-xl py-4 text-sm font-bold transition-all duration-200"
+            >
+              ← More stories
+            </Link>
+          </div>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
