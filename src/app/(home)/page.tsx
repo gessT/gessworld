@@ -33,7 +33,7 @@ const page = async () => {
       <div className="min-h-screen w-full">
 
         {/* ── HERO: full-viewport photo + centered text ── */}
-        <div className="relative w-full h-[100dvh]">
+        <div className="relative isolate w-full h-[calc(100dvh-64px)]">
 
           {/* Background photo carousel */}
           <Suspense fallback={<SliderViewLoadingStatus />}>

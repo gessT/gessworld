@@ -44,7 +44,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/70 lg:hidden"
+            className="fixed inset-0 z-[1000] bg-black/70 lg:hidden"
           />
 
           {/* Slide-in drawer */}
@@ -54,7 +54,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.9 }}
-            className="fixed inset-y-0 left-0 z-50 w-72 flex flex-col lg:hidden bg-white dark:bg-zinc-900 overflow-hidden"
+            className="fixed inset-y-0 left-0 z-[1001] w-72 flex flex-col lg:hidden bg-white dark:bg-zinc-900 overflow-hidden"
           >
             {/* ── Red header bar ── */}
             <div className="relative bg-red-500 px-5 pt-12 pb-7 flex-shrink-0">

@@ -17,7 +17,7 @@ const Navbar = () => {
           <Link
             key={item.label}
             href={item.href}
-            className="text-sm font-medium text-foreground/70 hover:text-red-500 transition-colors duration-200 relative group"
+            className="text-sm font-semibold text-foreground/70 hover:text-red-500 transition-colors duration-200 relative group"
           >
             {item.label}
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 rounded-full group-hover:w-full transition-all duration-200" />
