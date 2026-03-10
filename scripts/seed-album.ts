@@ -17,87 +17,42 @@ import "dotenv/config";
 import { db } from "@/db";
 import { photos, citySets } from "@/db/schema";
 import { sql } from "drizzle-orm";
-
 // ─────────────────────────────────────────────────────────────────────────────
-// 1.  ALBUM CONFIG  (edit these to match your real album)
+// 1.  ALBUM CONFIG (Updated for Sawara)
 // ─────────────────────────────────────────────────────────────────────────────
 const ALBUM = {
   country: "Japan",
   countryCode: "JP",
-  region: "Tokyo",   // used as city name for JP / TW
-  city: "Tokyo",     // must match photos below
-  description: "Cherry-blossom season in the streets of Tokyo.",
+  region: "Chiba",   
+  city: "Sawara",    
+  description: "Exploring the 'Little Edo' atmosphere along the Ono River canals in Sawara.",
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 2.  PHOTOS  (add / duplicate entries as needed)
-//     • url        → S3 key, e.g.  photos/tokyo/filename.jpg
-//     • blurData   → Blurhash (placeholder used below — swap with real ones)
-//     • aspectRatio = width / height
+// 2.  PHOTOS (Generated from Sawara image sequence)
 // ─────────────────────────────────────────────────────────────────────────────
 const DUMMY_PHOTOS = [
   {
-    url: "https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/tokyo/6313ce3c-ee11-4f25-a533-92e079446a71-POST1-23-1773105570503.jpg",
-    title: "Shinjuku at Dusk",
-    description: "Golden hour light spilling through the skyscrapers of Shinjuku.",
+    url: "https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/sawara/POST1-1.jpg",
+    title: "Ono River Willow Trees",
+    description: "The iconic weeping willows lining the historic canal banks.",
     visibility: "public" as const,
     isFavorite: true,
     aspectRatio: 1.5,
     width: 4000,
     height: 2667,
-    blurData: "LGF5]+Yk^6#M@-5c,1J5@[or[Q6.",
+    blurData: "LGF5]+Yk^6#M@-5c,1J5@[or[Q6.", // Placeholder
     country: ALBUM.country,
     countryCode: ALBUM.countryCode,
     region: ALBUM.region,
     city: ALBUM.city,
-    fullAddress: "Shinjuku, Tokyo, Japan",
+    fullAddress: "Sawara, Katori, Chiba, Japan",
     make: "SONY",
     model: "A7 IV",
     lensModel: "FE 24-70mm F2.8 GM",
-    dateTimeOriginal: new Date("2025-04-03T18:30:00"),
-  },
-  {
-    url: "https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/tokyo/6313ce3c-ee11-4f25-a533-92e079446a71-POST1-23-1773105570503.jpg",
-    title: "Senso-ji Morning Light",
-    description: "Incense smoke drifting past the lanterns of Senso-ji Temple before the crowds arrive.",
-    visibility: "public" as const,
-    isFavorite: false,
-    aspectRatio: 0.667,    // portrait
-    width: 2667,
-    height: 4000,
-    blurData: "L6PZfSi_.AyE_3t7t7R**0o#DgR4",
-    country: ALBUM.country,
-    countryCode: ALBUM.countryCode,
-    region: ALBUM.region,
-    city: ALBUM.city,
-    fullAddress: "Asakusa, Tokyo, Japan",
-    make: "SONY",
-    model: "A7 IV",
-    lensModel: "FE 24-70mm F2.8 GM",
-    dateTimeOriginal: new Date("2025-04-04T06:15:00"),
-  },
-  {
-    url: "https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/tokyo/post1-1.jpg",
-    title: "Shibuya Crossing Rush",
-    description: "The organised chaos of Shibuya Crossing captured at peak hour.",
-    visibility: "public" as const,
-    isFavorite: false,
-    aspectRatio: 1.778,    // 16:9
-    width: 4800,
-    height: 2700,
-    blurData: "LBF~Ht00IUt7?bNGRjWB00%Mt7WB",
-    country: ALBUM.country,
-    countryCode: ALBUM.countryCode,
-    region: ALBUM.region,
-    city: ALBUM.city,
-    fullAddress: "Shibuya, Tokyo, Japan",
-    make: "SONY",
-    model: "A7 IV",
-    lensModel: "FE 16-50mm F2.8 GM",
-    dateTimeOriginal: new Date("2025-04-04T20:00:00"),
-  },
-];
-
+    dateTimeOriginal: new Date("2026-03-10T10:00:00"),
+  }
+]
 // ─────────────────────────────────────────────────────────────────────────────
 // 3.  SEED LOGIC  (no edits needed below this line)
 // ─────────────────────────────────────────────────────────────────────────────
