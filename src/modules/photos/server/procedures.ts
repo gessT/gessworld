@@ -5,7 +5,7 @@ import {
   baseProcedure,
   protectedProcedure,
 } from "@/trpc/init";
-import { and, eq, desc, asc, sql, ilike, count } from "drizzle-orm";
+import { and, eq, desc, asc, sql, ilike, count, or } from "drizzle-orm";
 import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
@@ -221,12 +221,30 @@ export const photosRouter = createTRPCRouter({
       return photo;
     }),
   getByCity: baseProcedure
-    .input(z.object({ city: z.string() }))
+    .input(
+      z.object({
+        city: z.string().optional(),
+        region: z.string().optional(),
+      })
+    )
     .query(async ({ input }) => {
+      // Collect all unique name values across both inputs
+      const names = Array.from(
+        new Set([input.city, input.region].filter(Boolean) as string[])
+      );
+
+      if (names.length === 0) return [];
+
+      // Each name matches photos.city OR photos.region (same name, either field)
+      const filters = names.flatMap((name) => [
+        eq(photos.city, name),
+        eq(photos.region, name),
+      ]);
+
       return db
         .select()
         .from(photos)
-        .where(eq(photos.city, input.city))
+        .where(or(...filters))
         .orderBy(desc(photos.dateTimeOriginal), desc(photos.createdAt));
     }),
 

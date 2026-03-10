@@ -107,14 +107,6 @@ export const cityRouter = createTRPCRouter({
         });
       }
 
-      // Verify the photo belongs to this city
-      if (photo.city !== citySet.city) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Photo does not belong to this city",
-        });
-      }
-
       // Update the cover photo
       const [updatedCitySet] = await db
         .update(citySets)

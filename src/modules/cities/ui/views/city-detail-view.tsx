@@ -79,9 +79,12 @@ export function CityDetailView({ city }: CityDetailViewProps) {
   const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
   const coverFileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch photos directly from photos table filtered by city name
+  // Fetch photos directly from photos table filtered by city or region
   const { data: albumPhotos = [] } = useQuery(
-    trpc.photos.getByCity.queryOptions({ city: cityData?.city ?? "" })
+    trpc.photos.getByCity.queryOptions({
+      city: cityData?.city ?? undefined,
+      region: cityData?.region ?? undefined,
+    })
   );
 
   const form = useForm<CityDescriptionForm>({
@@ -423,7 +426,7 @@ export function CityDetailView({ city }: CityDetailViewProps) {
         </div>
       </div>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-6 px-4 md:px-8">
-        {cityData.photos.map((photo) => (
+        {albumPhotos.map((photo) => (
           <div key={photo.id} className="space-y-4">
             <div className="relative group bg-gray-50 dark:bg-muted rounded-lg overflow-hidden aspect-square">
               <FramedPhoto
