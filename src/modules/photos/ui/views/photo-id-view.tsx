@@ -257,7 +257,7 @@ export const PhotoIdView = ({ id }: PhotoIdViewProps) => {
                     )}
                   />
 
-                  <div className="grid gap-4 md:grid-cols-2">
+                  {/* <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="focalLength"
@@ -446,8 +446,8 @@ export const PhotoIdView = ({ id }: PhotoIdViewProps) => {
                       </FormItem>
                     )}
                   />
+                </div> */}
                 </div>
-
                 <div className="flex justify-end pt-2">
                   <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Saving..." : "Save changes"}
@@ -470,7 +470,7 @@ export const PhotoIdView = ({ id }: PhotoIdViewProps) => {
               />
             </div>
 
-            <div className="bg-card border rounded-xl p-4 shadow-sm">
+            {/* <div className="bg-card border rounded-xl p-4 shadow-sm">
               <div className="mb-2 flex items-center justify-between">
                 <h2 className="text-sm font-medium">Location</h2>
               </div>
@@ -487,7 +487,7 @@ export const PhotoIdView = ({ id }: PhotoIdViewProps) => {
                   </div>
                 </Suspense>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

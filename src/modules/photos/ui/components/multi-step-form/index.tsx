@@ -185,8 +185,13 @@ export default function MultiStepForm({
         const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), "");
         const base64String = btoa(binaryString);
 
+        const citySlug = address?.city
+          ? address.city.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+          : "uncategorized";
+        const folder = `photos/${citySlug}`;
+
         uploadToS3.mutate(
-          { filename: uniqueFilename, contentType: pendingFile.type, folder: "photos", fileBuffer: base64String },
+          { filename: uniqueFilename, contentType: pendingFile.type, folder, fileBuffer: base64String },
           {
             onSuccess: (result) => doCreate(result.publicUrl),
             onError: (error) => {

@@ -98,18 +98,18 @@ export function PhotoForm({
     },
   });
 
-  const mapValues = {
-    markers:
-      currentLocation.lng === 0 && currentLocation.lat === 0
-        ? []
-        : [
-            {
-              id: "location",
-              longitude: currentLocation.lng,
-              latitude: currentLocation.lat,
-            },
-          ],
-  };
+  // const mapValues = {
+  //   markers:
+  //     currentLocation.lng === 0 && currentLocation.lat === 0
+  //       ? []
+  //       : [
+  //           {
+  //             id: "location",
+  //             longitude: currentLocation.lng,
+  //             latitude: currentLocation.lat,
+  //           },
+  //         ],
+  // };
 
   const onSubmit = (values: z.infer<typeof photosInsertSchema>) => {
     const formData = {
@@ -192,7 +192,7 @@ export function PhotoForm({
             />
 
             {/* Location Fields */}
-            <FormItem>
+            {/* <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
                 <div className="h-[300px] w-full rounded-md overflow-hidden border">
@@ -212,7 +212,7 @@ export function PhotoForm({
               <FormDescription>
                 {address?.fullAddress || address?.placeFormatted || "Set location using coordinates"}
               </FormDescription>
-            </FormItem>
+            </FormItem> */}
 
             <div className="grid grid-cols-2 gap-4">
               <FormField
