@@ -1,40 +1,62 @@
+根据我提供的【照片名称】和【照片描述】生成相册数据。
 
-根据我给的照片还有 照片名字
-1. gen album data with the following structure: 
-2. title description .必须跟着照片名字和描述生成，不能编造不存在的内容
-3. country, region, city .必须跟着照片名字和描述生成，不能编造不存在的内容
-4. cover_photo_id 先设置为null，等照片数据插入后再更新这个字段为第一张照片的id
+⚠️ 规则：
+1. title 和 description 必须严格根据照片名称和描述生成，不可以编造不存在的信息。
+2. country / region / city 只能根据提供的信息推断，如果没有就保持和示例一致。
+3. cover_photo_id 先设为 null。
+4. 所有照片继承 ALBUM 的国家和城市信息。
+
+────────────────────────
+
+需要填的重点资料：
+
+Country: 日本
+CountryCode: JP
+Region: 河口湖
+City: 河口湖
+FullAddress: 
+
+Album Description:
+
+Camera:
+Make: SONY
+Model: A6700
+Lens: Sigma 18-50mm F2.8
+
+────────────────────────
+根据照片资料生成的相册数据：
+
+输出格式：
 
 const ALBUM = {
-  country: "日本",
-  countryCode: "JP",
-  region: "千葉縣",
-  city: "佐原",
-  description: "探索佐原小野川運河沿岸，沉浸於「小江戶」的懷舊氛圍中。",
-  cover_photo_id: null, // will be set to the first photo's ID after insertion
+  country: "...",
+  countryCode: "...",
+  region: "...",
+  city: "...",
+  description: "...",
+  cover_photo_id: null
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 2. 照片數據庫 (POST1-1 至 POST1-12)
-// ─────────────────────────────────────────────────────────────────────────────
 const DUMMY_PHOTOS = [
   {
-    url: "https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/sawara/POST1-1.jpg",
-    title: "小野川垂柳",
-    description: "沿著歷史悠久的運河河岸，垂柳倒映在水面上。",
-    visibility: "public" as const,
+    url: "...",
+    title: "...",
+    description: "...",
+    visibility: "public",
     isFavorite: true,
     aspectRatio: 1.5,
     width: 4000,
     height: 2667,
-    blurData: "LGF5]+Yk^6#M@-5c,1J5@[or[Q6.",
     country: ALBUM.country,
     countryCode: ALBUM.countryCode,
     region: ALBUM.region,
     city: ALBUM.city,
-    fullAddress: "千葉縣香取市佐原",
-    make: "SONY",
-    model: "A6700",
-    lensModel: "Sigma 18-50mm F2.8",
-    dateTimeOriginal: new Date("2026-03-10T10:00:00"),
-  }]
+    fullAddress: "...",
+    make: "...",
+    model: "...",
+    lensModel: "...",
+    dateTimeOriginal: new Date("...")
+  }
+]
+
+final result shoudl be json file. so i can input using seed
