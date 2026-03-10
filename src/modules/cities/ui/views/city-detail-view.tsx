@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { FramedPhoto } from "@/components/framed-photo";
+import BlurImage from "@/components/blur-image";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 import {
   Dialog,
@@ -425,41 +426,51 @@ export function CityDetailView({ city }: CityDetailViewProps) {
           </div>
         </div>
       </div>
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-6 px-4 md:px-8">
-        {albumPhotos.map((photo) => (
-          <div key={photo.id} className="space-y-4">
-            <div className="relative group bg-gray-50 dark:bg-muted rounded-lg overflow-hidden aspect-square">
-              <FramedPhoto
-                src={photo.url}
-                alt={photo.title}
-                blurhash={photo.blurData!}
-                width={photo.width}
-                height={photo.height}
-                className="w-full h-full"
-              />
-              <div className="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleSetCover(photo.id)}
-                >
-                  {photo.id === cityData.coverPhotoId ? <Star /> : <StarOff />}
-                </Button>
-                <Button variant="outline" size="icon">
-                  <Heart />
-                </Button>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8">
+          {albumPhotos.map((photo) => (
+            <div key={photo.id} className="space-y-2">
+              <div className="relative group rounded-lg overflow-hidden aspect-square shadow-lg">
+                <BlurImage
+                  src={keyToUrl(photo.url)}
+                  alt={photo.title}
+                  blurhash={photo.blurData!}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  fill
+                />
+                <div className="absolute bottom-2 right-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => handleSetCover(photo.id)}
+                  >
+                    {photo.id === cityData.coverPhotoId ? (
+                      <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    ) : (
+                      <StarOff className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <p className="text-sm font-medium truncate">{photo.title}</p>
+                <p className="text-xs text-muted-foreground">
+                  {photo.dateTimeOriginal
+                    ? format(photo.dateTimeOriginal, "d MMM yyyy")
+                    : ""}
+                </p>
               </div>
             </div>
-            <div className="flex flex-col w-full items-center justify-center">
-              <p className="text-sm font-medium">{photo.title}</p>
-              <p className="text-xs text-muted-foreground">
-                {photo.dateTimeOriginal
-                  ? format(photo.dateTimeOriginal, "d MMM yyyy")
-                  : ""}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
