@@ -60,7 +60,7 @@ We travel together. We create together.
 
             {/* Stats */}
             <div className="flex gap-8 pt-6 mt-auto border-t border-white/20">
-              <div>
+              {/* <div>
                 <p className="text-2xl font-bold">100+</p>
                 <p className="text-white/60 text-xs">Destinations</p>
               </div>
@@ -71,7 +71,7 @@ We travel together. We create together.
               <div>
                 <p className="text-2xl font-bold">50K</p>
                 <p className="text-white/60 text-xs">Followers</p>
-              </div>
+              </div> */}
             </div>
           </div>
         </Link>

@@ -157,6 +157,7 @@ export const PostForm = ({ post }: PostFormProps) => {
               name="coverImage"
               render={({ field }) => (
                 <FormItem>
+                  {/* can update image after delete */}
                   <FormLabel>Cover Image</FormLabel>
                   <FormControl>
                     <FileUploader

@@ -48,8 +48,8 @@ export const BlogView = () => {
         {/* CONTACT CARDS  */}
         <div className="w-full grid grid-cols-2 gap-3 mt-3">
           <ContactCard title="Instagram" />
-          <ContactCard title="GitHub" />
-          <ContactCard title="X" />
+          {/* <ContactCard title="GitHub" />
+          <ContactCard title="X" /> */}
           <ContactCard
             title="Contact me"
             className="bg-primary hover:bg-primary-hover text-white dark:text-black"
@@ -105,8 +105,8 @@ export const BlogViewLoadingStatus = () => {
         {/* CONTACT CARDS  */}
         <div className="w-full grid grid-cols-2 gap-3 mt-3">
           <ContactCard title="Instagram" />
-          <ContactCard title="GitHub" />
-          <ContactCard title="X" />
+          {/* <ContactCard title="GitHub" />
+          <ContactCard title="X" /> */}
           <ContactCard
             title="Contact me"
             className="bg-primary hover:bg-primary-hover text-white dark:text-black"

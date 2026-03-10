@@ -14,7 +14,7 @@ export const BlogSlugView = ({ slug }: { slug: string }) => {
   const { data } = useSuspenseQuery(trpc.blog.getOne.queryOptions({ slug }));
 
   const tag = Array.isArray(data.tags) ? data.tags[0] : data.tags;
-
+console.log("BlogSlugView data:", data);
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white">
 

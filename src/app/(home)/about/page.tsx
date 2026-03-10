@@ -20,10 +20,10 @@ export const metadata: Metadata = {
 };
 
 const stats = [
-  { value: "100+", label: "Destinations", icon: MapPin },
-  { value: "500+", label: "Photos Captured", icon: Camera },
-  { value: "50K", label: "Community", icon: Users },
-  { value: "4.9", label: "Average Rating", icon: Star },
+  { value: "0+", label: "Destinations", icon: MapPin },
+  { value: "0+", label: "Photos Captured", icon: Camera },
+  { value: "0", label: "Community", icon: Users },
+  { value: "0", label: "Average Rating", icon: Star },
 ];
 
 const values = [
