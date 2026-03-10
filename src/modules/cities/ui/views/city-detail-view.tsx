@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { toast } from "sonner";
 import { useTRPC } from "@/trpc/client";
 import {
@@ -8,8 +8,11 @@ import {
   MapPin,
   Image as ImageIcon,
   Star,
-  Heart,
   StarOff,
+  Upload,
+  X,
+  Camera,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,6 +22,7 @@ import {
   useSuspenseQuery,
   useMutation,
   useQueryClient,
+  useQuery,
 } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,6 +37,15 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { FramedPhoto } from "@/components/framed-photo";
+import { keyToUrl } from "@/modules/s3/lib/key-to-url";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
 
 const cityDescriptionSchema = z.object({
   description: z.string().optional(),
@@ -44,11 +57,31 @@ interface CityDetailViewProps {
   city: string;
 }
 
+interface CoverImagePreview {
+  dataUrl: string;
+  base64: string;
+  type: string;
+  name: string;
+  width: number;
+  height: number;
+}
+
 export function CityDetailView({ city }: CityDetailViewProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const { data: cityData } = useSuspenseQuery(
     trpc.city.getOne.queryOptions({ city })
+  );
+
+  const [coverDialogOpen, setCoverDialogOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [coverPreview, setCoverPreview] = useState<CoverImagePreview | null>(null);
+  const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
+  const coverFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch photos directly from photos table filtered by city name
+  const { data: albumPhotos = [] } = useQuery(
+    trpc.photos.getByCity.queryOptions({ city: cityData?.city ?? "" })
   );
 
   const form = useForm<CityDescriptionForm>({
@@ -59,8 +92,71 @@ export function CityDetailView({ city }: CityDetailViewProps) {
   });
 
   const updateCoverPhoto = useMutation(
-    trpc.city.updateCoverPhoto.mutationOptions()
+    trpc.city.updateCoverPhoto.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.city.getOne.queryOptions({ city }));
+        await queryClient.invalidateQueries(trpc.city.getMany.queryOptions());
+        toast.success("Cover photo updated");
+        setCoverDialogOpen(false);
+        setSelectedPhotoId(null);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update cover photo");
+      },
+    })
   );
+
+  const updateCoverImage = useMutation(
+    trpc.city.updateCoverImage.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.city.getOne.queryOptions({ city }));
+        await queryClient.invalidateQueries(trpc.city.getMany.queryOptions());
+        toast.success("Cover image updated");
+        setCoverDialogOpen(false);
+        setCoverPreview(null);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update cover image");
+      },
+    })
+  );
+
+  const processCoverFile = useCallback((file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      const img = new window.Image();
+      img.onload = () => {
+        const base64 = dataUrl.includes(",") ? dataUrl.split(",")[1]! : dataUrl;
+        setCoverPreview({ dataUrl, base64, type: file.type, name: file.name, width: img.naturalWidth, height: img.naturalHeight });
+      };
+      img.src = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  const handleCoverDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) processCoverFile(file);
+  };
+
+  const handleCoverSubmit = () => {
+    if (!coverPreview || !cityData) return;
+    updateCoverImage.mutate({
+      cityId: cityData.id,
+      coverImageBase64: coverPreview.base64,
+      coverImageType: coverPreview.type,
+      coverImageName: coverPreview.name,
+      coverImageWidth: coverPreview.width,
+      coverImageHeight: coverPreview.height,
+    });
+  };
 
   const updateDescription = useMutation(
     trpc.city.updateDescription.mutationOptions({
@@ -91,26 +187,7 @@ export function CityDetailView({ city }: CityDetailViewProps) {
 
   const handleSetCover = async (photoId: string) => {
     if (!cityData) return;
-
-    updateCoverPhoto.mutate(
-      {
-        cityId: cityData.id,
-        photoId: photoId,
-      },
-      {
-        onSuccess: async () => {
-          // Invalidate both queries to refresh data
-          await queryClient.invalidateQueries(
-            trpc.city.getOne.queryOptions({ city })
-          );
-          await queryClient.invalidateQueries(trpc.city.getMany.queryOptions());
-          toast.success("Cover photo updated successfully");
-        },
-        onError: (error) => {
-          toast.error(error.message || "Failed to update cover photo");
-        },
-      }
-    );
+    updateCoverPhoto.mutate({ cityId: cityData.id, photoId });
   };
 
   if (!cityData) {
@@ -152,6 +229,124 @@ export function CityDetailView({ city }: CityDetailViewProps) {
               </Button>
             </Link>
           </div>
+          {/* Cover Image Dialog */}
+          <Dialog open={coverDialogOpen} onOpenChange={(open) => {
+            setCoverDialogOpen(open);
+            if (!open) { setCoverPreview(null); setSelectedPhotoId(null); }
+          }}>
+            <DialogContent className="sm:max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Update Album Cover</DialogTitle>
+              </DialogHeader>
+              <Tabs defaultValue="album">
+                <TabsList className="w-full">
+                  <TabsTrigger value="album" className="flex-1">Pick from Album</TabsTrigger>
+                  <TabsTrigger value="upload" className="flex-1">Upload New</TabsTrigger>
+                </TabsList>
+
+                {/* Tab 1: pick from existing album photos */}
+                <TabsContent value="album" className="mt-3">
+                  <p className="text-xs text-muted-foreground mb-3">Click a photo to select it as the album cover.</p>
+                  <div className="h-[420px] overflow-y-auto">
+                    <div className="grid grid-cols-3 gap-2 pr-1">
+                      {albumPhotos.map((photo) => {
+                        const isCurrent = photo.id === cityData.coverPhotoId;
+                        const isSelected = photo.id === selectedPhotoId;
+                        return (
+                          <button
+                            key={photo.id}
+                            onClick={() => setSelectedPhotoId(photo.id)}
+                            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                              isSelected
+                                ? "border-primary ring-2 ring-primary"
+                                : isCurrent
+                                ? "border-yellow-400"
+                                : "border-transparent hover:border-muted-foreground/50"
+                            }`}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={keyToUrl(photo.url)}
+                              alt={photo.title}
+                              className="w-full h-full object-cover"
+                            />
+                            {isCurrent && !isSelected && (
+                              <div className="absolute top-1 right-1 bg-yellow-400 rounded-full p-0.5">
+                                <Star className="h-3 w-3 text-yellow-900" />
+                              </div>
+                            )}
+                            {isSelected && (
+                              <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                <div className="bg-primary rounded-full p-1">
+                                  <Star className="h-4 w-4 text-primary-foreground" />
+                                </div>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4 pt-3 border-t">
+                    <Button variant="outline" onClick={() => { setCoverDialogOpen(false); setSelectedPhotoId(null); }}>Cancel</Button>
+                    <Button
+                      onClick={() => { if (selectedPhotoId && cityData) updateCoverPhoto.mutate({ cityId: cityData.id, photoId: selectedPhotoId }); }}
+                      disabled={!selectedPhotoId || updateCoverPhoto.isPending}
+                    >
+                      {updateCoverPhoto.isPending ? "Saving..." : "Set as Cover"}
+                    </Button>
+                  </div>
+                </TabsContent>
+
+                {/* Tab 2: upload a brand-new image */}
+                <TabsContent value="upload" className="mt-3 space-y-4">
+                  <p className="text-xs text-muted-foreground">Upload a new image — it will be stored in <code>photos/{cityData.city.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}/</code> on S3.</p>
+                  <input
+                    ref={coverFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) processCoverFile(f); }}
+                  />
+                  {!coverPreview ? (
+                    <div
+                      className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+                        isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50"
+                      }`}
+                      onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                      onDragLeave={() => setIsDragging(false)}
+                      onDrop={handleCoverDrop}
+                      onClick={() => coverFileInputRef.current?.click()}
+                    >
+                      <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                      <p className="text-sm font-medium">Drop image here or click to browse</p>
+                      <p className="text-xs text-muted-foreground mt-1">PNG, JPG, WebP supported</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="relative rounded-lg overflow-hidden aspect-video bg-muted">
+                        <Image src={coverPreview.dataUrl} alt="Cover preview" fill className="object-cover" />
+                        <button
+                          onClick={() => setCoverPreview(null)}
+                          className="absolute top-2 right-2 bg-background/80 rounded-full p-1 hover:bg-background"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{coverPreview.name} — {coverPreview.width}&times;{coverPreview.height}</p>
+                    </div>
+                  )}
+                  <div className="flex justify-end gap-2 pt-2 border-t">
+                    <Button variant="outline" onClick={() => { setCoverDialogOpen(false); setCoverPreview(null); }}>Cancel</Button>
+                    <Button onClick={handleCoverSubmit} disabled={!coverPreview || updateCoverImage.isPending}>
+                      {updateCoverImage.isPending ? "Uploading..." : "Upload & Set Cover"}
+                    </Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </DialogContent>
+          </Dialog>
+
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-start justify-between mb-6">
@@ -172,6 +367,10 @@ export function CityDetailView({ city }: CityDetailViewProps) {
                   </div>
                 </div>
               </div>
+              <Button variant="outline" size="sm" onClick={() => setCoverDialogOpen(true)}>
+                <Camera className="h-4 w-4 mr-2" />
+                Update Cover
+              </Button>
             </div>
 
             {/* Description Form Card */}
@@ -192,7 +391,7 @@ export function CityDetailView({ city }: CityDetailViewProps) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base font-medium">
-                          City Description
+                          City Descriptionss
                         </FormLabel>
                         <FormControl>
                           <Textarea

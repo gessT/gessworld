@@ -270,6 +270,106 @@ export const cityRouter = createTRPCRouter({
       return newCitySet;
     }),
 
+  // Upload a new cover image for a city album
+  updateCoverImage: protectedProcedure
+    .input(
+      z.object({
+        cityId: z.uuid(),
+        coverImageBase64: z.string().min(1),
+        coverImageType: z.string().min(1),
+        coverImageName: z.string().min(1),
+        coverImageWidth: z.number().optional(),
+        coverImageHeight: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const {
+        cityId,
+        coverImageBase64,
+        coverImageType,
+        coverImageName,
+        coverImageWidth,
+        coverImageHeight,
+      } = input;
+
+      // Find the city set
+      const [citySet] = await db
+        .select()
+        .from(citySets)
+        .where(eq(citySets.id, cityId));
+
+      if (!citySet) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "City not found" });
+      }
+
+      // Get the current cover photo's old S3 key
+      const [oldPhoto] = await db
+        .select({ url: photos.url })
+        .from(photos)
+        .where(eq(photos.id, citySet.coverPhotoId));
+
+      // Upload new image to S3 under the same path as regular photos
+      const base64Data = coverImageBase64.includes(",")
+        ? coverImageBase64.split(",")[1]!
+        : coverImageBase64;
+      const buffer = Buffer.from(base64Data, "base64");
+      const uuid = crypto.randomUUID();
+      const citySlug = citySet.city
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+      const newKey = `photos/${citySlug}/${uuid}-${coverImageName}`;
+
+      try {
+        await s3Client.send(
+          new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: newKey,
+            Body: buffer,
+            ContentType: coverImageType,
+            ContentLength: buffer.length,
+          })
+        );
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error instanceof Error ? error.message : "Failed to upload cover image",
+        });
+      }
+
+      const width = coverImageWidth ?? 1200;
+      const height = coverImageHeight ?? 800;
+      const aspectRatio = width / height;
+
+      // Update the existing cover photo record in DB
+      await db
+        .update(photos)
+        .set({ url: newKey, width, height, aspectRatio, updatedAt: new Date() })
+        .where(eq(photos.id, citySet.coverPhotoId));
+
+      // Touch the city set so caches invalidate
+      await db
+        .update(citySets)
+        .set({ updatedAt: new Date() })
+        .where(eq(citySets.id, cityId));
+
+      // Delete old S3 object (best-effort)
+      if (oldPhoto?.url) {
+        try {
+          await s3Client.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.S3_BUCKET_NAME,
+              Key: oldPhoto.url,
+            })
+          );
+        } catch {
+          // ignore
+        }
+      }
+
+      return { cityId, newKey };
+    }),
+
   // Delete a city album (and its cover photo record + S3 object)
   delete: protectedProcedure
     .input(z.object({ id: z.string().uuid() }))

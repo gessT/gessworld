@@ -220,6 +220,16 @@ export const photosRouter = createTRPCRouter({
 
       return photo;
     }),
+  getByCity: baseProcedure
+    .input(z.object({ city: z.string() }))
+    .query(async ({ input }) => {
+      return db
+        .select()
+        .from(photos)
+        .where(eq(photos.city, input.city))
+        .orderBy(desc(photos.dateTimeOriginal), desc(photos.createdAt));
+    }),
+
   getMany: baseProcedure
     .input(
       z.object({
