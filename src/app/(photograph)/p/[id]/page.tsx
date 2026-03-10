@@ -30,7 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const page = async ({ params }: Props) => {
   const id = (await params).id;
   const queryClient = getQueryClient();
-  await queryClient.fetchQuery(trpc.home.getPhotoById.queryOptions({ id }));
+  await Promise.all([
+    queryClient.fetchQuery(trpc.home.getPhotoById.queryOptions({ id })),
+    queryClient.fetchQuery(trpc.home.getAdjacentPhotos.queryOptions({ id })),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

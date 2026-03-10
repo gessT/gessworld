@@ -7,7 +7,8 @@ import { keyToUrl } from "@/modules/s3/lib/key-to-url";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
 
 interface PhotographViewProps {
   id: string;
@@ -19,12 +20,27 @@ export const PhotographView = ({ id }: PhotographViewProps) => {
   const { data } = useSuspenseQuery(
     trpc.home.getPhotoById.queryOptions({ id })
   );
+  const { data: adjacent } = useSuspenseQuery(
+    trpc.home.getAdjacentPhotos.queryOptions({ id })
+  );
 
   const imageInfo = {
     width: data.width,
     height: data.height,
     blurhash: data.blurData,
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" && adjacent?.prevId) {
+        router.replace(`/p/${adjacent.prevId}`);
+      } else if (e.key === "ArrowRight" && adjacent?.nextId) {
+        router.replace(`/p/${adjacent.nextId}`);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [adjacent, router]);
 
   return (
     <div className="h-screen flex justify-center items-center relative overflow-hidden">
@@ -36,6 +52,28 @@ export const PhotographView = ({ id }: PhotographViewProps) => {
       >
         <X className="w-4 h-4" />
       </button>
+
+      {/* Previous arrow */}
+      {adjacent?.prevId && (
+        <button
+          onClick={() => router.replace(`/p/${adjacent.prevId}`)}
+          className="absolute left-4 z-50 flex items-center justify-center text-foreground transition-all hover:scale-105 active:scale-95 bg-transparent border-none md:w-10 md:h-10 md:rounded-full md:bg-background/70 md:hover:bg-background/90 md:backdrop-blur-sm md:border md:border-white/10"
+          aria-label="Previous photo"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+      )}
+
+      {/* Next arrow */}
+      {adjacent?.nextId && (
+        <button
+          onClick={() => router.replace(`/p/${adjacent.nextId}`)}
+          className="absolute right-4 z-50 flex items-center justify-center text-foreground transition-all hover:scale-105 active:scale-95 bg-transparent border-none md:w-10 md:h-10 md:rounded-full md:bg-background/70 md:hover:bg-background/90 md:backdrop-blur-sm md:border md:border-white/10"
+          aria-label="Next photo"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      )}
 
       <div className="absolute inset-0 -z-10">
         <BlurImage

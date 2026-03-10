@@ -70,4 +70,42 @@ export const homeRouter = createTRPCRouter({
 
       return data;
     }),
+  getAdjacentPhotos: baseProcedure
+    .input(
+      z.object({
+        id: z.uuid(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { id } = input;
+
+      const photo = await db.query.photos.findFirst({
+        where: and(eq(photos.id, id), eq(photos.visibility, "public")),
+        columns: { id: true, city: true, country: true },
+      });
+
+      if (!photo?.city || !photo?.country) {
+        return { prevId: null, nextId: null };
+      }
+
+      const albumPhotos = await db
+        .select({ id: photos.id })
+        .from(photos)
+        .where(
+          and(
+            eq(photos.city, photo.city),
+            eq(photos.country, photo.country),
+            eq(photos.visibility, "public")
+          )
+        )
+        .orderBy(desc(photos.dateTimeOriginal), desc(photos.createdAt));
+
+      const idx = albumPhotos.findIndex((p) => p.id === id);
+      if (idx === -1) return { prevId: null, nextId: null };
+
+      return {
+        prevId: idx > 0 ? albumPhotos[idx - 1].id : null,
+        nextId: idx < albumPhotos.length - 1 ? albumPhotos[idx + 1].id : null,
+      };
+    }),
 });

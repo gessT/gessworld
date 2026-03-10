@@ -52,19 +52,19 @@ export function PhotoPreviewCard({
   return (
     <div
       className={cn(
-        "flex justify-center pb-14 w-full",
+        "flex justify-center w-full",
         // Set CSS variable for portrait mode responsiveness
         aspectRatio < 1 &&
-          "[--width-constraint:90vw] md:[--width-constraint:50vw]",
+          "[--width-constraint:90vw] md:[--width-constraint:60vw]",
         className
       )}
     >
       <div
         className="bg-white relative shadow-2xl rounded-lg w-full"
         style={{
-          maxWidth: `min(65vh * ${aspectRatio}, ${widthConstraint})`,
+          maxWidth: `min(85vh * ${aspectRatio}, ${widthConstraint})`,
           aspectRatio: aspectRatio,
-          maxHeight: "65dvh",
+          maxHeight: "85dvh",
         }}
       >
         <BlurImage
@@ -74,9 +74,7 @@ export function PhotoPreviewCard({
           height={imageInfo.height}
           blurhash={imageInfo.blurhash}
           className="w-full h-full object-cover rounded-lg"
-        />
-
-        <div className="absolute -bottom-12 left-0 px-4 sm:px-6 py-3 w-full bg-white flex justify-between items-center select-none text-gray-900 shadow-md rounded-b-lg">
+        /><div className="absolute -bottom-12 left-0 px-4 sm:px-6 py-3 w-full bg-white flex justify-between items-center select-none text-gray-900 shadow-md rounded-b-lg">
           <div className="flex flex-col text-center">
             <h1
               className={cn(
@@ -98,7 +96,7 @@ export function PhotoPreviewCard({
                   orientation="vertical"
                   className="hidden sm:block h-10 bg-gray-300"
                 />
-                <div className="hidden sm:flex flex-col gap-[2px]">
+                {/* <div className="hidden sm:flex flex-col gap-[2px]">
                   <div className="space-x-[6px] text-xs lg:text-sm font-mono text-gray-800">
                     <span>{focalLength35mm && focalLength35mm + "mm"}</span>
                     <span>{fNumber && "ƒ/" + fNumber}</span>
@@ -117,7 +115,7 @@ export function PhotoPreviewCard({
                         })}
                     </p>
                   </div>
-                </div>
+                </div> */}
               </>
             )}
           </div>
