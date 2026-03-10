@@ -432,7 +432,7 @@ export function CityDetailView({ city }: CityDetailViewProps) {
             <div key={photo.id} className="space-y-2">
               <div className="relative group rounded-lg overflow-hidden aspect-square shadow-lg">
                 <BlurImage
-                  src={keyToUrl(photo.url)}
+                  src={photo.url!}
                   alt={photo.title}
                   blurhash={photo.blurData!}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
