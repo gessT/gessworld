@@ -17,9 +17,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ApertureSelector } from "../../aperture-selector";
-import { ShutterSpeedSelector } from "../../shutter-speed-selector";
-import { ISOSelector } from "../../iso-selector";
+// import { ApertureSelector } from "../../aperture-selector"; // removed with fNumber
+// import { ShutterSpeedSelector } from "../../shutter-speed-selector"; // removed with exposureTime
+// import { ISOSelector } from "../../iso-selector"; // removed with iso
 import { ExposureCompensationSelector } from "../../exposure-compensation-selector";
 import { secondStepSchema, SecondStepData, MetadataStepProps } from "../types";
 import { useMutation } from "@tanstack/react-query";
@@ -61,11 +61,11 @@ export function SecondStep({
       make: initialData?.make,
       model: initialData?.model,
       lensModel: initialData?.lensModel,
-      focalLength: initialData?.focalLength,
-      focalLength35mm: initialData?.focalLength35mm,
-      fNumber: initialData?.fNumber,
-      iso: initialData?.iso,
-      exposureTime: initialData?.exposureTime,
+      // focalLength: initialData?.focalLength,
+      // focalLength35mm: initialData?.focalLength35mm,
+      // fNumber: initialData?.fNumber,
+      // iso: initialData?.iso,
+      // exposureTime: initialData?.exposureTime,
       exposureCompensation: initialData?.exposureCompensation,
       latitude: initialData?.latitude,
       longitude: initialData?.longitude,
@@ -79,10 +79,10 @@ export function SecondStep({
       make: v.make || exif?.make,
       model: v.model || exif?.model,
       lensModel: v.lensModel || exif?.lensModel,
-      focalLength35mm: v.focalLength35mm ?? exif?.focalLength35mm,
-      fNumber: v.fNumber ?? exif?.fNumber,
-      exposureTime: v.exposureTime ?? exif?.exposureTime,
-      iso: v.iso ?? exif?.iso,
+      // focalLength35mm: v.focalLength35mm ?? exif?.focalLength35mm,
+      // fNumber: v.fNumber ?? exif?.fNumber,
+      // exposureTime: v.exposureTime ?? exif?.exposureTime,
+      // iso: v.iso ?? exif?.iso,
     };
   };
 
@@ -317,25 +317,8 @@ export function SecondStep({
               )} />
             </div> */}
 
-            <div className="grid grid-cols-4 gap-3">
-              <FormField control={form.control} name="fNumber" render={({ field }) => (
-                <FormItem>
-                  <FieldLabel>Aperture</FieldLabel>
-                  <FormControl><ApertureSelector value={field.value} onChange={field.onChange} /></FormControl>
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="exposureTime" render={({ field }) => (
-                <FormItem>
-                  <FieldLabel>Shutter</FieldLabel>
-                  <FormControl><ShutterSpeedSelector value={field.value} onChange={field.onChange} /></FormControl>
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="iso" render={({ field }) => (
-                <FormItem>
-                  <FieldLabel>ISO</FieldLabel>
-                  <FormControl><ISOSelector value={field.value} onChange={field.onChange} /></FormControl>
-                </FormItem>
-              )} />
+            <div className="grid grid-cols-1 gap-3">
+              {/* fNumber, exposureTime, iso commented out */}
               <FormField control={form.control} name="exposureCompensation" render={({ field }) => (
                 <FormItem>
                   <FieldLabel>EV</FieldLabel>

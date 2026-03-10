@@ -1,11 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2, Send, Camera, Aperture, Timer, Zap, Calendar } from "lucide-react";
+import { ArrowLeft, Loader2, Send, Camera, Calendar } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import { fourthStepSchema, FourthStepData, StepProps } from "../types";
 import BlurImage from "@/components/blur-image";
 import { keyToUrl } from "@/modules/s3/lib/key-to-url";
-import { formatExposureTime } from "@/modules/photos/lib/utils";
 
 export function FourthStep({
   onNext,
@@ -27,19 +26,19 @@ export function FourthStep({
   const make = initialData?.make || initialData?.exif?.make;
   const model = initialData?.model || initialData?.exif?.model;
   const lensModel = initialData?.lensModel || initialData?.exif?.lensModel;
-  const focalLength35mm = initialData?.focalLength35mm || initialData?.exif?.focalLength35mm;
-  const fNumber = initialData?.fNumber || initialData?.exif?.fNumber;
-  const exposureTime = initialData?.exposureTime || initialData?.exif?.exposureTime;
-  const iso = initialData?.iso || initialData?.exif?.iso;
+  // const focalLength35mm = initialData?.focalLength35mm || initialData?.exif?.focalLength35mm;
+  // const fNumber = initialData?.fNumber || initialData?.exif?.fNumber;
+  // const exposureTime = initialData?.exposureTime || initialData?.exif?.exposureTime;
+  // const iso = initialData?.iso || initialData?.exif?.iso;
   const dateTimeOriginal = initialData?.exif?.dateTimeOriginal
     ? new Date(initialData.exif.dateTimeOriginal).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
     : undefined;
 
   const exifPills = [
-    { icon: Camera, value: focalLength35mm ? `${focalLength35mm}mm` : null },
-    { icon: Aperture, value: fNumber ? `ƒ/${fNumber}` : null },
-    { icon: Timer, value: exposureTime ? formatExposureTime(exposureTime) : null },
-    { icon: Zap, value: iso ? `ISO ${iso}` : null },
+    // { icon: Camera, value: focalLength35mm ? `${focalLength35mm}mm` : null },
+    // { icon: Aperture, value: fNumber ? `ƒ/${fNumber}` : null },
+    // { icon: Timer, value: exposureTime ? formatExposureTime(exposureTime) : null },
+    // { icon: Zap, value: iso ? `ISO ${iso}` : null },
     { icon: Calendar, value: dateTimeOriginal ?? null },
   ].filter((p) => p.value !== null);
 

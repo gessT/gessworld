@@ -18,10 +18,10 @@ interface PhotoPreviewCardProps {
   make?: string | null;
   model?: string | null;
   lensModel?: string | null;
-  focalLength35mm?: number | null;
-  fNumber?: number | null;
-  exposureTime?: number | null;
-  iso?: number | null;
+  // focalLength35mm?: number | null;
+  // fNumber?: number | null;
+  // exposureTime?: number | null;
+  // iso?: number | null;
   dateTimeOriginal?: string;
   className?: string;
 }
@@ -33,10 +33,10 @@ export function PhotoPreviewCard({
   make = "",
   model = "",
   lensModel = "",
-  focalLength35mm,
-  fNumber,
-  exposureTime,
-  iso,
+  // focalLength35mm,
+  // fNumber,
+  // exposureTime,
+  // iso,
   dateTimeOriginal,
   className,
 }: PhotoPreviewCardProps) {

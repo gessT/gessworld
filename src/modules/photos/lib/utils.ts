@@ -132,16 +132,16 @@ export interface TExifData {
   model?: string;
   /** Lens model */
   lensModel?: string;
-  /** Focal length in millimeters */
-  focalLength?: number;
-  /** 35mm equivalent focal length */
-  focalLength35mm?: number;
-  /** F-number (aperture) */
-  fNumber?: number;
-  /** ISO speed */
-  iso?: number;
-  /** Exposure time in seconds */
-  exposureTime?: number;
+  // /** Focal length in millimeters */
+  // focalLength?: number;
+  // /** 35mm equivalent focal length */
+  // focalLength35mm?: number;
+  // /** F-number (aperture) */
+  // fNumber?: number;
+  // /** ISO speed */
+  // iso?: number;
+  // /** Exposure time in seconds */
+  // exposureTime?: number;
   /** Exposure compensation value in EV */
   exposureCompensation?: number;
   /** GPS latitude in decimal degrees */
@@ -199,11 +199,11 @@ export const getPhotoExif = async (file: File): Promise<TExifData | null> => {
       Make,
       Model,
       LensModel,
-      FocalLength,
-      FocalLengthIn35mmFormat,
-      FNumber,
-      ISO,
-      ExposureTime,
+      // FocalLength,
+      // FocalLengthIn35mmFormat,
+      // FNumber,
+      // ISO,
+      // ExposureTime,
       ExposureCompensation,
       GPSLatitude,
       GPSLongitude,
@@ -216,14 +216,11 @@ export const getPhotoExif = async (file: File): Promise<TExifData | null> => {
       make: Make as string | undefined,
       model: Model as string | undefined,
       lensModel: LensModel as string | undefined,
-      focalLength: typeof FocalLength === "number" ? FocalLength : undefined,
-      focalLength35mm:
-        typeof FocalLengthIn35mmFormat === "number"
-          ? FocalLengthIn35mmFormat
-          : undefined,
-      fNumber: typeof FNumber === "number" ? FNumber : undefined,
-      iso: typeof ISO === "number" ? ISO : undefined,
-      exposureTime: typeof ExposureTime === "number" ? ExposureTime : undefined,
+      // focalLength: typeof FocalLength === "number" ? FocalLength : undefined,
+      // focalLength35mm: typeof FocalLengthIn35mmFormat === "number" ? FocalLengthIn35mmFormat : undefined,
+      // fNumber: typeof FNumber === "number" ? FNumber : undefined,
+      // iso: typeof ISO === "number" ? ISO : undefined,
+      // exposureTime: typeof ExposureTime === "number" ? ExposureTime : undefined,
       exposureCompensation:
         typeof ExposureCompensation === "number"
           ? ExposureCompensation

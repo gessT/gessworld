@@ -94,10 +94,10 @@ export const PhotographView = ({ id }: PhotographViewProps) => {
         make={data.make}
         model={data.model}
         lensModel={data.lensModel}
-        focalLength35mm={data.focalLength35mm}
-        fNumber={data.fNumber}
-        exposureTime={data.exposureTime}
-        iso={data?.iso}
+        // focalLength35mm={data.focalLength35mm}
+        // fNumber={data.fNumber}
+        // exposureTime={data.exposureTime}
+        // iso={data?.iso}
         dateTimeOriginal={
           data?.dateTimeOriginal ? data.dateTimeOriginal.toString() : undefined
         }

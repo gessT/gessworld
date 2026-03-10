@@ -26,11 +26,11 @@ export const secondStepSchema = z.object({
   make: z.string().optional(),
   model: z.string().optional(),
   lensModel: z.string().optional(),
-  focalLength: z.number().optional(),
-  focalLength35mm: z.number().optional(),
-  fNumber: z.number().optional(),
-  iso: z.number().optional(),
-  exposureTime: z.number().optional(),
+  // focalLength: z.number().optional(),
+  // focalLength35mm: z.number().optional(),
+  // fNumber: z.number().optional(),
+  // iso: z.number().optional(),
+  // exposureTime: z.number().optional(),
   exposureCompensation: z.number().optional(),
 });
 

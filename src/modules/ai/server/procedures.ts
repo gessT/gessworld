@@ -9,24 +9,20 @@ function buildExifContext(input: {
   make?: string;
   model?: string;
   lensModel?: string;
-  focalLength35mm?: number;
-  fNumber?: number;
-  exposureTime?: number;
-  iso?: number;
+  // focalLength35mm?: number;
+  // fNumber?: number;
+  // exposureTime?: number;
+  // iso?: number;
 }) {
-  const shutterStr = input.exposureTime
-    ? input.exposureTime < 1
-      ? `1/${Math.round(1 / input.exposureTime)}s`
-      : `${input.exposureTime}s`
-    : null;
+  // const shutterStr = input.exposureTime ...; // removed with exposureTime field
 
   const parts: string[] = [];
   if (input.make || input.model) parts.push(`Camera: ${[input.make, input.model].filter(Boolean).join(" ")}`);
   if (input.lensModel) parts.push(`Lens: ${input.lensModel}`);
-  if (input.focalLength35mm) parts.push(`Focal length: ${input.focalLength35mm}mm`);
-  if (input.fNumber) parts.push(`Aperture: ƒ/${input.fNumber}`);
-  if (shutterStr) parts.push(`Shutter: ${shutterStr}`);
-  if (input.iso) parts.push(`ISO: ${input.iso}`);
+  // if (input.focalLength35mm) parts.push(`Focal length: ${input.focalLength35mm}mm`);
+  // if (input.fNumber) parts.push(`Aperture: ƒ/${input.fNumber}`);
+  // if (shutterStr) parts.push(`Shutter: ${shutterStr}`);
+  // if (input.iso) parts.push(`ISO: ${input.iso}`);
   return parts.length ? parts.join("\n") : "No technical details available.";
 }
 
@@ -59,10 +55,10 @@ const exifInput = z.object({
   make: z.string().optional(),
   model: z.string().optional(),
   lensModel: z.string().optional(),
-  focalLength35mm: z.number().optional(),
-  fNumber: z.number().optional(),
-  exposureTime: z.number().optional(),
-  iso: z.number().optional(),
+  // focalLength35mm: z.number().optional(),
+  // fNumber: z.number().optional(),
+  // exposureTime: z.number().optional(),
+  // iso: z.number().optional(),
 });
 
 export const aiRouter = createTRPCRouter({
