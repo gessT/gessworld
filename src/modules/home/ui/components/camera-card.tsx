@@ -11,8 +11,8 @@ const CameraCard = () => {
 
         <div className="font-light">
           <p>
-          A Social Travel Photography Community
-We travel together. We create together.
+          旅行 × 攝影 × 社交  
+我們一起旅行，一起創作，一起記錄世界。 
           </p>
         </div>
       </div>

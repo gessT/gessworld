@@ -68,8 +68,8 @@ const page = async () => {
 
             {/* sub-headline */}
             <p className="mt-5 text-base sm:text-lg md:text-xl text-white/75 max-w-lg leading-relaxed font-medium drop-shadow">
-              A Social Travel Photography Community
-We travel together. We create together.
+              旅行 × 攝影 × 社交  
+我們一起旅行，一起創作，一起記錄世界。 
             </p>
 
             {/* CTA row */}

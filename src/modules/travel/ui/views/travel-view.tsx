@@ -14,9 +14,7 @@ export const TravelView = () => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(trpc.travel.getCitySets.queryOptions());
 
-  const [activeCity, setActiveCity] = useState<CitySetWithPhotos | null>(
-    () => data?.[0] ?? null
-  );
+  const [activeCity, setActiveCity] = useState<CitySetWithPhotos | null>(null);
 
   const active = activeCity ?? data[0];
 
@@ -42,8 +40,8 @@ export const TravelView = () => {
           </h1>
         </div>
 
-        {/* City list */}
-        <div className="flex-1 flex flex-col divide-y divide-white/8">
+        {/* City grid — 3 columns */}
+        <div className="flex-1 grid grid-cols-3 gap-3 p-4">
           {data.map((city) => (
             <CityItem
               key={city.id}

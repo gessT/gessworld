@@ -53,8 +53,8 @@ const ProfileCard = () => {
               </div>
 
               <p className="text-white/90 text-sm leading-relaxed max-w-md">
-                A Social Travel Photography Community
-We travel together. We create together.
+                旅行 × 攝影 × 社交  
+我們一起旅行，一起創作，一起記錄世界。 
               </p>
             </div>
 

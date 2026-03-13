@@ -116,11 +116,7 @@ export const BlogViewLoadingStatus = () => {
             <h1 className="text-3xl">Blog</h1>
             <div className="flex flex-col gap-4 font-light">
               <p>
-                Welcome to my blog, where I share my thoughts, experiences, and
-                insights on a wide range of topics. Whether you&apos;re a
-                photographer, a traveler, or simply someone who appreciates the
-                beauty of life, my blog is a place to connect with others who
-                share my passion for capturing moments and telling stories.
+                旅行不只是移動，是用鏡頭記錄每一個當下—— 從寧靜的北歐小鎮到日本的古老街道， 每一張照片都有屬於它的故事。
               </p>
             </div>
           </div>

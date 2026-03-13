@@ -43,8 +43,9 @@ const Footer = () => {
                 </div>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
-              A Social Travel Photography Community
-              We travel together. We create together.
+              旅行 × 攝影 × 社交  
+我們一起旅行，一起創作，一起記錄世界。 
+            
               </p>
               <div className="flex gap-3 pt-2">
                 <a href="https://www.instagram.com/gess.tue/" target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">

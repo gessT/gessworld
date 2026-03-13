@@ -55,6 +55,8 @@
 - 最后生成 2 个json object，分別為 ALBUM 和 NEW_POST，並且 DUMMY_PHOTOS 是 ALBUM 的一部分。
 - ALBUM 必须生成 全部照片数据， NEW_POST 的 content 部分可以穿插部分照片（50-60%），但不需要全部照片都穿插在部落格內容中。
 - 最重要 做成 json object 我需要， 分开newpost 跟DUMMY_PHOTOS。album
+- 如图是英文地点， 可以翻译成中文， 例如： "New York" -> "纽约"， "Paris" -> "巴黎"， "Tokyo" -> "东京" 等等。
+
 
 【示例輸出】：
 ```javascript
