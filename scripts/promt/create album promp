@@ -1,3 +1,7 @@
+主要地点：
+拍摄年份：
+
+
 You are a travel blog and photo album generator.
 
 I will provide an image (it may contain multiple photos).
@@ -68,7 +72,7 @@ Album description must summarize:
 • visual style  
 
 cover_photo_id must always be:
-photo_count need count the photo in dummy photo
+photo_count need count the total number photos in dummy photo
 
 null
 
@@ -81,7 +85,7 @@ Example:
   "city": "波爾沃",
   "description": "冬日覆蓋白雪的北歐古城...",
   "cover_photo_id": null
-  "photo_count": 3
+  "photo_count": need count the total number photos in dummy photo
 }
 
 --------------------------------------------------
@@ -101,7 +105,7 @@ Each photo structure:
 "description": "",
 
 "visibility": "public",
-"isFavorite": true,
+"isFavorite": false,
 
 "aspectRatio": 1.5,
 "width": 4000,

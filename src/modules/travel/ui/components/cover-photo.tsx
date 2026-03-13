@@ -10,7 +10,7 @@ interface CoverPhotoProps {
 
 export const CoverPhoto = ({ citySet, citySets }: CoverPhotoProps) => {
   return (
-    <div className="w-full h-[75vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
+    <div className="w-full h-[30vh] md:h-[50vh] lg:w-1/2 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
       <div className="w-full h-full relative overflow-hidden">
         {/* Photos — cross-fade transition */}
         {citySets?.map((city) => (
