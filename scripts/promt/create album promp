@@ -103,3 +103,10 @@ const NEW_POST = {
 <p1>結尾總結段落</p1>
 `
 };
+
+Content layout should be dynamic.
+You can freely design sections such as:
+hero image, two-column layout, gallery grid, quote block, story section.
+
+The blog should not always follow the same layout.
+Use images from DUMMY_PHOTOS throughout the content.

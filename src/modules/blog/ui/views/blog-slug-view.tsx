@@ -116,7 +116,7 @@ console.log("BlogSlugView data:", data);
         </div>
 
         {/* Article content */}
-        <div className="max-w-3xl mx-auto px-6 sm:px-10 py-16">
+        <div className="max-w-3xl lg:max-w-6xl mx-auto px-6 sm:px-10 py-16">
           {/* Drop cap intro line */}
           <div className="border-l-2 border-red-500 pl-6 mb-12">
             <p className="text-white/50 text-sm font-bold tracking-[0.15em] uppercase">
@@ -124,14 +124,53 @@ console.log("BlogSlugView data:", data);
             </p>
           </div>
 
-          {/* Rich text */}
-          <div className="prose-invert">
-            <RichTextViewer content={data.content || ""} />
+          {/* Desktop: two-column grid. Mobile: single column */}
+          <div className="lg:grid lg:grid-cols-[1fr_260px] lg:gap-16 lg:items-start">
+
+            {/* Rich text */}
+            <div className="prose-invert rich-text-viewer">
+              <RichTextViewer content={data.content || ""} />
+            </div>
+
+            {/* Desktop sidebar — hidden on mobile */}
+            <aside className="hidden lg:block">
+              <div className="sticky top-16 space-y-8">
+
+                {/* Tags */}
+                {data.tags && data.tags.length > 0 && (
+                  <div>
+                    <p className="text-white/30 text-[10px] font-black tracking-[0.2em] uppercase mb-3">Tags</p>
+                    <div className="flex flex-wrap gap-2">
+                      {(data.tags as string[]).map((t) => (
+                        <span key={t} className="bg-white/5 border border-white/10 text-white/60 text-xs px-3 py-1 rounded-full">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Reading time */}
+                {data.readingTimeMinutes && (
+                  <div>
+                    <p className="text-white/30 text-[10px] font-black tracking-[0.2em] uppercase mb-2">Reading time</p>
+                    <p className="text-white text-3xl font-black">
+                      {data.readingTimeMinutes}
+                      <span className="text-white/40 text-sm font-bold ml-1">min</span>
+                    </p>
+                  </div>
+                )}
+
+
+               
+
+              </div>
+            </aside>
           </div>
         </div>
 
         {/* ── END OF ARTICLE STRIP ─────────────────────────────── */}
-        <div className="border-t border-white/8 max-w-3xl mx-auto px-6 sm:px-10 py-12">
+        <div className="border-t border-white/8 max-w-3xl lg:max-w-6xl mx-auto px-6 sm:px-10 py-12">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1 h-5 bg-red-500 rounded-full" />
             <p className="text-white font-black text-lg tracking-tight">

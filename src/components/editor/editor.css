@@ -65,7 +65,33 @@ h3.tiptap-heading + h2.tiptap-heading {
   padding-left: 1rem;
 }
 
-/* Tiptap BubbleMenu and FloatingMenu styles */
+/* ── Rich-text viewer (blog post reader) ────────────────────── */
+.rich-text-viewer .ProseMirror {
+  padding: 0;
+  font-size: 1.125rem;   /* 18px */
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.rich-text-viewer .ProseMirror p {
+  margin-bottom: 1.75rem;
+}
+
+.rich-text-viewer .ProseMirror img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 2.5rem 0;
+  display: block;
+}
+
+.rich-text-viewer .ProseMirror h1.tiptap-heading,
+.rich-text-viewer .ProseMirror h2.tiptap-heading,
+.rich-text-viewer .ProseMirror h3.tiptap-heading {
+  color: #ffffff;
+}
+
+/* ── Tiptap BubbleMenu and FloatingMenu styles ─────────────── */
 
 /* Ensure menus are always on top and can escape container bounds */
 .tippy-box {
