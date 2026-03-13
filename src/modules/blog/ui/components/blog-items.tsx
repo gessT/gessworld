@@ -10,9 +10,9 @@ import { ArrowUpRight } from "lucide-react";
 export const HorizontalStripItem = ({ post }: { post: postsGetMany[0] }) => (
   <Link
     href={`/blog/${post.slug}`}
-    className="group flex-shrink-0 snap-start block w-72 sm:w-80"
+    className="group block w-full mb-4"
   >
-    <div className="relative overflow-hidden rounded-xl bg-[#141414] border border-white/8 group-hover:border-red-500/30 transition-all duration-300" style={{ aspectRatio: "16/10" }}>
+    <div className="relative overflow-hidden rounded-xl bg-[#141414] border border-white/8 group-hover:border-red-500/30 transition-all duration-300" style={{ aspectRatio: "5/1" }}>
       <Image
         src={keyToUrl(post.coverImage) || "/placeholder.svg"}
         alt={post.title || ""}
@@ -20,11 +20,16 @@ export const HorizontalStripItem = ({ post }: { post: postsGetMany[0] }) => (
         unoptimized
         className="object-cover group-hover:scale-105 transition-transform duration-500"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/90 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-black/10" />
       <div className="absolute bottom-0 left-0 right-0 p-4">
-        <h3 className="text-white font-black text-sm leading-snug line-clamp-2 group-hover:text-red-400 transition-colors duration-200 uppercase tracking-tight">
+        <h3 className="text-white font-black text-2xl leading-snug line-clamp-2 group-hover:text-red-400 transition-colors duration-200 uppercase tracking-tight mb-1">
           {post.title}
         </h3>
+        {post.description && (
+            <p className="text-white/70 text-xs font-light line-clamp-2">
+                {post.description}
+            </p>
+        )}
       </div>
       {/* Arrow badge top-right */}
       <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-[#0e0e0e]/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -38,11 +43,11 @@ export const HorizontalStripItem = ({ post }: { post: postsGetMany[0] }) => (
 export const GridItem = ({ post, index }: { post: postsGetMany[0]; index: number }) => (
   <Link
     href={`/blog/${post.slug}`}
-    className="group block break-inside-avoid mb-4"
+    className="group block mb-4 w-full"
   >
-    <div className="relative overflow-hidden rounded-xl bg-[#141414] border border-white/8 group-hover:border-red-500/30 transition-all duration-300">
-      {/* Image — natural height for masonry feel */}
-      <div className="relative w-full" style={{ aspectRatio: index % 3 === 0 ? "4/5" : "3/2" }}>
+    <div className="flex gap-4 rounded-xl bg-[#141414] border border-white/8 group-hover:border-red-500/30 transition-all duration-300 overflow-hidden">
+      {/* Left: Image */}
+      <div className="w-1/3 relative" style={{ aspectRatio: "1/1" }}>
         <Image
           src={keyToUrl(post.coverImage) || "/placeholder.svg"}
           alt={post.title || ""}
@@ -50,17 +55,20 @@ export const GridItem = ({ post, index }: { post: postsGetMany[0]; index: number
           unoptimized
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/90 via-[#0e0e0e]/10 to-transparent" />
       </div>
-      {/* Caption */}
-      <div className="p-4 flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-white/25 text-[9px] font-black tracking-[0.2em] uppercase mb-1">#{index}</p>
-          <h3 className="text-white/80 group-hover:text-white font-black text-sm leading-snug uppercase tracking-tight transition-colors duration-200">
-            {post.title}
-          </h3>
-        </div>
-        <ArrowUpRight className="w-4 h-4 text-red-500 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-0.5" />
+      {/* Right: Content */}
+      <div className="w-2/3 p-4 flex flex-col">
+        <p className="text-white/25 text-[9px] font-black tracking-[0.2em] uppercase mb-1">#{index}</p>
+        <h3 className="text-white/80 group-hover:text-white font-black text-sm leading-snug uppercase tracking-tight transition-colors duration-200 mb-2">
+          {post.title}
+        </h3>
+        {post.description && (
+            <p className="text-white/50 text-xs font-light line-clamp-2">
+                {post.description}
+            </p>
+        )}
+        <div className="flex-grow" />
+        <ArrowUpRight className="w-4 h-4 text-red-500 self-end opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-0.5" />
       </div>
     </div>
   </Link>
