@@ -1,11 +1,19 @@
 import { z } from "zod";
 import { db } from "@/db";
 import { createTRPCRouter, baseProcedure } from "@/trpc/init";
-import { desc, eq, and } from "drizzle-orm";
-import { citySets, photos } from "@/db/schema";
+import { desc, eq, and, count } from "drizzle-orm";
+import { citySets, photos, posts } from "@/db/schema";
 import { TRPCError } from "@trpc/server";
 
 export const homeRouter = createTRPCRouter({
+  getStats: baseProcedure.query(async () => {
+    const [[{ cityCount }], [{ photoCount }], [{ postCount }]] = await Promise.all([
+      db.select({ cityCount: count() }).from(citySets),
+      db.select({ photoCount: count() }).from(photos).where(eq(photos.visibility, "public")),
+      db.select({ postCount: count() }).from(posts).where(eq(posts.visibility, "public")),
+    ]);
+    return { cityCount, photoCount, postCount };
+  }),
   getManyLikePhotos: baseProcedure
     .input(
       z.object({

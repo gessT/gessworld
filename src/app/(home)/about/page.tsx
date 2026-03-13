@@ -12,19 +12,16 @@ import {
   Compass,
 } from "lucide-react";
 import Footer from "@/components/footer";
+import { appRouter } from "@/trpc/routers/_app";
+import { createTRPCContext, createCallerFactory } from "@/trpc/init";
+
+const createCaller = createCallerFactory(appRouter);
 
 export const metadata: Metadata = {
   title: "About — Snaptogoclub",
   description:
     "記錄我走過的地方，用鏡頭捕捉世 界的每一個瞬間。",
 };
-
-const stats = [
-  { value: "30+", label: "去過的城市", icon: MapPin },
-  { value: "1000+", label: "拍攝照片", icon: Camera },
-  { value: "50+", label: "旅行故事", icon: Users },
-  { value: "∞", label: "未來旅程", icon: Star },
-];
 
 const values = [
   {
@@ -49,7 +46,18 @@ const values = [
   },
 ];
 
-const AboutPage = () => {
+const AboutPage = async () => {
+  const ctx = await createTRPCContext();
+  const caller = createCaller(ctx);
+  const { cityCount, photoCount, postCount } = await caller.home.getStats();
+
+  const stats = [
+    { value: `${cityCount}+`, label: "去過的城市", icon: MapPin },
+    { value: `${photoCount}+`, label: "拍攝照片", icon: Camera },
+    { value: `${postCount}+`, label: "旅行故事", icon: Users },
+    { value: "∞", label: "未來旅程", icon: Star },
+  ];
+
   return (
     <div className="bg-[#0e0e0e] text-white min-h-screen">
       {/* ── HERO ───────────────────────────────────────────────────── */}
@@ -157,7 +165,7 @@ const AboutPage = () => {
                   <Camera className="w-5 h-5 text-red-400" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg leading-none">1000+</p>
+                  <p className="text-white font-bold text-lg leading-none">{photoCount}</p>
                   <p className="text-white/50 text-xs mt-1">照片故事</p>
                 </div>
               </div>
@@ -169,7 +177,7 @@ const AboutPage = () => {
                   <MapPin className="w-5 h-5 text-red-400" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg leading-none">30+</p>
+                  <p className="text-white font-bold text-lg leading-none">{cityCount}+</p>
                   <p className="text-white/50 text-xs mt-1">旅行地點</p>
                 </div>
               </div>

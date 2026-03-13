@@ -63,9 +63,9 @@ const page = async () => {
             <div className="flex flex-col items-center text-center space-y-12">
               {/* 主標題：極輕量化的現代美學 */}
               <h1 className="text-5xl sm:text-7xl lg:text-9xl font-thin text-white leading-[0.9] tracking-tighter uppercase">
-                Frame <span className="text-white/20 italic font-extralight">the</span>
+                Snap <span className="text-white/20 italic font-extralight">to go</span>
                 <br />
-                <span className="font-light tracking-[0.1em] text-red-500">World</span>
+                <span className="font-light tracking-[0.1em] text-red-500">Club</span>
               </h1>
 
               {/* 核心理念：橫向流動感 */}
