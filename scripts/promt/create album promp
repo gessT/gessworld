@@ -1,50 +1,77 @@
-根据我提供的【照片名称】和【照片描述】生成相册数据。
+【目標】：
+我會提供一張圖片（圖片中可能有多張照片），請你根據圖片生成一個完整的相冊資料 + 部落格文章，要求如下：
 
-这里是porvoo 芬兰的 
-尽量变成繁体
+【相冊資料要求】：
+1. 使用繁體中文。
+2. Country / CountryCode / Region / City 必須基於我提供的圖片地點推斷，City = Region。
+3. Album Description 需要概述圖片中場景、氛圍、特色。
+4. cover_photo_id 先設為 null。
+5. 照片陣列命名為 DUMMY_PHOTOS，每張照片：
+   - url：示例格式 https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/{region}/{filename}.jpg
+   - title：根據照片名稱
+   - description：根據照片描述
+   - fullAddress：簡單描述拍攝地點
+   - visibility: "public"
+   - isFavorite: true
+   - aspectRatio: 1.5
+   - width: 4000
+   - height: 2667
+   - country / countryCode / region / city 繼承 Album
+   - make: "SONY"
+   - model: "A6700"
+   - lensModel: "Sigma 18-50mm F2.8"
+   - dateTimeOriginal: 當前時間
 
-⚠️ 规则：
-1. title 和 description 必须严格根据照片名称和描述生成，不可以编造不存在的信息。
-2. country / region / city 只能根据提供的信息推断，如果没有就保持和示例一致。
-3. cover_photo_id 先设为 null。
-4. 所有照片继承 ALBUM 的国家和城市信息。
+【部落格生成要求】：
+1. 使用繁體中文。
+2. 格式：Editor `<p1>` 標籤包裹段落。
+3. 可以穿插 DUMMY_PHOTOS 的 url，例如：
+   <p1>文字描述…<img src="DUMMY_PHOTOS[0].url" alt="DUMMY_PHOTOS[0].title"></p1>
+4. 部落格內容必須基於照片資料，不可編造不存在的場景或物件。
+5. 段落可以加入 emoji，增加部落格可讀性。
+6. 結尾需有總結段落，描述整體氛圍與感受。
 
-────────────────────────
+【輸出結構】：
+1. ALBUM 常量
+2. DUMMY_PHOTOS 陣列
+3. NEW_POST 常量，包括：
+   - title：部落格標題
+   - slug：自動生成，例如地名 + 主題
+   - author：Your Name
+   - publishedAt：當前時間
+   - cover_photo_url：DUMMY_PHOTOS[0].url
+   - albumId：ALBUM.id 或 null
+   - content：完整部落格內容（Editor 格式 <p1>，可穿插照片）不一定要穿插全部照片， 50-60% 的照片穿插在部落格內容中即可。字内容多一点
 
-需要填的重点资料：
+【注意】：
+- DUMMY_PHOTOS[0].url 一致 小写 {region}
+- title / description / fullAddress 嚴格基於我提供的照片信息。
+- title": 根据照片给一个适合的标题，描述照片内容和氛围。
+- description: 根据照片内容描述照片的细节和氛围。
+-author ： Gesstue
+- 所有相片繼承 Album 的國家/城市資訊。
+- 可以生成多張照片，只要將 DUMMY_PHOTOS 物件複製。
+- 日期使用當前時間 new Date()。
+- 最后生成 2 个json object，分別為 ALBUM 和 NEW_POST，並且 DUMMY_PHOTOS 是 ALBUM 的一部分。
+- ALBUM 必须生成 全部照片数据， NEW_POST 的 content 部分可以穿插部分照片（50-60%），但不需要全部照片都穿插在部落格內容中。
+- 最重要 做成 json object 我需要， 分开newpost 跟DUMMY_PHOTOS。album
 
-Country: 
-CountryCode: 
-Region: 
-City: same with region
-FullAddress: 
-
-Album Description:
-
-Camera:
-Make: SONY
-Model: A6700
-Lens: Sigma 18-50mm F2.8
-
-────────────────────────
-根据照片资料生成的相册数据：
-
-输出格式：
-
+【示例輸出】：
+```javascript
 const ALBUM = {
-  country: "...",
-  countryCode: "...",
-  region: "...",
-  city: "...",
-  description: "...",
+  country: "",
+  countryCode: "",
+  region: "",
+  city: "",
+  description: "",
   cover_photo_id: null
 };
 
 const DUMMY_PHOTOS = [
   {
-    url: "...", .//https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/{porvoo/porvoo-1.jpg} region city 后类似这样
-    title: "...",
-    description: "...",
+    url: "",
+    title: "",
+    description: "",
     visibility: "public",
     isFavorite: true,
     aspectRatio: 1.5,
@@ -54,12 +81,25 @@ const DUMMY_PHOTOS = [
     countryCode: ALBUM.countryCode,
     region: ALBUM.region,
     city: ALBUM.city,
-    fullAddress: "...",
-    make: "...",
-    model: "...",
-    lensModel: "...",
-    dateTimeOriginal: new Date("...") 现在的时间
+    fullAddress: "",
+    make: "SONY",
+    model: "A6700",
+    lensModel: "Sigma 18-50mm F2.8",
+    dateTimeOriginal: new Date()
   }
-]
+];
 
-final result shoudl be json file. so i can input using seed
+const NEW_POST = {
+  title: "",
+  slug: "",
+  author: "Your Name",
+  publishedAt: new Date(),
+  cover_photo_url: DUMMY_PHOTOS[0].url,
+  albumId: ALBUM.id || null,
+  content: `
+<p1>...</p1>
+<p1>可穿插 <img src="\${DUMMY_PHOTOS[0].url}" alt="\${DUMMY_PHOTOS[0].title}"></p1>
+<p1>...</p1>
+<p1>結尾總結段落</p1>
+`
+};

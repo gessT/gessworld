@@ -47,8 +47,9 @@ const ALL_ALBUMS: AlbumData[] = albumFiles.map((file) => {
   const raw = JSON.parse(content) as Record<string, unknown>;
 
   // Support both lowercase keys ("album"/"photos") and uppercase ("ALBUM"/"DUMMY_PHOTOS")
-  const album = (raw.album ?? raw.ALBUM) as AlbumData["album"] | undefined;
-  const photos = (raw.photos ?? raw.DUMMY_PHOTOS) as AlbumData["photos"] | undefined;
+  const album = (raw.album ?? raw.ALBUM) as (AlbumData["album"] & { DUMMY_PHOTOS?: AlbumData["photos"]; photos?: AlbumData["photos"] }) | undefined;
+  // Photos can be at root level OR nested inside the album object
+  const photos = (raw.photos ?? raw.DUMMY_PHOTOS ?? album?.photos ?? album?.DUMMY_PHOTOS) as AlbumData["photos"] | undefined;
 
   if (!album || !photos) {
     throw new Error(`Invalid album JSON in ${file}: missing "album"/"ALBUM" or "photos"/"DUMMY_PHOTOS" key`);
