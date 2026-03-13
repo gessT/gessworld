@@ -53,7 +53,7 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
 
         {/* Headline — massive Hypebeast-style */}
      
-          <h2 className="text-lg md:text-xl text-muted-foreground leading-relaxed lg:text-6xl font-bold ">
+          <h2 className="text-lg md:text-xl text-muted-foreground leading-relaxed lg:text-6xl font-light tracking-tight text-white/90 mb-6 max-w-2xl">
       {data.title}
   </h2>
 

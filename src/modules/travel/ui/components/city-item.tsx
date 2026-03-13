@@ -22,7 +22,7 @@ export const CityItem = ({ city, activeId, onMouseEnter }: CityItemProps) => {
         onMouseEnter={() => onMouseEnter(city)}
       >
         {/* Big image */}
-        <div className="relative w-full aspect-[3/5] overflow-hidden">
+        <div className="relative w-full aspect-square overflow-hidden">
           <BlurImage
             src={keyToUrl(city.coverPhoto.url)}
             alt={city.city}

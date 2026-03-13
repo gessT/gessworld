@@ -22,9 +22,10 @@ export const HorizontalStripItem = ({ post }: { post: postsGetMany[0] }) => (
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-black/10" />
       <div className="absolute bottom-0 left-0 right-0 p-4">
-        <h3 className="text-white font-black text-2xl leading-snug line-clamp-2 group-hover:text-red-400 transition-colors duration-200 uppercase tracking-tight mb-1">
-          {post.title}
-        </h3>
+<h3 className="text-white font-light text-sm md:text-lg leading-snug line-clamp-2 group-hover:text-red-400 transition-colors duration-200 uppercase tracking-widest mb-1">
+  {post.title}
+</h3>
+        
         {post.description && (
             <p className="text-white/70 text-xs font-light line-clamp-2">
                 {post.description}
@@ -59,9 +60,9 @@ export const GridItem = ({ post, index }: { post: postsGetMany[0]; index: number
       {/* Right: Content */}
       <div className="w-2/3 p-4 flex flex-col">
         <p className="text-white/25 text-[9px] font-black tracking-[0.2em] uppercase mb-1">#{index}</p>
-        <h3 className="text-white/80 group-hover:text-white font-black text-sm leading-snug uppercase tracking-tight transition-colors duration-200 mb-2">
-          {post.title}
-        </h3>
+      <h3 className="text-white font-light text-sm md:text-lg leading-snug line-clamp-2 group-hover:text-red-400 transition-colors duration-200 uppercase tracking-widest mb-1">
+  {post.title}
+</h3>
         {post.description && (
             <p className="text-white/50 text-xs font-light line-clamp-2">
                 {post.description}

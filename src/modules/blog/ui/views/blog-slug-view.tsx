@@ -73,9 +73,9 @@ console.log("BlogSlugView data:", data);
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight uppercase max-w-4xl mb-5 break-words">
+          <h2 className="text-4xl font-light  sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight uppercase max-w-4xl mb-5 break-words">
             {data.title}
-          </h1>
+          </h2>
 
           {/* Description */}
           {data.description && (

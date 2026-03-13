@@ -68,6 +68,7 @@ Album description must summarize:
 • visual style  
 
 cover_photo_id must always be:
+photo_count need count the photo in dummy photo
 
 null
 
@@ -80,6 +81,7 @@ Example:
   "city": "波爾沃",
   "description": "冬日覆蓋白雪的北歐古城...",
   "cover_photo_id": null
+  "photo_count": 3
 }
 
 --------------------------------------------------

@@ -40,8 +40,8 @@ export const TravelView = () => {
           </h1>
         </div>
 
-        {/* City grid — 3 columns */}
-        <div className="flex-1 grid grid-cols-3 gap-3 p-4">
+        {/* City grid — 2 cols mobile, 3 cols desktop */}
+        <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-3 p-4">
           {data.map((city) => (
             <CityItem
               key={city.id}
