@@ -16,7 +16,7 @@ import Footer from "@/components/footer";
 export const metadata: Metadata = {
   title: "About — Snaptogoclub",
   description:
-    "記錄我走過的地方，用鏡頭捕捉世界的每一個瞬間。",
+    "記錄我走過的地方，用鏡頭捕捉世 界的每一個瞬間。",
 };
 
 const stats = [
