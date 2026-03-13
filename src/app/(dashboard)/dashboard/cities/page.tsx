@@ -8,11 +8,11 @@ import {
   CityListLoadingView,
   CityListErrorView,
 } from "@/modules/cities/ui/views/city-list-view";
-import { MapPin } from "lucide-react";
+import { Globe2, Plus } from "lucide-react";
 
 export const metadata = {
-  title: "City Collection",
-  description: "City Collection",
+  title: "城市清單 | 隨心所往",
+  description: "紀錄你的每一場城市冒險",
 };
 
 export const dynamic = "force-dynamic";
@@ -22,35 +22,42 @@ const CityPage = async () => {
   void queryClient.prefetchQuery(trpc.city.getMany.queryOptions());
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e]">
-      {/* Page header */}
-      <div className="px-4 md:px-8 py-8 border-b border-white/8 mb-6">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-red-600/20 border border-red-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-            <MapPin className="w-5 h-5 text-red-400" />
-          </div>
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-1 h-5 bg-red-500 rounded-full" />
-              <span className="text-white/40 text-xs uppercase tracking-widest font-bold">Dashboard</span>
-            </div>
-            <h1 className="text-3xl font-black uppercase tracking-tight text-white leading-none">
-              City Collection
-            </h1>
-            <p className="text-white/40 text-sm mt-1">
-              Your travel destinations, organized by city
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-indigo-500">
+    
 
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <ErrorBoundary FallbackComponent={CityListErrorView}>
-          <Suspense fallback={<CityListLoadingView />}>
-            <CityListView />
-          </Suspense>
-        </ErrorBoundary>
-      </HydrationBoundary>
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        {/* Page Header - 縮小標題，強調質感 */}
+        <header className="mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 mb-4">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/50">Discovery Mode</span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+            城市收藏 <span className="text-indigo-500">.</span>
+          </h1>
+          <p className="text-white/40 text-sm mt-2 font-medium tracking-wide">
+            探索全球城市美學，整理你的專屬旅行地圖。
+          </p>
+        </header>
+
+        {/* 內容區塊 - 這裡假設 CityListView 內部使用了 Grid 佈局 */}
+        <main className="relative">
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <ErrorBoundary FallbackComponent={CityListErrorView}>
+              <Suspense fallback={<CityListLoadingView />}>
+                {/* 提示：在 CityListView 內部，請確保你的卡片使用 
+                   aspect-square (Tailwind class) 來達成正方形效果 
+                */}
+                <CityListView />
+              </Suspense>
+            </ErrorBoundary>
+          </HydrationBoundary>
+        </main>
+      </div>
     </div>
   );
 };
