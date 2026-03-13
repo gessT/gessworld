@@ -1,5 +1,8 @@
 根据我提供的【照片名称】和【照片描述】生成相册数据。
 
+这里是porvoo 芬兰的 
+尽量变成繁体
+
 ⚠️ 规则：
 1. title 和 description 必须严格根据照片名称和描述生成，不可以编造不存在的信息。
 2. country / region / city 只能根据提供的信息推断，如果没有就保持和示例一致。
@@ -10,10 +13,10 @@
 
 需要填的重点资料：
 
-Country: 日本
-CountryCode: JP
-Region: 河口湖
-City: 河口湖
+Country: 
+CountryCode: 
+Region: 
+City: same with region
 FullAddress: 
 
 Album Description:
@@ -39,7 +42,7 @@ const ALBUM = {
 
 const DUMMY_PHOTOS = [
   {
-    url: "...",
+    url: "...", .//https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/{porvoo/porvoo-1.jpg} region city 后类似这样
     title: "...",
     description: "...",
     visibility: "public",
@@ -55,7 +58,7 @@ const DUMMY_PHOTOS = [
     make: "...",
     model: "...",
     lensModel: "...",
-    dateTimeOriginal: new Date("...")
+    dateTimeOriginal: new Date("...") 现在的时间
   }
 ]
 

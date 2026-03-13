@@ -101,7 +101,7 @@ const Footer = () => {
                 © 2026 Snaptogoclub. All rights reserved.
               </p>
               <div className="flex items-center gap-1 text-gray-500 text-sm">
-                Made with <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> by Snaptogoclub
+                {/* Made with <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> by Snaptogoclub */}
               </div>
               <div className="flex gap-6 text-sm">
                 <a href="#" className="text-gray-500 hover:text-red-400 transition-colors">Privacy</a>
