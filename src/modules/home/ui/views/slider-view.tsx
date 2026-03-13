@@ -43,7 +43,11 @@ export const SliderView = () => {
         const isFirstSlide = index === 0;
 
         return (
-          <div key={photo.id} className="flex-[0_0_100%] h-full relative">
+          <div key={photo.id} className="flex-[0_0_100%] h-screen relative overflow-hidden bg-black">
+            {/* 1. 壓暗遮罩：使用漸變讓底部更暗，方便承載文字，同時整體降亮度 */}
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+
+            {/* 2. 圖片處理 */}
             <BlurImage
               src={keyToUrl(photo.url)}
               alt={photo.title}
@@ -52,7 +56,19 @@ export const SliderView = () => {
               loading={isFirstSlide ? "eager" : "lazy"}
               fetchPriority={isFirstSlide ? "high" : undefined}
               blurhash={photo.blurData}
-              className="w-full h-full object-cover"
+              className="
+      w-full h-full 
+      object-cover 
+      object-top 
+      brightness-[0.8] 
+      contrast-[1.05]
+      transition-transform 
+      duration-[20s] 
+      scale-105
+    "
+            // object-top: 確保從照片頂部開始對齊，不切掉頭部
+            // brightness-[0.8]: 整體壓暗 20%
+            // brightness 配合 gradient 遮罩可以營造高級電影感
             />
           </div>
         );

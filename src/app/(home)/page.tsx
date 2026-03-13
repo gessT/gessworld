@@ -60,20 +60,41 @@ const page = async () => {
             </span>
 
             {/* headline */}
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-white leading-none tracking-tighter drop-shadow-xl">
-              Discover
-              <br />
-              <span className="text-red-400">the World</span>
-            </h1>
+            <div className="flex flex-col items-center text-center space-y-12">
+              {/* 主標題：極輕量化的現代美學 */}
+              <h1 className="text-5xl sm:text-7xl lg:text-9xl font-thin text-white leading-[0.9] tracking-tighter uppercase">
+                Frame <span className="text-white/20 italic font-extralight">the</span>
+                <br />
+                <span className="font-light tracking-[0.1em] text-red-500">World</span>
+              </h1>
 
-            {/* sub-headline */}
-            <div className="mt-5 text-base sm:text-lg md:text-xl text-white/75 max-w-lg leading-relaxed font-medium drop-shadow text-center">
-              <p className="text-4xl md:text-5xl font-semibold tracking-wide leading-tight text-white">
-                旅行 × 攝影 × 社交
-              </p>
-              <p className="text-lg text-white/60 leading-relaxed font-light mt-3">
-                我們一起旅行，一起創作，一起記錄世界。
-              </p>
+              {/* 核心理念：橫向流動感 */}
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-[1px] bg-white/20" />
+                  <p className="text-lg md:text-2xl font-light tracking-[0.5em] text-white/90 uppercase">
+                    旅行 <span className="text-red-500 mx-1">×</span> 攝影 <span className="text-red-500 mx-1">×</span> 社交
+                  </p>
+                  <div className="w-12 h-[1px] bg-white/20" />
+                </div>
+
+                {/* 副標題：寬字距、高行高 */}
+                <div className="max-w-xl space-y-2">
+                  <p className="text-sm md:text-base text-white/40 leading-relaxed font-light tracking-[0.2em]">
+                    每一場旅途都是一次萃取。
+                  </p>
+                  <p className="text-sm md:text-base text-white/40 leading-relaxed font-light tracking-[0.2em]">
+                    我們一起走入風景，用鏡頭交換故事，讓瞬間成為永恆。
+                  </p>
+                </div>
+              </div>
+
+              {/* 裝飾性的小細節：座標感 */}
+              <div className="pt-8 opacity-20 hover:opacity-100 transition-opacity duration-700">
+                <p className="text-[10px] font-thin tracking-[1em] uppercase text-white">
+                  Based in Malaysia x Singapore
+                </p>
+              </div>
             </div>
 
             {/* CTA row */}
@@ -95,7 +116,7 @@ const page = async () => {
           </div>
 
           {/* Scroll-down indicator */}
-          <HeroScroll />
+          {/* <HeroScroll /> */}
         </div>
 
         {/* ── MAIN CONTENT ── */}
