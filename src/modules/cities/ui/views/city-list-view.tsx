@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTRPC } from "@/trpc/client";
 import { CityCard } from "../components/city-card";
 import { AddCityDialog } from "../components/add-city-dialog";
@@ -10,6 +11,7 @@ export function CityListView() {
   const trpc = useTRPC();
   const { data: cities } = useSuspenseQuery(trpc.city.getMany.queryOptions());
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="space-y-10">
@@ -40,7 +42,8 @@ export function CityListView() {
         {cities.map((citySet) => (
           <div 
             key={citySet.id} 
-            className="group relative aspect-square w-full rounded-[2rem] overflow-hidden bg-[#1a1a1a] shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-indigo-500/10"
+            className="group relative aspect-square w-full rounded-[2rem] overflow-hidden bg-[#1a1a1a] shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-indigo-500/10 cursor-pointer"
+            onClick={() => router.push(`/dashboard/cities/${encodeURIComponent(citySet.city)}`)}
           >
             {/* 1. 城市背景圖/內容 (CityCard 內部應填滿容器) */}
             <CityCard citySet={citySet} />
