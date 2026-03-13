@@ -61,7 +61,7 @@ export function CityListView() {
                   </span>
                 </div>
                 <h3 className="text-xl font-black text-white tracking-tight leading-tight">
-                  {citySet.name}
+                  {citySet.country}
                 </h3>
                 {/* 額外資訊：例如景點數量 */}
                 <div className="overflow-hidden h-0 group-hover:h-5 transition-all duration-500">
