@@ -23,6 +23,10 @@ interface AlbumPhoto {
   model?: string;
   lensModel?: string;
   dateTimeOriginal?: string;
+  country?: string;
+  countryCode?: string;
+  region?: string;
+  city?: string;
 }
 
 interface AlbumData {

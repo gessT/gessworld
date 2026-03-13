@@ -84,7 +84,6 @@ export function CityDetailView({ city }: CityDetailViewProps) {
   const { data: albumPhotos = [] } = useQuery(
     trpc.photos.getByCity.queryOptions({
       city: cityData?.city ?? undefined,
-      region: cityData?.region ?? undefined,
     })
   );
 
