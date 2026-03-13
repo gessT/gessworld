@@ -9,15 +9,14 @@ const CameraCard = () => {
           <h1>& Camera Lenses</h1>
         </div>
 
-        <div className="font-light">
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-wide leading-tight">
-    旅行 × 攝影 × 社交
-  </h1>
-
-  <p className="text-lg text-muted-foreground leading-relaxed font-light">
-    我們一起旅行，一起創作，一起記錄世界。
-  </p>
-        </div>
+        <div className="mt-5 text-base sm:text-lg md:text-xl text-white/75 max-w-lg leading-relaxed font-medium drop-shadow text-center">
+              <p className="text-4xl md:text-5xl font-semibold tracking-wide leading-tight text-white">
+                旅行 × 攝影 × 社交
+              </p>
+              <p className="text-lg text-white/60 leading-relaxed font-light mt-3">
+                我們一起旅行，一起創作，一起記錄世界。
+              </p>
+            </div>
       </div>
     </CardContainer>
   );

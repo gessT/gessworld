@@ -39,7 +39,7 @@ async function seedPosts() {
 
     console.log(`Inserting post: "${post.title}" (slug: ${post.slug})`);
 
-    await db
+    const result = await db
       .insert(posts)
       .values({
         title: post.title,
@@ -50,17 +50,14 @@ async function seedPosts() {
         content: post.content,
         visibility: post.visibility ?? 'public',
       })
-      .onConflictDoUpdate({
-        target: posts.slug,
-        set: {
-          title: post.title,
-          description: post.description,
-          coverImage,
-          tags: post.tags,
-          content: post.content,
-          visibility: post.visibility ?? 'public',
-        },
-      });
+      .onConflictDoNothing()
+      .returning({ slug: posts.slug });
+
+    if (result.length === 0) {
+      console.log(`  ⏭️  Skipped (already exists): "${post.slug}"`);
+    } else {
+      console.log(`  ✅ Inserted: "${post.slug}"`);
+    }
   }
 
   console.log('✅ Posts seeded successfully!');

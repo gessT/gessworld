@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { db } from "@/db";
 import { photos, citySets } from "@/db/schema";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 import { readdirSync, readFileSync } from "fs";
 import { join, resolve } from "path";
 
@@ -69,6 +69,19 @@ async function seedAlbum(data: AlbumData) {
   const insertedPhotos: { id: string; title: string }[] = [];
 
   for (const photo of albumPhotos) {
+    // Skip if a photo with this URL already exists
+    const [existing] = await db
+      .select({ id: photos.id, title: photos.title })
+      .from(photos)
+      .where(eq(photos.url, photo.url))
+      .limit(1);
+
+    if (existing) {
+      console.log(`  ⏭️  Skipped (already exists): "${photo.title}"`);
+      insertedPhotos.push({ id: existing.id, title: existing.title });
+      continue;
+    }
+
     try {
       const [row] = await db
         .insert(photos)
@@ -100,7 +113,7 @@ async function seedAlbum(data: AlbumData) {
         console.log(`  ✅  Photo inserted: "${row.title}" (${row.id})`);
       }
     } catch (err) {
-      console.warn(`  ⚠️  Skipped photo "${photo.title}": ${err instanceof Error ? err.message : err}`);
+      console.warn(`  ⚠️  Error inserting "${photo.title}": ${err instanceof Error ? err.message : err}`);
     }
   }
 
@@ -162,8 +175,6 @@ async function truncateAlbums() {
 
 async function main() {
   console.log(`\n📂  Found ${ALL_ALBUMS.length} album(s) to seed: ${albumFiles.join(", ")}\n`);
-
-  await truncateAlbums();
 
   for (const albumData of ALL_ALBUMS) {
     await seedAlbum(albumData);

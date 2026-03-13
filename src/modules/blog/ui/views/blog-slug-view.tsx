@@ -73,7 +73,7 @@ console.log("BlogSlugView data:", data);
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tight uppercase max-w-4xl mb-5">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight uppercase max-w-4xl mb-5 break-words">
             {data.title}
           </h1>
 
@@ -124,48 +124,14 @@ console.log("BlogSlugView data:", data);
             </p>
           </div>
 
-          {/* Desktop: two-column grid. Mobile: single column */}
-          <div className="lg:grid lg:grid-cols-[1fr_260px] lg:gap-16 lg:items-start">
+          {/* Desktop: full width. Mobile: single column */}
+          <div className="w-full">
 
             {/* Rich text */}
             <div className="prose-invert rich-text-viewer">
               <RichTextViewer content={data.content || ""} />
             </div>
 
-            {/* Desktop sidebar — hidden on mobile */}
-            <aside className="hidden lg:block">
-              <div className="sticky top-16 space-y-8">
-
-                {/* Tags */}
-                {data.tags && data.tags.length > 0 && (
-                  <div>
-                    <p className="text-white/30 text-[10px] font-black tracking-[0.2em] uppercase mb-3">Tags</p>
-                    <div className="flex flex-wrap gap-2">
-                      {(data.tags as string[]).map((t) => (
-                        <span key={t} className="bg-white/5 border border-white/10 text-white/60 text-xs px-3 py-1 rounded-full">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Reading time */}
-                {data.readingTimeMinutes && (
-                  <div>
-                    <p className="text-white/30 text-[10px] font-black tracking-[0.2em] uppercase mb-2">Reading time</p>
-                    <p className="text-white text-3xl font-black">
-                      {data.readingTimeMinutes}
-                      <span className="text-white/40 text-sm font-bold ml-1">min</span>
-                    </p>
-                  </div>
-                )}
-
-
-               
-
-              </div>
-            </aside>
           </div>
         </div>
 
