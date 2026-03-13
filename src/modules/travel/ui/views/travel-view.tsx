@@ -32,11 +32,11 @@ export const TravelView = () => {
         <div className="sticky top-16 z-20 bg-[#0e0e0e]/95 backdrop-blur-sm border-b border-white/8 px-8 py-6">
           <div className="flex items-center gap-2 text-red-500 text-[11px] font-bold tracking-[0.25em] uppercase mb-2">
             <MapPin className="w-3 h-3" />
-            {data.length} Destinations
+            {data.length} 個目的地
           </div>
           <h1 className="text-3xl lg:text-4xl font-black text-white leading-none">
-            Where to{" "}
-            <span className="text-white/25">next?</span>
+            下一站{" "}
+            <span className="text-white/25">去哪？</span>
           </h1>
         </div>
 

@@ -1,119 +1,107 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone, Instagram, ArrowRight, Camera, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Mail, MapPin, Instagram, Camera, Globe, Compass, Plane, ArrowUpRight } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="w-full">
-      {/* Newsletter CTA */}
-      {/* <div className="bg-gradient-to-r from-red-500 via-rose-500 to-red-600">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-3 text-white">
-              <h3 className="text-2xl md:text-3xl font-bold">Join the Journey</h3>
-              <p className="text-white/80 text-base">Get travel stories and photography tips in your inbox.</p>
-            </div>
-            <div className="flex gap-2">
-              <Input
-                type="email"
-                placeholder="Your email address"
-                className="bg-white/20 border-white/30 text-white placeholder:text-white/60 rounded-xl focus:bg-white/30"
-              />
-              <Button className="bg-white text-red-600 hover:bg-white/90 rounded-xl px-6 font-semibold shadow-lg">
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* Main Footer */}
-      <div className="bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-            {/* Brand */}
-            <div className="space-y-4 lg:col-span-1">
-              <div className="flex items-center gap-2">
-                <div className="bg-red-500 p-1.5 rounded-lg">
-                  <Camera className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold">Snaptogoclub</h2>
-                </div>
+    <footer className="w-full bg-[#050505] text-white border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-24">
+        
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-20">
+          
+          {/* Section 1: Brand Identity (占 5 欄) */}
+          <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/5 p-2 rounded-full border border-white/10">
+                <Camera className="w-5 h-5 text-red-500" />
               </div>
-               <div className="mt-5 text-base sm:text-lg md:text-xl text-white/75 max-w-lg leading-relaxed font-medium drop-shadow text-center">
-              <p className="text-4xl md:text-5xl font-semibold tracking-wide leading-tight text-white">
-                旅行 × 攝影 × 社交
+              <h2 className="text-xl md:text-2xl font-light tracking-[0.25em] uppercase">
+                Snaptogoclub
+              </h2>
+            </div>
+            
+            <div className="space-y-3">
+              <p className="text-sm font-light tracking-[0.2em] text-white/80 uppercase">
+                旅行 <span className="text-white/20 mx-1">|</span> 攝影 <span className="text-white/20 mx-1">|</span> 社交
               </p>
-              <p className="text-lg text-white/60 leading-relaxed font-light mt-3">
-                我們一起旅行，一起創作，一起記錄世界。
+              <p className="text-xs md:text-sm text-white/40 font-extralight tracking-[0.1em] leading-relaxed max-w-[320px]">
+                我們一起旅行，一起創作，一起用鏡頭捕捉世界的細微末節。
               </p>
             </div>
-              <div className="flex gap-3 pt-2">
-                <a href="https://www.instagram.com/gess.tue/" target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
-                  <Instagram className="w-4 h-4" />
-                </a>
-                <a href="mailto:tueguosheng@gmail.com" className="bg-gray-800 hover:bg-red-500 p-2.5 rounded-xl transition-all duration-200">
-                  <Mail className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
 
-            {/* Explore */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400">Explore</h4>
-              <ul className="space-y-3">
-                <li><Link href="/" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Home</Link></li>
-                <li><Link href="/travel" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Destinations</Link></li>
-                <li><Link href="/blog" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Blog</Link></li>
-                <li><Link href="/about" className="text-gray-300 hover:text-red-400 text-sm transition-colors">About</Link></li>
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400">Resources</h4>
-              <ul className="space-y-3">
-                <li><Link href="/dashboard" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Dashboard</Link></li>
-                <li><Link href="/discover" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Discover</Link></li>
-                <li><a href="#" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Gallery</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-red-400 text-sm transition-colors">Collections</a></li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-400">Contact</h4>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-2.5 text-gray-300 text-sm">
-                  <Mail className="w-4 h-4 text-red-400" />
-                  <span>tueguosheng@gmail.com</span>
-                </li>
-                <li className="flex items-center gap-2.5 text-gray-300 text-sm">
-                  <MapPin className="w-4 h-4 text-red-400" />
-                  <span>Global Traveler</span>
-                </li>
-              </ul>
+            <div className="flex gap-5 pt-2">
+              <a href="https://www.instagram.com/gess.tue/" target="_blank" rel="noopener noreferrer" 
+                 className="group flex items-center gap-2 text-white/40 hover:text-white transition-all duration-300">
+                <Instagram className="w-5 h-5" />
+                <span className="text-[10px] tracking-widest uppercase hidden md:block">Instagram</span>
+              </a>
+              <a href="mailto:tueguosheng@gmail.com" 
+                 className="group flex items-center gap-2 text-white/40 hover:text-white transition-all duration-300">
+                <Mail className="w-5 h-5" />
+                <span className="text-[10px] tracking-widest uppercase hidden md:block">Email</span>
+              </a>
             </div>
           </div>
 
-          {/* Bottom Bar */}
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-gray-500 text-sm">
-                © 2026 Snaptogoclub. All rights reserved.
-              </p>
-              <div className="flex items-center gap-1 text-gray-500 text-sm">
-                {/* Made with <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> by Snaptogoclub */}
-              </div>
-              <div className="flex gap-6 text-sm">
-                <a href="#" className="text-gray-500 hover:text-red-400 transition-colors">Privacy</a>
-                <a href="#" className="text-gray-500 hover:text-red-400 transition-colors">Terms</a>
+          {/* Section 2 & 3: Links (手機版並排，電腦版各占 2-3 欄) */}
+          <div className="md:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8">
+            
+            {/* 探索導覽 */}
+            <div className="space-y-6">
+              <h4 className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">探索 / Explore</h4>
+              <ul className="space-y-4">
+                {['首頁', '目的地', '旅行網誌', '關於我們'].map((item) => (
+                  <li key={item}>
+                    <Link href="#" className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">
+                      {item}
+                      <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-y-1 transition-all" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* 資源中心 */}
+            <div className="space-y-6">
+              <h4 className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">資源 / Resources</h4>
+              <ul className="space-y-4">
+                {['控制台', '發現靈感', '攝影畫廊', '精選合集'].map((item) => (
+                  <li key={item}>
+                    <Link href="#" className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">
+                      {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* 聯絡資訊 (僅電腦版顯示為獨立欄位) */}
+            <div className="hidden md:block space-y-6">
+              <h4 className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">聯絡 / Contact</h4>
+              <div className="space-y-4 text-white/50 text-xs font-light tracking-widest">
+                <p className="hover:text-white transition-colors cursor-pointer">tueguosheng@gmail.com</p>
+                <p>全球旅人 / Global Traveler</p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Bottom Bar: 版權資訊 */}
+        <div className="border-t border-white/5 pt-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <p className="text-white/20 text-[10px] font-extralight tracking-[0.2em] uppercase">
+                © 2026 SNAPTOGOCLUB. ALL RIGHTS RESERVED.
+              </p>
+            </div>
+            
+            <div className="flex gap-8">
+              <a href="#" className="text-white/20 hover:text-white/50 text-[10px] font-extralight tracking-[0.2em] uppercase transition-colors">Privacy</a>
+              <a href="#" className="text-white/20 hover:text-white/50 text-[10px] font-extralight tracking-[0.2em] uppercase transition-colors">Terms</a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </footer>
   );
