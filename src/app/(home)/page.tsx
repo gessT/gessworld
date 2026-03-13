@@ -68,8 +68,13 @@ const page = async () => {
 
             {/* sub-headline */}
             <p className="mt-5 text-base sm:text-lg md:text-xl text-white/75 max-w-lg leading-relaxed font-medium drop-shadow">
-              旅行 × 攝影 × 社交  
-我們一起旅行，一起創作，一起記錄世界。 
+               <h1 className="text-4xl md:text-5xl font-semibold tracking-wide leading-tight">
+    旅行 × 攝影 × 社交
+  </h1>
+
+  <p className="text-lg text-muted-foreground leading-relaxed font-light">
+    我們一起旅行，一起創作，一起記錄世界。
+  </p> 
             </p>
 
             {/* CTA row */}

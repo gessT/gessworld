@@ -10,10 +10,13 @@ const CameraCard = () => {
         </div>
 
         <div className="font-light">
-          <p>
-          旅行 × 攝影 × 社交  
-我們一起旅行，一起創作，一起記錄世界。 
-          </p>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-wide leading-tight">
+    旅行 × 攝影 × 社交
+  </h1>
+
+  <p className="text-lg text-muted-foreground leading-relaxed font-light">
+    我們一起旅行，一起創作，一起記錄世界。
+  </p>
         </div>
       </div>
     </CardContainer>

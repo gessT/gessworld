@@ -92,7 +92,7 @@ const DUMMY_PHOTOS = [
 ];
 
 const NEW_POST = {
-  title: "",
+  title: "",不需要太長， 10-15字， 可以是地名 + 主題，例如 "巴黎的浪漫街道"、"东京夜景漫步"、"纽约的城市节奏" 等等
   slug: "",
   author: "Your Name",
   publishedAt: new Date(),

@@ -52,9 +52,11 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
         </div>
 
         {/* Headline — massive Hypebeast-style */}
-        <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight mb-8 uppercase">
-          {data.title}
-        </h2>
+     
+          <h2 className="text-lg md:text-xl text-muted-foreground leading-relaxed lg:text-6xl font-bold ">
+      {data.title}
+  </h2>
+
 
         {/* CTA pill */}
         <div className="inline-flex items-center gap-2 border border-white/30 text-white font-black text-sm uppercase tracking-widest px-6 py-3 rounded-sm group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300">
