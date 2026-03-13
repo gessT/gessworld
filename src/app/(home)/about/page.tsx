@@ -16,36 +16,36 @@ import Footer from "@/components/footer";
 export const metadata: Metadata = {
   title: "About — Snaptogoclub",
   description:
-    "We travel. We shoot. We tell stories. Discover the journey behind Snaptogoclub.",
+    "記錄我走過的地方，用鏡頭捕捉世界的每一個瞬間。",
 };
 
 const stats = [
-  { value: "0+", label: "Destinations", icon: MapPin },
-  { value: "0+", label: "Photos Captured", icon: Camera },
-  { value: "0", label: "Community", icon: Users },
-  { value: "0", label: "Average Rating", icon: Star },
+  { value: "30+", label: "去過的城市", icon: MapPin },
+  { value: "1000+", label: "拍攝照片", icon: Camera },
+  { value: "50+", label: "旅行故事", icon: Users },
+  { value: "∞", label: "未來旅程", icon: Star },
 ];
 
 const values = [
   {
     icon: Globe,
-    title: "Explore Without Limits",
-    desc: "Every border is an invitation. We chase light across continents, from neon-lit alleys to untouched wilderness.",
+    title: "看見世界",
+    desc: "旅行讓我用不同的視角理解這個世界，每一個城市都是一段新的故事。",
   },
   {
     icon: Camera,
-    title: "Capture the Real",
-    desc: "Not posed. Not filtered. We document the raw, unscripted moments that only travel can create.",
+    title: "捕捉瞬間",
+    desc: "透過鏡頭，我能把那些稍縱即逝的畫面留下來，變成永遠的記憶。",
   },
   {
     icon: Heart,
-    title: "Travel with Soul",
-    desc: "We move slow, connect deep, and leave each place better — keeping memories, not footprints.",
+    title: "用心旅行",
+    desc: "旅行不只是打卡景點，而是感受當地的生活與文化。",
   },
   {
     icon: Compass,
-    title: "Your Story, Not Ours",
-    desc: "Every trip is personal. We craft each experience around you — your pace, your vision, your adventure.",
+    title: "跟著好奇心走",
+    desc: "很多最美的地方，往往不是計畫好的，而是在旅途中偶然遇見的。",
   },
 ];
 
@@ -66,17 +66,17 @@ const AboutPage = () => {
         {/* Hero text */}
         <div className="relative z-10 px-6 sm:px-12 lg:px-20 pb-20 max-w-4xl">
           <span className="inline-block text-red-500 text-xs font-bold tracking-[0.25em] uppercase mb-4">
-            Our Story
+            我的旅程
           </span>
           <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tight mb-6">
-            We Live
+            我走過世界
             <br />
-            <span className="text-red-500">to Travel.</span>
+            <span className="text-red-500">用鏡頭記錄</span>
           </h1>
           <p className="text-white/70 text-lg sm:text-xl max-w-xl leading-relaxed">
-            Snaptogoclub is not a tour company. We are a movement — a tribe of
-            young explorers who believe every journey deserves to be remembered
-            beautifully.
+            這是一個屬於我的旅行部落格。
+            我用相機記錄走過的城市、看過的風景，以及旅途中那些稍縱即逝的瞬間。
+            每一段旅程，都值得被記住。
           </p>
         </div>
       </section>
@@ -108,47 +108,41 @@ const AboutPage = () => {
           <div className="space-y-8">
             <div>
               <span className="text-red-500 text-xs font-bold tracking-[0.25em] uppercase">
-                Who we are
+                關於我
               </span>
               <h2 className="text-4xl sm:text-5xl font-black mt-3 leading-tight">
-                Born on the road.
+                旅行開始於
                 <br />
-                <span className="text-white/40">Built for wanderers.</span>
+                <span className="text-white/40">一台相機與一份好奇心</span>
               </h2>
             </div>
             <div className="space-y-5 text-white/60 text-base leading-relaxed">
               <p>
-                Snaptogoclub started with a camera, a one-way ticket, and a
-                question:{" "}
-                <em className="text-white/90 not-italic font-semibold">
-                  "What if we could make every journey look and feel as good as
-                  it actually was?"
-                </em>
+                這個部落格的開始，其實很簡單。
+                只是想把自己旅行過的地方、看過的風景，
+                用照片和文字記錄下來。
               </p>
               <p>
-                We are not guides. We are{" "}
-                <span className="text-white font-semibold">
-                  travel companions, visual storytellers, and co-creators
-                </span>{" "}
-                — walking alongside you, lens in hand, letting the real moments
-                unfold naturally.
+                有些旅程是計畫好的，
+                有些則是在旅途中偶然發現。
+                從城市街道到寧靜小鎮，
+                每一個地方都留下了一段回憶。
               </p>
               <p>
-                Whether it is a couple chasing golden hour, a squad hunting for
-                the next hidden gem, or a solo traveller ready to find
-                themselves — Snaptogoclub is your reason to go and your way to
-                remember it.
+                在這裡，我分享我走過的路、
+                看過的風景，以及透過鏡頭捕捉到的瞬間。
+                希望這些故事，也能帶給你一點旅行的靈感。
               </p>
             </div>
             <Link
               href="/travel"
               className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-7 py-3.5 rounded-full transition-colors text-sm tracking-wide"
             >
-              See our journeys <ArrowRight className="w-4 h-4" />
+              查看我的旅程 <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          {/* Image collage */}
+          {/* Image */}
           <div className="relative h-[500px] hidden lg:block">
             <div className="absolute inset-0 rounded-2xl overflow-hidden">
               <div
@@ -156,27 +150,27 @@ const AboutPage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/60 to-transparent" />
             </div>
-            {/* Floating badge */}
+
             <div className="absolute -bottom-6 -left-6 bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 shadow-2xl">
               <div className="flex items-center gap-3">
                 <div className="bg-red-500/20 rounded-xl p-2.5">
                   <Camera className="w-5 h-5 text-red-400" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg leading-none">500+</p>
-                  <p className="text-white/50 text-xs mt-1">Stories told</p>
+                  <p className="text-white font-bold text-lg leading-none">1000+</p>
+                  <p className="text-white/50 text-xs mt-1">照片故事</p>
                 </div>
               </div>
             </div>
-            {/* Floating badge 2 */}
+
             <div className="absolute -top-6 -right-6 bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 shadow-2xl">
               <div className="flex items-center gap-3">
                 <div className="bg-red-500/20 rounded-xl p-2.5">
                   <MapPin className="w-5 h-5 text-red-400" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg leading-none">100+</p>
-                  <p className="text-white/50 text-xs mt-1">Destinations</p>
+                  <p className="text-white font-bold text-lg leading-none">30+</p>
+                  <p className="text-white/50 text-xs mt-1">旅行地點</p>
                 </div>
               </div>
             </div>
@@ -184,7 +178,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* ── FULL BLEED QUOTE ───────────────────────────────────────── */}
+      {/* ── QUOTE ───────────────────────────────────────── */}
       <section className="relative py-32 overflow-hidden">
         <div
           className="absolute inset-0 bg-[url(/aboutbg.png)] bg-cover bg-center bg-fixed opacity-20"
@@ -192,24 +186,24 @@ const AboutPage = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0e0e0e] via-transparent to-[#0e0e0e]" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-12 text-center">
           <p className="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
-            &ldquo;带着镜头走，
-            <span className="text-red-500">带着故事回家</span>
-            。&rdquo;
+            「走過的路，
+            <span className="text-red-500">都在鏡頭裡</span>
+            。」
           </p>
           <p className="text-white/40 mt-6 text-base tracking-widest uppercase font-medium">
-            Leave with a lens. Come back with a story.
+            Every road I walk becomes a story.
           </p>
         </div>
       </section>
 
-      {/* ── VALUES BENTO GRID ──────────────────────────────────────── */}
+      {/* ── VALUES ──────────────────────────────────────── */}
       <section className="px-6 sm:px-12 lg:px-20 py-24 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-red-500 text-xs font-bold tracking-[0.25em] uppercase">
-            What drives us
+            我的旅行理念
           </span>
           <h2 className="text-4xl sm:text-5xl font-black mt-3">
-            Our <span className="text-white/40">Principles</span>
+            旅行 <span className="text-white/40">與攝影</span>
           </h2>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -230,31 +224,30 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* ── CTA SECTION ────────────────────────────────────────────── */}
+      {/* ── CTA ────────────────────────────────────────────── */}
       <section className="px-6 sm:px-12 lg:px-20 pb-24 max-w-7xl mx-auto">
         <div className="relative bg-gradient-to-br from-red-600/20 to-red-900/10 border border-red-500/20 rounded-3xl p-12 sm:p-16 overflow-hidden text-center">
-          {/* Background texture */}
           <div className="absolute inset-0 opacity-5 bg-[url(/aboutbg.png)] bg-cover bg-center rounded-3xl" />
           <div className="relative z-10">
             <h2 className="text-4xl sm:text-5xl font-black mb-4">
-              Ready to start your story?
+              繼續探索世界
             </h2>
             <p className="text-white/60 text-lg mb-10 max-w-xl mx-auto">
-              Join thousands of travellers who chose to experience the world
-              differently — with Snaptogoclub.
+              跟著我的旅行腳步，
+              一起透過鏡頭看見世界。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/travel"
                 className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-4 rounded-full transition-colors text-sm tracking-wide"
               >
-                Explore Journeys <ArrowRight className="w-4 h-4" />
+                查看旅程 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/discover"
                 className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-8 py-4 rounded-full transition-colors text-sm tracking-wide border border-white/20"
               >
-                Discover Photos
+                瀏覽照片
               </Link>
             </div>
           </div>
