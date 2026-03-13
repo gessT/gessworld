@@ -80,15 +80,16 @@ const page = async () => {
             <div className="mt-9 flex flex-wrap gap-3 justify-center pointer-events-auto">
               <a
                 href="/travel"
-                className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-7 py-3 rounded-full text-sm shadow-lg shadow-red-500/30 transition-colors"
+                className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium tracking-widest px-7 py-3 rounded-full text-sm shadow-lg shadow-red-500/30 transition-all duration-300"
               >
-                Explore Destinations
+                探索目的地
               </a>
+
               <a
                 href="/blog"
-                className="bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 text-white font-semibold px-7 py-3 rounded-full text-sm transition-colors"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-medium tracking-widest px-7 py-3 rounded-full text-sm transition-all duration-300"
               >
-                Read Stories
+                閱讀旅人故事
               </a>
             </div>
           </div>
@@ -107,7 +108,7 @@ const page = async () => {
           <section>
             <div className="flex items-center gap-3 mb-8">
               <span className="w-1 h-7 bg-red-500 rounded-full" />
-              <h2 className="text-2xl font-bold tracking-tight">Popular Destinations</h2>
+              <h2 className="text-2xl font-bold tracking-tight">人氣目的地</h2>
             </div>
             <Suspense fallback={<CitiesViewLoadingStatus />}>
               <ErrorBoundary fallback={<p>Something went wrong</p>}>

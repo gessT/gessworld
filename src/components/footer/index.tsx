@@ -50,10 +50,15 @@ const Footer = () => {
             <div className="space-y-6">
               <h4 className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">探索 / Explore</h4>
               <ul className="space-y-4">
-                {['首頁', '目的地', '旅行網誌', '關於我們'].map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">
-                      {item}
+                {[
+                  { label: '首頁', href: '/' },
+                  { label: '目的地', href: '/travel' },
+                  { label: '旅行網誌', href: '/blog' },
+                  { label: '關於我們', href: '/about' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link href={item.href} className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">
+                      {item.label}
                       <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-y-1 transition-all" />
                     </Link>
                   </li>
@@ -65,10 +70,15 @@ const Footer = () => {
             <div className="space-y-6">
               <h4 className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">資源 / Resources</h4>
               <ul className="space-y-4">
-                {['控制台', '發現靈感', '攝影畫廊', '精選合集'].map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">
-                      {item}
+                {[
+                  { label: '控制台', href: '/dashboard' },
+                  { label: '發現靈感', href: '/discover' },
+                  { label: '攝影畫廊', href: '/discover' },
+                  { label: '精選合集', href: '/discover' },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link href={item.href} className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -79,7 +89,7 @@ const Footer = () => {
             <div className="hidden md:block space-y-6">
               <h4 className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">聯絡 / Contact</h4>
               <div className="space-y-4 text-white/50 text-xs font-light tracking-widest">
-                <p className="hover:text-white transition-colors cursor-pointer">tueguosheng@gmail.com</p>
+                <a href="mailto:tueguosheng@gmail.com" className="hover:text-white transition-colors">tueguosheng@gmail.com</a>
                 <p>全球旅人 / Global Traveler</p>
               </div>
             </div>
