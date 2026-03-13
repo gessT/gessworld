@@ -43,7 +43,7 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
   }
 
   // 地點：優先使用 data.location，否則預設一個
-  const location = data.location || "某個溫柔的角落"; // 或 data.location_cn
+  const location = data.title || "某個溫柔的角落"; // 或 data.location_cn
 
   return (
     <Link
