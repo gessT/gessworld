@@ -7,7 +7,6 @@ import {
   SiTrpc,
   SiReactquery,
   SiShadcnui,
-  SiAdobelightroomclassic,
   SiVercel,
   SiCloudflare,
   SiDrizzle,
@@ -53,10 +52,6 @@ const technologies = [
   {
     icon: SiCloudflare,
     name: "Cloudflare",
-  },
-  {
-    icon: SiAdobelightroomclassic,
-    name: "Lightroom Classic",
   },
 ];
 
