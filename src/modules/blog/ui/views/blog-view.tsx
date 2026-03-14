@@ -74,13 +74,13 @@ export const BlogView = () => {
         </div>
 
         {/* CONTACT CARDS */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+        {/* <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
           <ContactCard title="Instagram" />
           <ContactCard
             title="WhatsApp me"
             className="bg-red-600 hover:bg-red-500 text-white border-transparent shadow-lg shadow-red-600/10"
           />
-        </div>
+        </div> */}
 
         {/* FOOTER */}
         <div className="pt-8">

@@ -43,7 +43,7 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
   }
 
   // 地點：優先使用 data.location，否則預設一個
-  const location = data.title || "某個溫柔的角落"; // 或 data.location_cn
+  const location = data.slug || "某個溫柔的角落"; // 或 data.location_cn
 
   return (
     <Link
@@ -81,10 +81,19 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
             </div>
           </div>
 
-          {/* Headline - 清晰、大字體、細字重 */}
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-light leading-tight tracking-tight text-white mb-2">
-            {data.title}
-          </h2>
+     <div className="flex flex-col gap-1 mb-4">
+  {/* Subtitle / Category - 這是年輕部落格常見的設計細節 */}
+  <span className="text-[10px] md:text-[11px] font-medium tracking-[0.4em] text-white/30 uppercase">
+    Story & Vision
+  </span>
+
+  <h2 className="text-3xl md:text-4xl lg:text-5xl font-extralight leading-[1.1] tracking-[0.05em] text-white/90">
+    {data.title}
+  </h2>
+  
+  {/* Optional: 裝飾性細線，增加現代感 */}
+  <div className="w-8 h-[1px] bg-white/20 mt-4" />
+</div>
           {/* 隨機生成的描述短語 */}
           <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed mb-10 max-w-xl">
              {randomQuote}

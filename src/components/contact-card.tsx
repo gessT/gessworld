@@ -4,58 +4,58 @@ import { MdWhatsapp } from "react-icons/md";
 import { PiArrowUpRight, PiInstagramLogo } from "react-icons/pi";
 
 const iconMap = {
-  Instagram: <PiInstagramLogo size={18} />,
-  "WhatsApp me": <MdWhatsapp size={18} />,
+  Instagram: <PiInstagramLogo size={14} />,
+  "WhatsApp me": <MdWhatsapp size={14} />,
 };
 
 interface Props {
   title: keyof typeof iconMap;
+  subTitle?: string;
   href?: string;
   className?: string;
-  phone?: string; // 新增電話參數
+  phone?: string; 
 }
 
-const ContactCard = ({ title, href, className, phone = "85212345678" }: Props) => {
-  // 自動判斷連結：若是 WhatsApp 則生成專屬連結
-  const finalHref = title === "WhatsApp me" 
-    ? `https://wa.me/${phone}` 
-    : href || "#";
-
-  const isWhatsApp = title === "WhatsApp me";
+const ContactCard = ({ title, subTitle, href, className, phone = "85212345678" }: Props) => {
+  const finalHref = title === "WhatsApp me" ? `https://wa.me/${phone}` : href || "#";
 
   return (
     <Link
       href={finalHref}
       target="_blank"
       className={cn(
-        "w-full h-full p-4 lg:p-5 rounded-full flex justify-between items-center cursor-pointer group transition-all duration-500",
-        // 預設樣式：極簡深色背景
-        "bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10",
-        // WhatsApp 專屬強烈風格（若有傳入 className 則會覆蓋）
-        isWhatsApp && "bg-red-600 border-red-500 hover:bg-red-500 hover:border-red-400 text-white shadow-lg shadow-red-600/20",
+        "group relative flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-500",
+        "bg-white/[0.03] backdrop-blur-md border border-white/10 hover:border-white/40",
+        "active:scale-95", // Mobile-friendly tactile feel
         className
       )}
     >
-      {/* 文字：改為細體與寬字距 */}
-      <p className="text-sm font-light tracking-[0.15em] uppercase transition-all duration-300 group-hover:translate-x-1">
-        {title}
-      </p>
+      {/* Content Section */}
+      <div className="flex flex-col items-start transition-all duration-500 group-hover:-translate-y-0.5">
+        <span className="text-[7px] leading-none font-bold tracking-[0.3em] text-white/20 uppercase group-hover:text-white/40 transition-colors">
+          {subTitle}
+        </span>
+        <p className="text-[11px] leading-none font-medium tracking-wider mt-1.5 transition-colors">
+          {title}
+        </p>
+      </div>
 
-      <div className="relative inline-block overflow-hidden size-[18px]">
-        <div className="relative inline-block group h-full w-full">
-          {/* 原始 Icon */}
-          <span className="block transform transition-transform duration-300 ease-in-out group-hover:-translate-y-full">
+      {/* ICON STRIP: Vertical Slide Animation */}
+      <div className="relative h-[14px] w-[14px] overflow-hidden shrink-0">
+        <div className="flex flex-col transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) group-hover:-translate-y-full">
+          {/* Layer 1: Brand Icon */}
+          <div className="h-[14px] w-[14px] flex items-center justify-center shrink-0 opacity-40 group-hover:opacity-0 transition-opacity duration-300">
             {iconMap[title]}
-          </span>
-          {/* Hover 切換後的箭頭 */}
-          <span className={cn(
-            "absolute inset-0 transform translate-y-full transition-transform duration-300 ease-in-out group-hover:translate-y-0",
-            isWhatsApp ? "text-white" : "text-white" // 全部改為純白 Hover
-          )}>
-            <PiArrowUpRight size={18} />
-          </span>
+          </div>
+          {/* Layer 2: Action Arrow */}
+          <div className="h-[14px] w-[14px] flex items-center justify-center shrink-0">
+            <PiArrowUpRight size={14} className="text-current" />
+          </div>
         </div>
       </div>
+      
+      {/* Modern Highlight Glow */}
+      <div className="absolute inset-0 rounded-2xl bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
     </Link>
   );
 };

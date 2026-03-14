@@ -98,9 +98,9 @@ const Footer = () => {
               <ul className="space-y-4">
                 {[
                   { label: '控制台', href: '/dashboard' },
-                  { label: '發現靈感', href: '/discover' },
-                  { label: '攝影畫廊', href: '/discover' },
-                  { label: '精選合集', href: '/discover' },
+                  // { label: '發現靈感', href: '/discover' },
+                  { label: '攝影畫廊', href: '/travel' },
+                  // { label: '精選合集', href: '/discover' },
                 ].map((item) => (
                   <li key={item.label}>
                     <Link href={item.href} className="group flex items-center gap-1 text-white/60 hover:text-white text-xs md:text-sm font-light tracking-widest transition-all">

@@ -55,7 +55,7 @@ const page = async () => {
           {/* ── Centred hero content ── */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
             {/* pill badge */}
-            <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white/90 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6 tracking-wider uppercase">
+            <span className="mt-4 inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white/90 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6 tracking-wider uppercase">
               ✦ Travel &amp; Photography
             </span>
 
