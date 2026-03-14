@@ -7,8 +7,10 @@ import Link from "next/link";
 import { cn } from "@/lib/utils"; // Standard Tailwind utility for merging classes
 
 const navItems = [
-  { label: "探索目的地", subLabel: "EXPLORE", href: "/travel" },
-  { label: "攝影畫廊", subLabel: "GALLERY", href: "/gallery" },
+  { label: "探索目的地", subLabel: "EXPLORE", href: "/explore" },
+
+  { label: "攝影畫廊", subLabel: "GALLERY", href: "/travel" },
+
   { label: "旅人網誌", subLabel: "JOURNAL", href: "/blog" },
   { label: "關於我們", subLabel: "STORY", href: "/about" },
 ];
@@ -39,7 +41,7 @@ const Navbar = () => {
               )}>
                 {item.subLabel}
               </span>
-              
+
               {/* Main Label */}
               <span className={cn(
                 "text-sm font-light tracking-[0.15em] transition-all duration-300",
@@ -47,7 +49,7 @@ const Navbar = () => {
               )}>
                 {item.label}
               </span>
-              
+
               {/* Underline */}
               <span className={cn(
                 "absolute -bottom-1 left-1/2 -translate-x-1/2 h-[1px] bg-white transition-all duration-500 ease-out",
