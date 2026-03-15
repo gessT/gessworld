@@ -49,8 +49,8 @@ The root structure must be exactly:
    ❌ "NEW_POST"     ✅ "post"
 
 2. MARKDOWN URLS — Never wrap URLs in markdown link syntax. This breaks JSON parsing.
-   ❌ "[https://jiotriplah.s3...jpg](https://...)"
-   ✅ "https://jiotriplah.s3.ap-southeast-1.amazonaws.com/photos/kobe/kobe-1.jpg"
+   
+   ✅ !important this is CORRECT "https://jiotriplah.s3.ap-southeast-1.amazonaws.com/photos/kobe/kobe-1.jpg"
 
 3. SAVE AS UTF-8 WITHOUT BOM — When copying the JSON output into a .json file,
    save it as UTF-8 (no BOM). BOM causes a parse error: "Unexpected token 锘?"
