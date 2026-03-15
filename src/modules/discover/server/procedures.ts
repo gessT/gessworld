@@ -8,6 +8,7 @@ import {
   trips,
   tripTags,
   tripFeatures,
+  tripDepartures,
 } from "@/db/schema";
 import {
   DEFAULT_PAGE,
@@ -81,6 +82,16 @@ export const discoverRouter = createTRPCRouter({
       )
       .orderBy(tripFeatures.sortOrder);
 
+    const allDepartures = await db
+      .select()
+      .from(tripDepartures)
+      .where(
+        tripIds.length === 1
+          ? eq(tripDepartures.tripId, tripIds[0])
+          : inArray(tripDepartures.tripId, tripIds)
+      )
+      .orderBy(tripDepartures.sortOrder);
+
     // Attach cover photo URL
     const coverIds = data
       .map((t) => t.coverPhotoId)
@@ -106,6 +117,17 @@ export const discoverRouter = createTRPCRouter({
       features: allFeatures
         .filter((f) => f.tripId === trip.id)
         .map((f) => ({ label: f.label, iconKey: f.iconKey })),
+      departures: allDepartures
+        .filter((d) => d.tripId === trip.id)
+        .map((d) => ({
+          id: d.id,
+          label: d.label,
+          startDate: d.startDate,
+          endDate: d.endDate,
+          spotsTotal: d.spotsTotal,
+          spotsLeft: d.spotsLeft,
+          sortOrder: d.sortOrder,
+        })),
       coverPhoto:
         coverPhotos.find((p) => p.id === trip.coverPhotoId) ?? null,
     }));
@@ -172,21 +194,38 @@ export const discoverRouter = createTRPCRouter({
         .where(eq(tripFeatures.tripId, trip.id))
         .orderBy(tripFeatures.sortOrder);
 
+      const departures = await db
+        .select()
+        .from(tripDepartures)
+        .where(eq(tripDepartures.tripId, trip.id))
+        .orderBy(tripDepartures.sortOrder);
+
       return {
         ...trip,
         tags: tags.map((t) => t.label),
         features: features.map((f) => f.label),
+        departures: departures.map((d) => ({
+          label: d.label,
+          startDate: d.startDate.toISOString().slice(0, 10),
+          endDate: d.endDate.toISOString().slice(0, 10),
+          spotsTotal: d.spotsTotal ?? undefined,
+          spotsLeft: d.spotsLeft ?? undefined,
+          sortOrder: d.sortOrder,
+        })),
       };
     }),
 
   create: protectedProcedure
     .input(tripFormSchema)
     .mutation(async ({ input }) => {
-      const { tags, features, priceUsd, ...tripData } = input;
+      const { tags, features, priceUsd, departures, ...tripData } = input;
 
       const [newTrip] = await db
         .insert(trips)
-        .values({ ...tripData, priceUsd: priceUsd * 100 })
+        .values({
+          ...tripData,
+          priceUsd: priceUsd * 100,
+        })
         .returning();
 
       if (tags.length > 0) {
@@ -210,17 +249,35 @@ export const discoverRouter = createTRPCRouter({
         );
       }
 
+      if (departures.length > 0) {
+        await db.insert(tripDepartures).values(
+          departures.map((d, i) => ({
+            tripId: newTrip.id,
+            label: d.label,
+            startDate: new Date(d.startDate),
+            endDate: new Date(d.endDate),
+            spotsTotal: d.spotsTotal,
+            spotsLeft: d.spotsLeft ?? d.spotsTotal,
+            sortOrder: d.sortOrder ?? i,
+          }))
+        );
+      }
+
       return newTrip;
     }),
 
   update: protectedProcedure
     .input(tripUpdateFormSchema)
     .mutation(async ({ input }) => {
-      const { id, tags, features, priceUsd, ...tripData } = input;
+      const { id, tags, features, priceUsd, departures, ...tripData } = input;
 
       const [updatedTrip] = await db
         .update(trips)
-        .set({ ...tripData, priceUsd: priceUsd * 100, updatedAt: new Date() })
+        .set({
+          ...tripData,
+          priceUsd: priceUsd * 100,
+          updatedAt: new Date(),
+        })
         .where(eq(trips.id, id))
         .returning();
 
@@ -249,6 +306,22 @@ export const discoverRouter = createTRPCRouter({
             label,
             iconKey: FEATURE_ICON_KEYS[i % FEATURE_ICON_KEYS.length],
             sortOrder: i,
+          }))
+        );
+      }
+
+      // Replace departures
+      await db.delete(tripDepartures).where(eq(tripDepartures.tripId, id));
+      if (departures.length > 0) {
+        await db.insert(tripDepartures).values(
+          departures.map((d, i) => ({
+            tripId: id,
+            label: d.label,
+            startDate: new Date(d.startDate),
+            endDate: new Date(d.endDate),
+            spotsTotal: d.spotsTotal,
+            spotsLeft: d.spotsLeft ?? d.spotsTotal,
+            sortOrder: d.sortOrder ?? i,
           }))
         );
       }

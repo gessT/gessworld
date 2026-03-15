@@ -299,8 +299,6 @@ export const trips = pgTable(
     // Schedule
     durationDays: integer("duration_days").notNull(),
     bestSeasonLabel: text("best_season_label"), // e.g. "Jan - Mar"
-    departureDateStart: timestamp("departure_date_start"),
-    departureDateEnd: timestamp("departure_date_end"),
 
     // Pricing
     priceUsd: integer("price_usd").notNull(), // stored in cents: 880000 = $8,800
@@ -321,8 +319,27 @@ export const trips = pgTable(
   (t) => [
     index("trip_status_idx").on(t.status),
     index("trip_city_set_idx").on(t.citySetId),
-    index("trip_departure_idx").on(t.departureDateStart),
   ]
+);
+
+// ── trip_departures ──────────────────────────────────────────────────────────
+// Multiple selectable departure windows per trip
+
+export const tripDepartures = pgTable(
+  "trip_departures",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tripId: uuid("trip_id")
+      .notNull()
+      .references(() => trips.id, { onDelete: "cascade" }),
+    label: text("label").notNull(),        // e.g. "Winter Aurora A"
+    startDate: timestamp("start_date").notNull(),
+    endDate: timestamp("end_date").notNull(),
+    spotsTotal: integer("spots_total"),    // null = unlimited
+    spotsLeft: integer("spots_left"),
+    sortOrder: integer("sort_order").default(0).notNull(),
+  },
+  (t) => [index("trip_departures_trip_idx").on(t.tripId)]
 );
 
 // ── trip_tags ────────────────────────────────────────────────────────────────
@@ -426,6 +443,11 @@ export const tripsRelations = relations(trips, ({ one, many }) => ({
   features: many(tripFeatures),
   gallery: many(tripGallery),
   enrollments: many(tripEnrollments),
+  departures: many(tripDepartures),
+}));
+
+export const tripDeparturesRelations = relations(tripDepartures, ({ one }) => ({
+  trip: one(trips, { fields: [tripDepartures.tripId], references: [trips.id] }),
 }));
 
 export const tripTagsRelations = relations(tripTags, ({ one }) => ({
@@ -453,6 +475,7 @@ export type TripTag = InferSelectModel<typeof tripTags>;
 export type TripFeature = InferSelectModel<typeof tripFeatures>;
 export type TripGalleryItem = InferSelectModel<typeof tripGallery>;
 export type TripEnrollment = InferSelectModel<typeof tripEnrollments>;
+export type TripDeparture = InferSelectModel<typeof tripDepartures>;
 
 export type TripFull = Trip & {
   coverPhoto: Photo | null;

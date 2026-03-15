@@ -8,3 +8,6 @@ export const IMAGE_SIZE_LIMIT = 50 * 1024 * 1024;
 
 // Upload default folder
 export const DEFAULT_PHOTOS_UPLOAD_FOLDER = "photos";
+
+// WhatsApp contact number — set NEXT_PUBLIC_WHATSAPP_NUMBER in .env (international format, no +)
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";

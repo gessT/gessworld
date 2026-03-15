@@ -2,18 +2,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import {
   ArrowRight,
   Calendar,
   Camera,
   Compass,
   MapPin,
+  MessageCircle,
   Star,
   Users,
 } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import Footer from "@/components/footer";
+import { WHATSAPP_NUMBER } from "@/constants";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   camera: Camera,
@@ -41,11 +44,37 @@ const DISCOVER_NOTES = [
   },
 ];
 
+function fmtDate(d: Date | string | null | undefined) {
+  if (!d) return null;
+  return new Date(d).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function buildWhatsAppUrl(
+  tripTitle: string,
+  departureLabel?: string | null,
+  start?: Date | string | null,
+  end?: Date | string | null
+) {
+  const dateStr =
+    start && end
+      ? ` — ${departureLabel ? departureLabel + ": " : ""}${fmtDate(start)} → ${fmtDate(end)}`
+      : "";
+  const text = `Hi! I'm interested in the "${tripTitle}" trip${dateStr}. Could you please send me more information? 🙏`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
 export const DiscoverTripsView = () => {
   const trpc = useTRPC();
   const { data: tripList } = useSuspenseQuery(
     trpc.discover.getManyTrips.queryOptions()
   );
+
+  // selectedDeparture[tripId] = index of selected departure (or null)
+  const [selectedDeparture, setSelectedDeparture] = useState<Record<string, number | null>>({});
 
   const featuredTrip = tripList[0] ?? null;
 
@@ -232,10 +261,20 @@ export const DiscoverTripsView = () => {
             </div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-3">
-              {tripList.map((trip) => (
+              {tripList.map((trip) => {
+                const selIdx = selectedDeparture[trip.id] ?? null;
+                const selDep = selIdx !== null ? trip.departures[selIdx] : null;
+                const hasSelected = selIdx !== null;
+                const hasDepartures = trip.departures.length > 0;
+
+                return (
                 <article
                   key={trip.id}
-                  className="group overflow-hidden rounded-[2rem] border border-white/8 bg-[#111] transition-all duration-500 hover:-translate-y-1 hover:border-red-500/35"
+                  className={`group overflow-hidden rounded-[2rem] border bg-[#111] transition-all duration-500 hover:-translate-y-1 ${
+                    hasSelected
+                      ? "border-red-500/70 shadow-[0_0_32px_rgba(239,68,68,0.18)]"
+                      : "border-white/8 hover:border-red-500/35"
+                  }`}
                 >
                   <div className="relative h-72 overflow-hidden">
                     {trip.coverPhoto ? (
@@ -314,15 +353,101 @@ export const DiscoverTripsView = () => {
                       </div>
                     )}
 
-                    <Link
-                      href="/travel"
-                      className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.24em] text-white transition-colors hover:text-red-400"
-                    >
-                      Explore This Mood <ArrowRight size={12} />
-                    </Link>
+                    {/* ── Date selection + WhatsApp CTA ── */}
+                    <div className="border-t border-white/8 pt-4 space-y-3">
+                      {/* Departure date pills */}
+                      {hasDepartures && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-[0.28em] text-white/35">
+                            Choose Departure
+                          </p>
+                          <div className="flex flex-col gap-2">
+                            {trip.departures.map((dep, idx) => {
+                              const isSel = selIdx === idx;
+                              const spotsLabel =
+                                dep.spotsLeft != null
+                                  ? dep.spotsLeft <= 3
+                                    ? `${dep.spotsLeft} left!`
+                                    : `${dep.spotsLeft} spots`
+                                  : null;
+                              return (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  onClick={() =>
+                                    setSelectedDeparture((prev) => ({
+                                      ...prev,
+                                      [trip.id]: isSel ? null : idx,
+                                    }))
+                                  }
+                                  className={`w-full flex items-center justify-between rounded-xl border px-4 py-2.5 text-left transition-all ${
+                                    isSel
+                                      ? "border-red-500/60 bg-red-500/10 text-white"
+                                      : "border-white/10 bg-white/[0.03] text-white/55 hover:border-white/25 hover:text-white/90"
+                                  }`}
+                                >
+                                  <div className="space-y-0.5">
+                                    <p className={`text-[11px] font-bold uppercase tracking-[0.18em] ${isSel ? "text-red-300" : "text-white/40"}`}>
+                                      {dep.label}
+                                    </p>
+                                    <p className="text-xs font-semibold">
+                                      <Calendar size={10} className="inline mr-1 opacity-60" />
+                                      {fmtDate(dep.startDate)} → {fmtDate(dep.endDate)}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col items-end gap-1">
+                                    {spotsLabel && (
+                                      <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                        dep.spotsLeft != null && dep.spotsLeft <= 3
+                                          ? "bg-red-500/30 text-red-300"
+                                          : "bg-white/10 text-white/50"
+                                      }`}>
+                                        {spotsLabel}
+                                      </span>
+                                    )}
+                                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${isSel ? "text-red-400" : "text-white/25"}`}>
+                                      {isSel ? "✓" : "Select"}
+                                    </span>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* WhatsApp button */}
+                      <div className="flex items-center gap-3">
+                        <a
+                          href={buildWhatsAppUrl(
+                            trip.title,
+                            selDep?.label,
+                            selDep?.startDate,
+                            selDep?.endDate
+                          )}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-black uppercase tracking-[0.2em] transition-all ${
+                            hasSelected
+                              ? "bg-[#25D366] text-white hover:bg-[#20bd5a]"
+                              : "bg-white/[0.06] text-white/50 hover:bg-[#25D366]/80 hover:text-white"
+                          }`}
+                        >
+                          <MessageCircle size={14} />
+                          {hasSelected ? "WhatsApp Us" : "Enquire via WhatsApp"}
+                        </a>
+                        <Link
+                          href="/travel"
+                          className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-white/40 transition-colors hover:text-red-400"
+                        >
+                          Gallery <ArrowRight size={11} />
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

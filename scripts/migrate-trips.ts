@@ -81,6 +81,20 @@ CREATE TABLE IF NOT EXISTS "trip_features" (
 
 CREATE INDEX IF NOT EXISTS "trip_features_trip_idx" ON "trip_features" ("trip_id");
 
+-- ── trip_departures ───────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS "trip_departures" (
+  "id"          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "trip_id"     uuid NOT NULL REFERENCES "trips"("id") ON DELETE CASCADE,
+  "label"       text NOT NULL,
+  "start_date"  timestamp NOT NULL,
+  "end_date"    timestamp NOT NULL,
+  "spots_total" integer,
+  "spots_left"  integer,
+  "sort_order"  integer NOT NULL DEFAULT 0
+);
+
+CREATE INDEX IF NOT EXISTS "trip_departures_trip_idx" ON "trip_departures" ("trip_id");
+
 -- ── trip_gallery ──────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS "trip_gallery" (
   "id"         uuid PRIMARY KEY DEFAULT gen_random_uuid(),

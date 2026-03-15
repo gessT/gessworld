@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { db } from "@/db";
-import { trips, tripTags, tripFeatures, tripGallery, tripEnrollments } from "@/db/schema";
+import { trips, tripTags, tripFeatures, tripGallery, tripEnrollments, tripDepartures } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import tripsData from "./data/trips.json";
 
@@ -21,6 +21,15 @@ interface TripSeedFeature {
   label: string;
   iconKey: string;
   sortOrder: number;
+}
+
+interface TripSeedDeparture {
+  label: string;
+  startDate: string;
+  endDate: string;
+  spotsTotal?: number;
+  spotsLeft?: number;
+  sortOrder?: number;
 }
 
 interface TripSeedGallery {
@@ -52,6 +61,7 @@ interface TripSeedRecord {
   difficulty: TripDifficulty;
   tags: TripSeedTag[];
   features: TripSeedFeature[];
+  departures: TripSeedDeparture[];
   gallery: TripSeedGallery[];
   enrollments: TripSeedEnrollment[];
 }
@@ -130,6 +140,22 @@ async function main() {
           sortOrder: feat.sortOrder,
         }))
       );
+    }
+
+    // ── Insert departures ─────────────────────────────────────────────────
+    if (record.departures.length > 0) {
+      await db.insert(tripDepartures).values(
+        record.departures.map((d, i) => ({
+          tripId,
+          label: d.label,
+          startDate: new Date(d.startDate),
+          endDate: new Date(d.endDate),
+          spotsTotal: d.spotsTotal,
+          spotsLeft: d.spotsLeft ?? d.spotsTotal,
+          sortOrder: d.sortOrder ?? i,
+        }))
+      );
+      console.log(`       📅 ${record.departures.length} departure(s) added`);
     }
 
     // ── Insert gallery entries (requires valid photo UUIDs in DB) ─────────

@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const departureSchema = z.object({
+  label: z.string().min(1, { message: "Label is required" }),
+  startDate: z.string().min(1, { message: "Start date is required" }),
+  endDate: z.string().min(1, { message: "End date is required" }),
+  spotsTotal: z.number().int().positive().optional(),
+  spotsLeft: z.number().int().min(0).optional(),
+  sortOrder: z.number().int().default(0),
+});
+
 export const tripFormSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   subtitle: z.string().min(1, { message: "Subtitle is required" }),
@@ -14,6 +23,7 @@ export const tripFormSchema = z.object({
     .int()
     .positive({ message: "Price is required (enter full dollars, e.g. 8800)" }),
   bestSeasonLabel: z.string().optional(),
+  departures: z.array(departureSchema).default([]),
   minGroupSize: z.number().int().min(1).optional(),
   maxGroupSize: z.number().int().min(1).optional(),
   accentGradient: z.string().optional(),
@@ -29,3 +39,4 @@ export const tripUpdateFormSchema = tripFormSchema.extend({
 
 export type TripFormValues = z.infer<typeof tripFormSchema>;
 export type TripUpdateFormValues = z.infer<typeof tripUpdateFormSchema>;
+export type DepartureValues = z.infer<typeof departureSchema>;

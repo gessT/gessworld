@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { MdWhatsapp } from "react-icons/md";
 import { PiArrowUpRight, PiInstagramLogo } from "react-icons/pi";
+import { WHATSAPP_NUMBER } from "@/constants";
 
 const iconMap = {
   Instagram: <PiInstagramLogo size={14} />,
@@ -16,7 +17,7 @@ interface Props {
   phone?: string; 
 }
 
-const ContactCard = ({ title, subTitle, href, className, phone = "85212345678" }: Props) => {
+const ContactCard = ({ title, subTitle, href, className, phone = WHATSAPP_NUMBER }: Props) => {
   const finalHref = title === "WhatsApp me" ? `https://wa.me/${phone}` : href || "#";
 
   return (

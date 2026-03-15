@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Resolver } from "react-hook-form";
 import { z } from "zod";
@@ -8,6 +8,7 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Plus, Trash2 } from "lucide-react";
 
 import { tripFormSchema, tripUpdateFormSchema } from "../../schemas";
 import { TripGetOne } from "../../types";
@@ -92,6 +93,7 @@ export const TripForm = ({ trip }: TripFormProps) => {
       // DB stores cents, form shows dollars
       priceUsd: trip ? Math.round(trip.priceUsd / 100) : 0,
       bestSeasonLabel: trip?.bestSeasonLabel ?? "",
+      departures: trip?.departures ?? [],
       minGroupSize: trip?.minGroupSize ?? 1,
       maxGroupSize: trip?.maxGroupSize ?? 10,
       accentGradient: trip?.accentGradient ?? "",
@@ -101,6 +103,9 @@ export const TripForm = ({ trip }: TripFormProps) => {
       features: trip?.features ?? [],
     },
   });
+
+  const { fields: departureFields, append: appendDeparture, remove: removeDeparture } =
+    useFieldArray({ control: form.control, name: "departures" });
 
   const isPending = createTrip.isPending || updateTrip.isPending;
 
@@ -336,6 +341,130 @@ export const TripForm = ({ trip }: TripFormProps) => {
               </FormItem>
             )}
           />
+
+          <Separator />
+
+          {/* Departure Date Options */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium leading-none">Departure Options</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add multiple date windows for users to choose from.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  appendDeparture({
+                    label: "",
+                    startDate: "",
+                    endDate: "",
+                    sortOrder: departureFields.length,
+                  })
+                }
+              >
+                <Plus size={14} className="mr-1" /> Add Date
+              </Button>
+            </div>
+
+            {departureFields.length === 0 && (
+              <p className="text-xs text-muted-foreground border border-dashed rounded-lg p-3 text-center">
+                No departure dates yet — click &quot;Add Date&quot; to add one.
+              </p>
+            )}
+
+            {departureFields.map((depField, index) => (
+              <div
+                key={depField.id}
+                className="rounded-lg border p-3 space-y-3 bg-muted/30"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    Option {index + 1}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-destructive hover:text-destructive"
+                    onClick={() => removeDeparture(index)}
+                  >
+                    <Trash2 size={13} />
+                  </Button>
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name={`departures.${index}.label`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Label</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Spring Cherry Blossom" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name={`departures.${index}.startDate`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">From</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`departures.${index}.endDate`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">To</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name={`departures.${index}.spotsTotal`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Total Spots (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="10"
+                          value={field.value ?? ""}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value === "" ? undefined : Number(e.target.value)
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ))}
+          </div>
 
           {/* Price */}
           <FormField

@@ -45,7 +45,7 @@ const Footer = () => {
 
               {/* WhatsApp - 這裡替換了 Email */}
               <a
-                href="https://wa.me/+6593432871" // 格式範例：https://wa.me/85212345678
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ""}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-2.5 text-white/40 hover:text-white transition-all duration-500"

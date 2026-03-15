@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { db } from "@/db";
-import { tripEnrollments, tripGallery, tripFeatures, tripTags, trips } from "@/db/schema";
+import { tripEnrollments, tripGallery, tripFeatures, tripTags, tripDepartures, trips } from "@/db/schema";
 
 async function main() {
   console.log("\n🗑️  Truncating trips tables (FK order)...\n");
@@ -16,6 +16,9 @@ async function main() {
 
   await db.delete(tripTags);
   console.log("  ✅  trip_tags cleared");
+
+  await db.delete(tripDepartures);
+  console.log("  ✅  trip_departures cleared");
 
   await db.delete(trips);
   console.log("  ✅  trips cleared");
