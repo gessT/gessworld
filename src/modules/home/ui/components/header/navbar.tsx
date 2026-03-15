@@ -7,7 +7,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils"; // Standard Tailwind utility for merging classes
 
 const navItems = [
-  { label: "探索目的地", subLabel: "EXPLORE", href: "/explore" },
+  { label: "探索目的地", subLabel: "DISCOVER", href: "/discover" },
 
   { label: "攝影畫廊", subLabel: "GALLERY", href: "/travel" },
 
