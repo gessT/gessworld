@@ -6,10 +6,10 @@ import { X, Instagram, Mail, ArrowUpRight } from "lucide-react";
 import { useEffect } from "react";
 
 const menuItems = [
-  { label: "首頁", subLabel: "Home", href: "/", num: "01" },
-  { label: "探索目的地", subLabel: "Travel", href: "/travel", num: "02" },
-  { label: "旅人網誌", subLabel: "Journal", href: "/blog", num: "03" },
-  { label: "關於我們", subLabel: "About", href: "/about", num: "04" },
+  { label: "探索目的地", subLabel: "DISCOVER", href: "/discover", num: "01" },
+  { label: "攝影畫廊", subLabel: "GALLERY", href: "/travel", num: "02" },
+  { label: "旅人網誌", subLabel: "JOURNAL", href: "/blog", num: "03" },
+  { label: "關於我們", subLabel: "STORY", href: "/about", num: "04" },
 ];
 
 interface Props {

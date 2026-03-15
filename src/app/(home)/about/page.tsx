@@ -42,7 +42,7 @@ const AboutPage = async () => {
 
         <div className="relative z-10 max-w-4xl">
           <span className="inline-block text-red-500 text-[10px] font-black tracking-[0.3em] uppercase mb-4 px-2 py-1 border border-red-500/20 bg-red-500/5 rounded">
-            Since 2024 • Travel & Visuals
+            Since 2025 • Travel & Visuals
           </span>
           <h1 className="text-6xl sm:text-8xl font-black tracking-tighter leading-[0.9] mb-6">
             走過世界 <br />
