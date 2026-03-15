@@ -31,7 +31,7 @@ export const BlogView = () => {
           {/* Background image */}
           <Image
             src="/blogbg.jpg"
-            alt="萃旅 背景"
+            alt="揪旅啦 背景"
             fill
             className="object-cover transition-transform duration-1000 hover:scale-[1.03]"
           />
@@ -42,7 +42,7 @@ export const BlogView = () => {
           <div className="relative z-10 w-full p-8 sm:p-12 lg:p-16">
             {/* Background label watermark */}
             <span className="pointer-events-none absolute right-4 bottom-12 text-[100px] sm:text-[140px] font-thin text-white/[0.03] leading-none select-none tracking-[0.1em]">
-              萃旅
+              揪旅啦
             </span>
 
             {/* Top row */}

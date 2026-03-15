@@ -56,14 +56,14 @@ const page = async () => {
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
             {/* pill badge */}
             <span className="mt-24 inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white/90 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6 tracking-wider uppercase">
-              ✦ Travel &amp; Photography
+              ✦ 揪人出發 · 一起旅行
             </span>
 
             {/* headline */}
             <div className="flex flex-col items-center text-center space-y-12">
               {/* 主標題：極輕量化的現代美學 */}
               <h1 className="text-5xl sm:text-7xl lg:text-9xl font-thin text-white leading-[0.9] tracking-tighter uppercase">
-                Snap <span className="text-white/20 italic font-extralight">to go</span>
+                揪<span className="text-white/20 italic font-extralight">旅</span>
                 <br />
                 <span className="font-light tracking-[0.1em] text-red-500">Club</span>
               </h1>
@@ -73,7 +73,7 @@ const page = async () => {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-[1px] bg-white/20" />
                   <p className="text-lg md:text-2xl font-light tracking-[0.5em] text-white/90 uppercase">
-                    旅行 <span className="text-red-500 mx-1">×</span> 攝影 <span className="text-red-500 mx-1">×</span> 社交
+                    揪人 <span className="text-red-500 mx-1">×</span> 旅行 <span className="text-red-500 mx-1">×</span> 留影
                   </p>
                   <div className="w-12 h-[1px] bg-white/20" />
                 </div>
@@ -81,10 +81,10 @@ const page = async () => {
                 {/* 副標題：寬字距、高行高 */}
                 <div className="max-w-xl space-y-2">
                   <p className="text-sm md:text-base text-white/40 leading-relaxed font-light tracking-[0.2em]">
-                    每一場旅途都是一次萃取。
+                    不想一個人出發？來這裡揪伴。
                   </p>
                   <p className="text-sm md:text-base text-white/40 leading-relaxed font-light tracking-[0.2em]">
-                    我們一起走入風景，用鏡頭交換故事，讓瞬間成為永恆。
+                    我們一起走入風景，用鏡頭記錄每一個共同的瞬間。
                   </p>
                 </div>
               </div>
@@ -103,14 +103,14 @@ const page = async () => {
                 href="/travel"
                 className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium tracking-widest px-7 py-3 rounded-full text-sm shadow-lg shadow-red-500/30 transition-all duration-300"
               >
-                探索目的地
+                揪團出發
               </a>
 
               <a
                 href="/blog"
                 className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-medium tracking-widest px-7 py-3 rounded-full text-sm transition-all duration-300"
               >
-                閱讀旅人故事
+                旅人故事
               </a>
             </div>
           </div>
