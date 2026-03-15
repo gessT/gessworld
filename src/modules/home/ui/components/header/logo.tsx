@@ -7,7 +7,7 @@ const Logo = () => {
       {/* Logo 圖示：加上微光的邊框感 */}
       <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-white/10 group-hover:border-white/40 transition-all duration-500">
         <Image
-          src="/snapandgo.png"
+          src="/jiotriplah.jpg"
           alt="揪 旅 Jiotriplah"
           fill
           className="object-cover group-hover:scale-110 transition-transform duration-700"

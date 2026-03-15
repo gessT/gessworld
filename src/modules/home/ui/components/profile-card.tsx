@@ -21,7 +21,7 @@ const ProfileCard = () => {
             <div className="flex flex-col md:flex-row md:items-center gap-6">
               <div className="relative">
                 <Avatar className="size-20 lg:size-24 border border-white/10 p-1 bg-white/5 shadow-2xl">
-                  <AvatarImage src="/snapandgo.png" alt="Jiotriplah" className="rounded-full object-cover" />
+                  <AvatarImage src="/jiotriplah.jpg" alt="Jiotriplah" className="rounded-full object-cover" />
                   <AvatarFallback className="bg-zinc-900 text-white">SG</AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 bg-rose-500 rounded-full p-2 shadow-lg border-2 border-[#0a0a0a]">
@@ -32,7 +32,7 @@ const ProfileCard = () => {
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <h1 className="text-3xl lg:text-4xl font-light tracking-tighter text-white">
-                    Snaptogo<span className="font-medium text-rose-400">club</span>
+                    Jio Trip<span className="font-medium text-rose-400">Lah</span>
                   </h1>
                   <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0">
                     <ArrowUpRight className="w-5 h-5 text-white/40" />
