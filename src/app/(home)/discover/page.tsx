@@ -10,9 +10,9 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Discover �� Snaptogoclub",
+  title: "探索旅程 · Snaptogoclub",
   description:
-    "�ø����p�ķ�ʽҎ������·�����ĳ����`�е�ð�U�L�����ҵ������һվ��",
+    "以輕量的方式出走，走進下一條路線。每趟旅程都圍繞拍攝節奏與冒險精神，找到屬於你的下一站。",
 };
 
 export default async function DiscoverPage() {
