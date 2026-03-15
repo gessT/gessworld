@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { db } from "@/db";
+import { db, pool } from "@/db";
 import { trips, tripTags, tripFeatures, tripGallery, tripEnrollments, tripDepartures } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import tripsData from "./data/trips.json";
@@ -192,11 +192,12 @@ async function main() {
   console.log(`   Inserted : ${inserted}`);
   console.log(`   Skipped  : ${skipped}`);
   console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
-
-  process.exit(0);
 }
 
-main().catch((err) => {
-  console.error("❌ Seed failed:", err);
-  process.exit(1);
-});
+main()
+  .catch((err) => {
+    console.error("❌ Seed failed:", err);
+  })
+  .finally(async () => {
+    await pool?.end();
+  });

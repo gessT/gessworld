@@ -7,8 +7,10 @@ import pg from "pg";
 const isLocal = process.env.DATABASE_PROVIDER === "local";
 
 // Use 'pg' for local/docker development and 'neon-http' for serverless/production
+export const pool = isLocal
+  ? new pg.Pool({ connectionString: process.env.DATABASE_URL! })
+  : null;
+
 export const db = isLocal
-  ? drizzlePg(new pg.Pool({ connectionString: process.env.DATABASE_URL! }), {
-      schema,
-    })
+  ? drizzlePg(pool!, { schema })
   : drizzleNeon(neon(process.env.DATABASE_URL!), { schema });
