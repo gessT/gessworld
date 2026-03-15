@@ -128,6 +128,7 @@ async function seed() {
       city: album.city,
       description: album.description,
       coverPhotoId: coverPhoto.id,
+      photoCount: insertedPhotos.length,
     });
 
     console.log(`Seeded album for ${album.city}`);

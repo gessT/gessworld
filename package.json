@@ -15,6 +15,7 @@
     "seed:trips": "npx tsx scripts/seed-trips.ts",
     "seed:all": "npx tsx scripts/seed.ts",
     "db:truncate": "npx tsx scripts/truncate-all.ts",
+    "db:truncate:albums": "npx tsx scripts/truncate-albums.ts",
     "clean:photo-urls": "npx tsx scripts/clean-photo-urls-safe.ts",
     "rollback:photo-urls": "npx tsx scripts/rollback-photo-urls.ts",
     "lint": "eslint"
