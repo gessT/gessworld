@@ -13,7 +13,7 @@
 
 import "dotenv/config";
 import { db } from "@/db";
-import { photos, citySets, categories, posts } from "@/db/schema";
+import { photos, citySets, categories, posts, trips, tripDepartures, tripTags, tripFeatures, tripGallery, tripEnrollments } from "@/db/schema";
 import * as readline from "readline";
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -21,6 +21,8 @@ const ask = (q: string) => new Promise<string>((res) => rl.question(q, res));
 
 async function main() {
   console.log("\n⚠️  WARNING: This will permanently delete ALL data from:");
+  console.log("   • trip enrollments, gallery, features, tags, departures");
+  console.log("   • trips");
   console.log("   • photos");
   console.log("   • city_sets");
   console.log("   • categories");
@@ -38,7 +40,25 @@ async function main() {
   console.log("\n🗑️  Truncating tables…\n");
 
   // Delete in dependency order (child → parent to satisfy FK constraints)
-  // city_sets.coverPhotoId → photos.id, so city_sets must go first
+  // trips.coverPhotoId → photos.id, so trips (and its children) must go first
+  await db.delete(tripEnrollments);
+  console.log("  ✅  trip_enrollments cleared");
+
+  await db.delete(tripGallery);
+  console.log("  ✅  trip_gallery cleared");
+
+  await db.delete(tripFeatures);
+  console.log("  ✅  trip_features cleared");
+
+  await db.delete(tripTags);
+  console.log("  ✅  trip_tags cleared");
+
+  await db.delete(tripDepartures);
+  console.log("  ✅  trip_departures cleared");
+
+  await db.delete(trips);
+  console.log("  ✅  trips cleared");
+
   await db.delete(posts);
   console.log("  ✅  posts cleared");
 

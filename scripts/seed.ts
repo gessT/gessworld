@@ -73,9 +73,16 @@ console.log("Found data files:", dataFileNames);
 async function seed() {
   for (const fileName of dataFileNames) {
     const filePath = join(DATA_DIR, fileName);
-    const fileContent = readFileSync(filePath, "utf-8");
-    const data: SeedData = JSON.parse(fileContent);
+    const fileContent = readFileSync(filePath, "utf-8").replace(/^\uFEFF/, "");
+    const raw = JSON.parse(fileContent);
 
+    // Skip files that are not album seed data (e.g. trips.json is an array)
+    if (Array.isArray(raw) || !raw.album) {
+      console.log(`Skipping ${fileName} — not an album seed file.`);
+      continue;
+    }
+
+    const data: SeedData = raw;
     const { album, photos: albumPhotos, post } = data;
 
     // 1. Skip if city already seeded

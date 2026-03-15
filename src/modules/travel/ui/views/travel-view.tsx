@@ -18,6 +18,14 @@ export const TravelView = () => {
 
   const active = activeCity ?? data[0];
 
+  if (!active) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#0e0e0e] text-white/30 text-sm tracking-widest uppercase">
+        No destinations yet — check back soon.
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full bg-[#0e0e0e]">
       {/* LEFT — Cinematic full-screen photo panel */}
