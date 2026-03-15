@@ -9,6 +9,7 @@ import { ArrowRight, MapPin } from "lucide-react";
 
 interface LatestPostSectionProps {
   data?: postsGetMany[0];
+  compactHeader?: boolean;
 }
 
 // ── 生成的 10 句溫柔邂逅感旅行短語 (繁體中文) ──
@@ -25,7 +26,7 @@ const travelQuotes = [
   "世界很大，風景很美，而最動人的，是與你一同見證的此刻。"
 ];
 
-export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
+export const LatestPostSection = ({ data, compactHeader = false }: LatestPostSectionProps) => {
   
   // 使用 useMemo 確保每次渲染時隨機選擇一句短語，避免頻繁變化
   const randomQuote = useMemo(() => {
@@ -48,7 +49,9 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
   return (
     <Link
       href={`/blog/${data.slug}`}
-      className="block w-full h-[60vh] md:h-full relative overflow-hidden group cursor-pointer rounded-3xl"
+      className={`block w-full relative overflow-hidden group cursor-pointer rounded-3xl ${
+        compactHeader ? "h-[48vh]" : "h-[60vh] md:h-full"
+      }`}
     >
       {/* ── Background Image ── */}
       <Image
@@ -65,29 +68,49 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
       <div className="absolute inset-0 bg-gradient-to-t from-[#2c1a1a]/70 via-transparent to-[#2c1a1a]/20" />
 
       {/* ── Editorial Block (Moiderm Travel Style) ── */}
-      <div className="absolute bottom-0 left-0 p-10 sm:p-16 lg:p-24 z-10 w-full max-w-7xl flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+      <div
+        className={`absolute bottom-0 left-0 z-10 w-full max-w-7xl flex flex-col md:flex-row md:items-end md:justify-between ${
+          compactHeader ? "p-6 sm:p-8 gap-4" : "p-10 sm:p-16 lg:p-24 gap-8"
+        }`}
+      >
         
         {/* Left Column: Context & Title */}
         <div className="max-w-2xl">
           <div className="flex items-center gap-4 mb-6">
             {/* 標籤背景變為淺紅/珊瑚粉 */}
-            <span className="bg-[#ff8a8a] text-white text-[10px] md:text-[11px] font-black tracking-[0.25em] uppercase px-4 py-2 rounded-full">
+            <span
+              className={`bg-[#ff8a8a] text-white font-black tracking-[0.25em] uppercase rounded-full ${
+                compactHeader ? "text-[9px] px-3 py-1.5" : "text-[10px] md:text-[11px] px-4 py-2"
+              }`}
+            >
               最新旅拍
             </span>
             {/* 地點變為動態數據 */}
-            <div className="flex items-center gap-2 text-white/50 text-[11px] font-light tracking-[0.1em] uppercase">
-                <MapPin className="w-3 h-3" />
+            <div
+              className={`flex items-center gap-2 text-white/50 font-light tracking-[0.1em] uppercase ${
+                compactHeader ? "text-[10px]" : "text-[11px]"
+              }`}
+            >
+                <MapPin className={compactHeader ? "w-2.5 h-2.5" : "w-3 h-3"} />
                 <span>#01 ・ {location}</span> 
             </div>
           </div>
 
      <div className="flex flex-col gap-1 mb-4">
   {/* Subtitle / Category - 這是年輕部落格常見的設計細節 */}
-  <span className="text-[10px] md:text-[11px] font-medium tracking-[0.4em] text-white/30 uppercase">
+  <span
+    className={`font-medium tracking-[0.4em] text-white/30 uppercase ${
+      compactHeader ? "text-[9px]" : "text-[10px] md:text-[11px]"
+    }`}
+  >
     Story & Vision
   </span>
 
-  <h2 className="text-3xl md:text-4xl lg:text-5xl font-extralight leading-[1.1] tracking-[0.05em] text-white/90">
+  <h2
+    className={`font-extralight leading-[1.1] tracking-[0.05em] text-white/90 ${
+      compactHeader ? "text-2xl sm:text-3xl" : "text-3xl md:text-4xl lg:text-5xl"
+    }`}
+  >
     {data.title}
   </h2>
   
@@ -95,7 +118,11 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
   <div className="w-8 h-[1px] bg-white/20 mt-4" />
 </div>
           {/* 隨機生成的描述短語 */}
-          <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed mb-10 max-w-xl">
+          <p
+            className={`text-white/70 font-light leading-relaxed max-w-xl ${
+              compactHeader ? "text-sm sm:text-base mb-6" : "text-lg md:text-xl mb-10"
+            }`}
+          >
              {randomQuote}
           </p>
         </div>
@@ -103,18 +130,34 @@ export const LatestPostSection = ({ data }: LatestPostSectionProps) => {
         {/* Right Column: CTA Pill (Modern Rounded Style) */}
         <div className="flex-shrink-0">
           {/* 懸停顏色變為淺紅 */}
-          <div className="inline-flex items-center gap-2 bg-transparent border border-white/30 text-white font-medium text-sm px-8 py-4 rounded-full group-hover:bg-[#ff8a8a] group-hover:border-[#ff8a8a] transition-all duration-300">
+          <div
+            className={`inline-flex items-center gap-2 bg-transparent border border-white/30 text-white font-medium rounded-full group-hover:bg-[#ff8a8a] group-hover:border-[#ff8a8a] transition-all duration-300 ${
+              compactHeader ? "text-xs px-5 py-2.5" : "text-sm px-8 py-4"
+            }`}
+          >
             開始探索
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              className={`${
+                compactHeader ? "w-4 h-4" : "w-5 h-5"
+              } group-hover:translate-x-1 transition-transform`}
+            />
           </div>
         </div>
       </div>
 
       {/* ── Top-right issue number (Moiderm Minimalism) ── */}
-      <div className="absolute top-10 right-10 z-10 text-right">
-        <p className="text-white/20 text-[11px] font-medium tracking-[0.3em] uppercase">期數</p>
+      <div className={`absolute z-10 text-right ${compactHeader ? "top-6 right-6" : "top-10 right-10"}`}>
+        <p className={`text-white/20 font-medium tracking-[0.3em] uppercase ${compactHeader ? "text-[10px]" : "text-[11px]"}`}>
+          期數
+        </p>
         {/* 期數文字 font weight thin，極簡風格 */}
-        <p className="text-white/50 text-6xl md:text-7xl font-thin leading-none tracking-tight">01</p>
+        <p
+          className={`text-white/50 font-thin leading-none tracking-tight ${
+            compactHeader ? "text-5xl" : "text-6xl md:text-7xl"
+          }`}
+        >
+          01
+        </p>
       </div>
     </Link>
   );

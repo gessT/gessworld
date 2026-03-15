@@ -25,6 +25,11 @@ export const BlogView = () => {
 
       {/* ── RIGHT CONTENT: 調整為 60% 寬度 (w-7/12)，給予更多呼吸空間 ── */}
       <div className="w-full lg:w-7/12 space-y-6 pb-6 lg:pr-4">
+        {/* MOBILE FEATURED LATEST POST */}
+        <div className="lg:hidden">
+          <LatestPostSection data={data?.[0]} compactHeader />
+        </div>
+
         
         {/* DESCRIPTION CARD: 調整為寬幅電影比例 (Cinema Aspect) */}
         <div className="relative overflow-hidden rounded-3xl border border-white/5 min-h-[400px] lg:min-h-[480px] flex items-end">
@@ -95,7 +100,7 @@ export const BlogViewLoadingStatus = () => {
   return (
     <div className="flex flex-col gap-4 lg:gap-8 lg:flex-row w-full bg-[#050505] p-3 lg:p-4">
       {/* LEFT CONTENT SKELETON (40%) */}
-      <div className="w-full h-[60vh] lg:w-5/12 lg:fixed lg:top-4 lg:left-4 md:h-[80vh] lg:h-[calc(100vh-2rem)] p-0 group">
+      <div className="hidden lg:block lg:w-5/12 lg:fixed lg:top-4 lg:left-4 lg:h-[calc(100vh-2rem)] p-0 group">
         <Skeleton className="w-full h-full rounded-3xl bg-white/5" />
       </div>
 
@@ -103,6 +108,10 @@ export const BlogViewLoadingStatus = () => {
 
       {/* RIGHT CONTENT SKELETON (60%) */}
       <div className="w-full lg:w-7/12 space-y-6 pb-6 lg:pr-4">
+        <div className="lg:hidden h-[48vh] rounded-3xl overflow-hidden">
+          <Skeleton className="w-full h-full bg-white/5" />
+        </div>
+
         {/* DESCRIPTION CARD SKELETON */}
         <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-white/5 min-h-[400px] lg:min-h-[480px] p-8 sm:p-12 lg:p-16 flex flex-col justify-end">
           <Skeleton className="w-32 h-4 bg-white/10 mb-8" />
