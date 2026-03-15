@@ -12,10 +12,10 @@ const AboutCard = () => {
           <h1 className="text-2xl md:text-3xl font-bold">About</h1>
         </div>
         <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
-          <div className="about-snaptogoclub">
-            <h2>关于 snaptogoclub</h2>
+          <div className="about-jiotriplah">
+            <h2>关于 jiotriplah</h2>
             <p>
-              snaptogoclub，是我想打造的一个
+              jiotriplah，是我想打造的一个
               <strong>「边走、边拍、边生活」</strong>
               的旅行体验品牌。我相信，每一次旅行，不只是去一个地方，而是一张张被捕捉的光影、一段段被留下的故事。
             </p>
@@ -29,9 +29,9 @@ const AboutCard = () => {
 
             <p>
               无论是情侣旅拍、小团队旅行、还是想学习摄影的朋友，
-              我都希望 snaptogoclub 能成为你
+              我都希望 jiotriplah 能成为你
               <strong>出发的理由与勇气</strong>。
-              带着镜头走，带着故事回家——这，就是 snaptogoclub 想要分享的旅行方式。
+              带着镜头走，带着故事回家——这，就是 jiotriplah 想要分享的旅行方式。
             </p>
           </div>
 

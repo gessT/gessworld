@@ -21,7 +21,7 @@ const ProfileCard = () => {
             <div className="flex flex-col md:flex-row md:items-center gap-6">
               <div className="relative">
                 <Avatar className="size-20 lg:size-24 border border-white/10 p-1 bg-white/5 shadow-2xl">
-                  <AvatarImage src="/snapandgo.png" alt="Snaptogoclub" className="rounded-full object-cover" />
+                  <AvatarImage src="/snapandgo.png" alt="Jiotriplah" className="rounded-full object-cover" />
                   <AvatarFallback className="bg-zinc-900 text-white">SG</AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 bg-rose-500 rounded-full p-2 shadow-lg border-2 border-[#0a0a0a]">

@@ -84,7 +84,7 @@ export const CityView = ({ city }: Props) => {
           <div className="absolute top-6 right-6 z-10">
             <div className="bg-red-600/90 backdrop-blur-sm rounded-full px-3 py-1">
               <span className="text-white text-[10px] font-black tracking-widest uppercase">
-                Snaptogoclub
+                Jiotriplah
               </span>
             </div>
           </div>

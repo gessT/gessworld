@@ -64,7 +64,7 @@ export const CoverPhoto = ({ citySet, citySets }: CoverPhotoProps) => {
         <div className="absolute top-6 left-6 z-30">
           <div className="bg-red-600/90 backdrop-blur-sm rounded-full px-3 py-1">
             <span className="text-white text-[10px] font-black tracking-widest uppercase">
-              Snaptogoclub
+              Jiotriplah
             </span>
           </div>
         </div>

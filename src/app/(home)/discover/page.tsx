@@ -10,7 +10,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "探索旅程 · Snaptogoclub",
+  title: "探索旅程 · Jiotriplah",
   description:
     "以輕量的方式出走，走進下一條路線。每趟旅程都圍繞拍攝節奏與冒險精神，找到屬於你的下一站。",
 };

@@ -44,7 +44,7 @@ JSON
   },
   "DUMMY_PHOTOS": [
     {
-      "url": "https://snaptogoclub.s3.ap-southeast-1.amazonaws.com/photos/{city_lowercase}/{filename}.jpg",
+      "url": "https://jiotriplah.s3.ap-southeast-1.amazonaws.com/photos/{city_lowercase}/{filename}.jpg",
       "title": "照片標題",
       "description": "視覺細節描述",
       "visibility": "public",

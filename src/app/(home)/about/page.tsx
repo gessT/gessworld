@@ -21,7 +21,7 @@ import { createTRPCContext, createCallerFactory } from "@/trpc/init";
 const createCaller = createCallerFactory(appRouter);
 
 export const metadata: Metadata = {
-  title: "About — Snaptogoclub",
+  title: "About — Jiotriplah",
   description: "捕捉瞬息萬變的世界，將回憶定格成永恆。",
 };
 

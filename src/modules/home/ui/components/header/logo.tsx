@@ -8,7 +8,7 @@ const Logo = () => {
       <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-white/10 group-hover:border-white/40 transition-all duration-500">
         <Image
           src="/snapandgo.png"
-          alt="揪 旅 Snaptogoclub"
+          alt="揪 旅 Jiotriplah"
           fill
           className="object-cover group-hover:scale-110 transition-transform duration-700"
         />
@@ -23,7 +23,7 @@ const Logo = () => {
           </span>
           {/* 品牌英文名：極小、極淡 */}
           <span className="hidden md:block font-extralight text-[9px] tracking-[0.2em] text-white/20 uppercase">
-            Snaptogoclub
+            Jiotriplah
           </span>
         </div>
 

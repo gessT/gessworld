@@ -17,10 +17,10 @@ const readexPro = Readex_Pro({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - Snaptogoclub",
-    default: "Snaptogoclub",
+    template: "%s - Jiotriplah",
+    default: "Jiotriplah",
   },
-  description: "Snaptogoclub - Travel Photography & Stories",
+  description: "Jiotriplah - Travel Photography & Stories",
 };
 
 export default function RootLayout({

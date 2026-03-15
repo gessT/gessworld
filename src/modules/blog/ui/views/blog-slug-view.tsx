@@ -49,7 +49,7 @@ export const BlogSlugView = ({ slug }: { slug: string }) => {
         <div className="absolute top-8 right-6 md:right-10 z-10">
           <div className="flex items-center gap-2">
             <span className="text-white/40 text-[9px] font-extralight tracking-[0.4em] uppercase">
-              Snaptogoclub • Travel
+              Jiotriplah • Travel
             </span>
           </div>
         </div>
@@ -114,7 +114,7 @@ export const BlogSlugView = ({ slug }: { slug: string }) => {
           <div className="flex items-start gap-4 mb-20">
              <div className="w-1 h-12 bg-red-500/80 rounded-full" />
              <p className="text-white/60 text-xs md:text-sm font-light tracking-[0.2em] leading-loose">
-               SNAPTOGOCLUB <br /> 
+               JIOTRIPLAH <br /> 
                用快門記錄世界，用文字封存旅途感悟。
              </p>
           </div>

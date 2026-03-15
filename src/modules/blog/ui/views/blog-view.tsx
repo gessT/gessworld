@@ -49,7 +49,7 @@ export const BlogView = () => {
             <div className="flex items-center gap-4 mb-8">
               <div className="w-8 h-[1px] bg-red-500" />
               <span className="text-white/40 text-[9px] font-light tracking-[0.4em] uppercase">
-                Snaptogoclub · Travel Stories
+                Jiotriplah · Travel Stories
               </span>
             </div>
 

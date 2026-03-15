@@ -45,7 +45,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
           {/* Top bar */}
           <div className="flex items-center justify-between px-6 pt-10 pb-6 flex-shrink-0">
             <span className="text-white/30 text-[10px] tracking-[0.4em] uppercase font-light">
-              Snaptogoclub
+              Jiotriplah
             </span>
             <button
               onClick={onClose}
@@ -145,7 +145,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
             </div>
 
             <p className="text-white/15 text-[10px] tracking-[0.2em] uppercase">
-              © 2026 Snaptogoclub
+              © 2026 Jiotriplah
             </p>
           </motion.div>
         </motion.div>

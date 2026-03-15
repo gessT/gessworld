@@ -98,7 +98,7 @@ const page = async () => {
             </div>
 
             {/* CTA row */}
-            <div className="mt-9 flex flex-wrap gap-3 justify-center pointer-events-auto">
+            <div className="mt-5 mb-5 flex flex-wrap gap-3 justify-center pointer-events-auto">
               <a
                 href="/travel"
                 className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium tracking-widest px-7 py-3 rounded-full text-sm shadow-lg shadow-red-500/30 transition-all duration-300"

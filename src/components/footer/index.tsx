@@ -16,7 +16,7 @@ const Footer = () => {
                 <Camera className="w-5 h-5 text-red-500" />
               </div>
               <h2 className="text-xl md:text-2xl font-light tracking-[0.25em] uppercase">
-                Snaptogoclub
+                Jiotriplah
               </h2>
             </div>
 
@@ -127,7 +127,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <p className="text-white/20 text-[10px] font-extralight tracking-[0.2em] uppercase">
-                © 2026 SNAPTOGOCLUB. ALL RIGHTS RESERVED.
+                © 2026 JIOTRIPLAH. ALL RIGHTS RESERVED.
               </p>
             </div>
 
