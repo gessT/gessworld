@@ -38,6 +38,11 @@ const data = {
       icon: "post",
     },
     {
+      title: "Trips",
+      url: "/dashboard/trips",
+      icon: "trip",
+    },
+    {
       title: "Profile",
       url: "/dashboard/profile",
       icon: "user",

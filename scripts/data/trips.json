@@ -1,0 +1,142 @@
+[
+  {
+    "title": "冰島：極光與孤島靈魂",
+    "subtitle": "熬夜等天光、沿著黑沙海岸拍到凌晨，屬於冷冽派旅人的冒險版本。",
+    "description": "這不是一趟放鬆的旅程。冰島的光線每小時都在變，你必須時刻準備好按下快門。從雷克雅未克出發，穿越黑沙海灘、瀑布深谷與冰川邊緣，在沒有城市燈光的荒原裡等待極光破空。我們的節奏刻意留白——不趕景點，只追光。",
+    "accentGradient": "from-cyan-400/30 via-sky-500/10 to-transparent",
+    "locationLabel": "冰島, 雷克雅未克",
+    "durationDays": 10,
+    "bestSeasonLabel": "Jan - Mar",
+    "departureDateStart": "2026-01-15T00:00:00Z",
+    "departureDateEnd": "2026-01-24T00:00:00Z",
+    "priceUsd": 880000,
+    "minGroupSize": 6,
+    "maxGroupSize": 10,
+    "status": "published",
+    "difficulty": "adventurous",
+    "tags": [
+      { "label": "極光獵人", "sortOrder": 0 },
+      { "label": "黑沙海灘", "sortOrder": 1 },
+      { "label": "電影感構圖", "sortOrder": 2 }
+    ],
+    "features": [
+      { "label": "攝影指導", "iconKey": "camera", "sortOrder": 0 },
+      { "label": "小團互動", "iconKey": "users", "sortOrder": 1 },
+      { "label": "野性探險", "iconKey": "compass", "sortOrder": 2 }
+    ],
+    "gallery": [],
+    "enrollments": []
+  },
+  {
+    "title": "京都：櫻花祭暗光美學",
+    "subtitle": "夜色、巷弄與蒸汽食堂交錯，專為喜歡慢節奏掃街的人設計。",
+    "description": "京都有兩張臉——白天的神社與夜晚的路燈小巷。我們選的是後者。行程以祇園、木屋町、哲學之道為主軸，在人潮退去後才真正開始。帶你找到那些不出現在旅遊書裡的轉角，把底片美學帶回來。",
+    "accentGradient": "from-pink-400/30 via-red-500/10 to-transparent",
+    "locationLabel": "日本, 京都",
+    "durationDays": 6,
+    "bestSeasonLabel": "Mar - Apr",
+    "departureDateStart": "2026-03-25T00:00:00Z",
+    "departureDateEnd": "2026-03-30T00:00:00Z",
+    "priceUsd": 320000,
+    "minGroupSize": 4,
+    "maxGroupSize": 8,
+    "status": "published",
+    "difficulty": "easy",
+    "tags": [
+      { "label": "深夜掃街", "sortOrder": 0 },
+      { "label": "櫻花檔期", "sortOrder": 1 },
+      { "label": "底片氛圍", "sortOrder": 2 }
+    ],
+    "features": [
+      { "label": "城市漫遊", "iconKey": "map-pin", "sortOrder": 0 },
+      { "label": "在地美食", "iconKey": "star", "sortOrder": 1 },
+      { "label": "人文觀察", "iconKey": "compass", "sortOrder": 2 }
+    ],
+    "gallery": [],
+    "enrollments": []
+  },
+  {
+    "title": "摩洛哥：撒哈拉色彩實驗室",
+    "subtitle": "走進高彩度巷弄與沙漠光影，把旅程拍成一整本時尚誌。",
+    "description": "舍夫沙萬的藍色、馬拉喀什的赭紅、撒哈拉的金黃——摩洛哥的調色盤太強烈，你拍什麼都不會難看。但我們要教你拍出更有層次的畫面。行程涵蓋藍城街拍、沙漠帳篷日落與市集人像，節奏密集但每張都是封面。",
+    "accentGradient": "from-amber-300/30 via-orange-500/10 to-transparent",
+    "locationLabel": "摩洛哥, 舍夫沙萬",
+    "durationDays": 8,
+    "bestSeasonLabel": "Sep - Nov",
+    "departureDateStart": "2026-09-10T00:00:00Z",
+    "departureDateEnd": "2026-09-17T00:00:00Z",
+    "priceUsd": 550000,
+    "minGroupSize": 6,
+    "maxGroupSize": 12,
+    "status": "published",
+    "difficulty": "moderate",
+    "tags": [
+      { "label": "異域建築", "sortOrder": 0 },
+      { "label": "沙漠探險", "sortOrder": 1 },
+      { "label": "人像大片", "sortOrder": 2 }
+    ],
+    "features": [
+      { "label": "風格拍攝", "iconKey": "camera", "sortOrder": 0 },
+      { "label": "色彩策展", "iconKey": "star", "sortOrder": 1 },
+      { "label": "公路旅行", "iconKey": "map-pin", "sortOrder": 2 }
+    ],
+    "gallery": [],
+    "enrollments": []
+  },
+  {
+    "title": "峇里島：黃金時段追光計畫",
+    "subtitle": "從稻田到海神廟，每個黃昏都是一次燈光布局。",
+    "description": "峇里島的日落不是偶然，而是可以計算的。我們設計行程的邏輯是：哪裡的光最好用、哪個角度最沒人發現、哪家咖啡廳窗邊值得等一整個下午。從烏布的晨霧到庫塔的碎浪，我們帶你把「黃金時段」變成每天的默認設定。",
+    "accentGradient": "from-amber-400/30 via-yellow-500/10 to-transparent",
+    "locationLabel": "印尼, 峇里島",
+    "durationDays": 7,
+    "bestSeasonLabel": "May - Aug",
+    "departureDateStart": "2026-06-01T00:00:00Z",
+    "departureDateEnd": "2026-06-07T00:00:00Z",
+    "priceUsd": 290000,
+    "minGroupSize": 4,
+    "maxGroupSize": 10,
+    "status": "published",
+    "difficulty": "easy",
+    "tags": [
+      { "label": "黃金時段", "sortOrder": 0 },
+      { "label": "稻田秘境", "sortOrder": 1 },
+      { "label": "海神廟日落", "sortOrder": 2 }
+    ],
+    "features": [
+      { "label": "光線追蹤", "iconKey": "camera", "sortOrder": 0 },
+      { "label": "慢活步調", "iconKey": "star", "sortOrder": 1 },
+      { "label": "在地嚮導", "iconKey": "users", "sortOrder": 2 }
+    ],
+    "gallery": [],
+    "enrollments": []
+  },
+  {
+    "title": "蘇格蘭：荒原與霧中孤堡",
+    "subtitle": "沒有遊客的城堡、捲動的霧、以及你在高地找到的孤獨感。",
+    "description": "蘇格蘭高地是攝影師的秘境——光線永遠不穩定，景色永遠戲劇化。我們刻意避開旺季，把節奏放慢到讓你可以在一個地點等上三個小時。Glencoe 的雲層移動、尼斯湖的霧氣、Eilean Donan 城堡的倒影——每一幕都只屬於當下那幾分鐘。",
+    "accentGradient": "from-slate-400/30 via-gray-500/10 to-transparent",
+    "locationLabel": "蘇格蘭, 因弗內斯",
+    "durationDays": 9,
+    "bestSeasonLabel": "Oct - Nov",
+    "departureDateStart": "2026-10-05T00:00:00Z",
+    "departureDateEnd": "2026-10-13T00:00:00Z",
+    "priceUsd": 720000,
+    "minGroupSize": 4,
+    "maxGroupSize": 8,
+    "status": "draft",
+    "difficulty": "moderate",
+    "tags": [
+      { "label": "孤堡獵影", "sortOrder": 0 },
+      { "label": "高地霧氣", "sortOrder": 1 },
+      { "label": "戲劇天光", "sortOrder": 2 }
+    ],
+    "features": [
+      { "label": "風景攝影", "iconKey": "camera", "sortOrder": 0 },
+      { "label": "小車自駕", "iconKey": "map-pin", "sortOrder": 1 },
+      { "label": "深度慢旅", "iconKey": "compass", "sortOrder": 2 }
+    ],
+    "gallery": [],
+    "enrollments": []
+  }
+]
