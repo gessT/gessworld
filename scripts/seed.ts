@@ -58,9 +58,9 @@ interface SeedData {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Load all album JSON files from scripts/data/
+// Load all album JSON files from scripts/album data/
 // ─────────────────────────────────────────────────────────────────────────────
-const DATA_DIR = resolve(__dirname, "data");
+const DATA_DIR = resolve(__dirname, "album data");
 const dataFileNames = readdirSync(DATA_DIR).filter((file) =>
   file.endsWith(".json"),
 );

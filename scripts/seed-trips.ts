@@ -2,7 +2,12 @@ import "dotenv/config";
 import { db, pool } from "@/db";
 import { trips, tripTags, tripFeatures, tripGallery, tripEnrollments, tripDepartures } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import tripsData from "./data/trips.json";
+import { readFileSync } from "fs";
+import { join } from "path";
+
+const tripsData = JSON.parse(
+  readFileSync(join(__dirname, "trip data", "trips.json"), "utf-8").replace(/^\uFEFF/, "")
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types that match the JSON shape
