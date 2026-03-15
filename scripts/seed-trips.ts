@@ -52,8 +52,6 @@ interface TripSeedRecord {
   locationLabel: string;
   durationDays: number;
   bestSeasonLabel?: string;
-  departureDateStart?: string;
-  departureDateEnd?: string;
   priceUsd: number;
   minGroupSize?: number;
   maxGroupSize?: number;
@@ -103,12 +101,6 @@ async function main() {
         locationLabel: record.locationLabel,
         durationDays: record.durationDays,
         bestSeasonLabel: record.bestSeasonLabel,
-        departureDateStart: record.departureDateStart
-          ? new Date(record.departureDateStart)
-          : undefined,
-        departureDateEnd: record.departureDateEnd
-          ? new Date(record.departureDateEnd)
-          : undefined,
         priceUsd: record.priceUsd,
         minGroupSize: record.minGroupSize,
         maxGroupSize: record.maxGroupSize,
