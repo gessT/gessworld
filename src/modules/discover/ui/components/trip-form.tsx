@@ -4,11 +4,12 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Resolver } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, ImageOff } from "lucide-react";
 
 import { tripFormSchema, tripUpdateFormSchema } from "../../schemas";
 import { TripGetOne } from "../../types";
@@ -93,6 +94,7 @@ export const TripForm = ({ trip }: TripFormProps) => {
       // DB stores cents, form shows dollars
       priceUsd: trip ? Math.round(trip.priceUsd / 100) : 0,
       bestSeasonLabel: trip?.bestSeasonLabel ?? "",
+      coverPhotoId: trip?.coverPhotoId ?? null,
       departures: trip?.departures ?? [],
       minGroupSize: trip?.minGroupSize ?? 1,
       maxGroupSize: trip?.maxGroupSize ?? 10,
@@ -102,6 +104,17 @@ export const TripForm = ({ trip }: TripFormProps) => {
       tags: trip?.tags ?? [],
       features: trip?.features ?? [],
     },
+  });
+
+  const { data: albumOptions } = useSuspenseQuery(
+    trpc.city.getMany.queryOptions()
+  );
+
+  const [pickerCity, setPickerCity] = useState<string | null>(null);
+
+  const { data: cityPhotos, isLoading: loadingPhotos } = useQuery({
+    ...trpc.discover.getPhotosForSelect.queryOptions({ city: pickerCity ?? "" }),
+    enabled: !!pickerCity,
   });
 
   const { fields: departureFields, append: appendDeparture, remove: removeDeparture } =
@@ -235,7 +248,129 @@ export const TripForm = ({ trip }: TripFormProps) => {
 
           <Separator />
 
-          {/* Status */}
+          {/* Cover Photo Picker */}
+          <FormField
+            control={form.control}
+            name="coverPhotoId"
+            render={({ field }) => {
+              const selectedPhoto = cityPhotos?.find((p) => p.id === field.value);
+              const hasSelectedId = !!field.value;
+
+              return (
+                <FormItem>
+                  <FormLabel>Cover Photo</FormLabel>
+
+                  {/* Selected preview — compact */}
+                  {selectedPhoto ? (
+                    <div className="relative rounded-lg overflow-hidden h-20 border border-border">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={selectedPhoto.url}
+                        alt={selectedPhoto.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-between px-3">
+                        <p className="text-white text-[10px] font-medium truncate max-w-[75%]">
+                          {selectedPhoto.title}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => { field.onChange(null); setPickerCity(null); }}
+                          className="text-[9px] text-white/60 hover:text-red-400 font-bold uppercase tracking-wide shrink-0"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ) : hasSelectedId ? (
+                    <div className="h-10 rounded-lg border border-border bg-muted/30 flex items-center justify-between px-3">
+                      <span className="text-xs text-muted-foreground">Cover photo linked</span>
+                      <button
+                        type="button"
+                        onClick={() => field.onChange(null)}
+                        className="text-[9px] text-muted-foreground hover:text-red-400 font-bold uppercase"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="h-10 rounded-lg border border-dashed border-muted-foreground/30 flex items-center justify-center gap-2 text-muted-foreground text-xs">
+                      <ImageOff size={13} /> No cover photo
+                    </div>
+                  )}
+
+                  {/* Step 1: Album dropdown */}
+                  <Select
+                    value={pickerCity ?? ""}
+                    onValueChange={(val) => setPickerCity(val || null)}
+                  >
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="Select album…" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {albumOptions.map((album) => (
+                        <SelectItem key={album.id} value={album.city}>
+                          <span className="flex items-center gap-2">
+                            {album.city}
+                            <span className="text-muted-foreground text-[10px]">({album.photoCount})</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Step 2: Photo grid — only when an album is chosen */}
+                  {pickerCity && (
+                    loadingPhotos ? (
+                      <div className="h-16 flex items-center justify-center text-xs text-muted-foreground">
+                        Loading…
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-4 gap-1 max-h-40 overflow-y-auto rounded-md border border-border p-1">
+                        {!cityPhotos?.length && (
+                          <p className="col-span-4 py-3 text-center text-xs text-muted-foreground">
+                            No photos
+                          </p>
+                        )}
+                        {cityPhotos?.map((photo) => {
+                          const isActive = field.value === photo.id;
+                          return (
+                            <button
+                              key={photo.id}
+                              type="button"
+                              title={photo.title}
+                              onClick={() => field.onChange(isActive ? null : photo.id)}
+                              className={`relative aspect-square rounded overflow-hidden border-2 transition-all ${
+                                isActive
+                                  ? "border-red-500 ring-1 ring-red-500"
+                                  : "border-transparent hover:border-muted-foreground/40"
+                              }`}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={photo.url}
+                                alt={photo.title}
+                                className="w-full h-full object-cover"
+                              />
+                              {isActive && (
+                                <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
+                                  <CheckCircle2 size={14} className="text-white drop-shadow" />
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )
+                  )}
+
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+
+          <Separator />
           <FormField
             control={form.control}
             name="status"

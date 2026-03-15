@@ -84,25 +84,23 @@ export const DiscoverTripsView = () => {
   return (
     <div className="min-h-screen bg-[#080808] text-white selection:bg-red-500/30">
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative isolate overflow-hidden px-4 pb-10 pt-6 sm:px-8 lg:px-12 lg:pb-16 lg:pt-8">
+      <section className="relative isolate overflow-hidden px-4 pb-5 pt-4 sm:px-8 lg:px-12 lg:pb-8 lg:pt-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,0.22),transparent_30%),radial-gradient(circle_at_top_right,rgba(56,189,248,0.18),transparent_24%),linear-gradient(180deg,#131313_0%,#080808_60%)]" />
         <div className="absolute inset-x-0 top-10 mx-auto h-72 w-72 rounded-full bg-red-500/10 blur-3xl" />
 
         <div className="relative mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
           {/* Hero left card */}
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 py-8 sm:px-8 sm:py-10 lg:min-h-[78vh] lg:px-10 lg:py-12">
-            {featuredTrip?.coverPhoto && (
-              <div className="absolute inset-0">
-                <Image
-                  src={featuredTrip.coverPhoto.url}
-                  alt={featuredTrip.title}
-                  fill
-                  priority
-                  className="object-cover opacity-35"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(8,8,8,0.18),rgba(8,8,8,0.82)_55%,rgba(8,8,8,0.96))]" />
-              </div>
-            )}
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] px-6 py-6 sm:px-8 sm:py-7 lg:min-h-[40vh] lg:px-10 lg:py-8">
+            <div className="absolute inset-0">
+              <Image
+                src="/discoveryhero.png"
+                alt="Discover hero"
+                fill
+                priority
+                className="object-cover opacity-60"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(8,8,8,0.10),rgba(8,8,8,0.65)_55%,rgba(8,8,8,0.90))]" />
+            </div>
 
             <div className="relative z-10 flex h-full flex-col justify-between gap-8">
               <div className="space-y-6">
@@ -111,7 +109,7 @@ export const DiscoverTripsView = () => {
                 </span>
 
                 <div className="max-w-2xl space-y-5">
-                  <h1 className="text-5xl font-black tracking-[-0.06em] text-white sm:text-6xl lg:text-8xl lg:leading-[0.9]">
+                  <h1 className="text-3xl font-black tracking-[-0.06em] text-white sm:text-4xl lg:text-5xl lg:leading-[0.95]">
                     年輕一點
                     <br />
                     去更遠的地方
@@ -137,7 +135,7 @@ export const DiscoverTripsView = () => {
                 </div>
               </div>
 
-              <div className="grid gap-3 md:grid-cols-3">
+              <div className="grid gap-2 md:grid-cols-3">
                 {[
                   { label: "Small Groups", value: `${featuredTrip?.minGroupSize ?? 6}-${featuredTrip?.maxGroupSize ?? 10} 人` },
                   { label: "Photo-Led", value: "100% 節奏策劃" },
@@ -145,12 +143,12 @@ export const DiscoverTripsView = () => {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 backdrop-blur-sm"
+                    className="rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 backdrop-blur-sm"
                   >
-                    <p className="text-[10px] font-black uppercase tracking-[0.28em] text-white/45">
+                    <p className="text-[9px] font-black uppercase tracking-[0.28em] text-white/45">
                       {item.label}
                     </p>
-                    <p className="mt-2 text-lg font-bold text-white">{item.value}</p>
+                    <p className="mt-1 text-sm font-bold text-white">{item.value}</p>
                   </div>
                 ))}
               </div>
@@ -161,9 +159,22 @@ export const DiscoverTripsView = () => {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {featuredTrip && (
               <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#121212] p-6 sm:p-7">
-                {featuredTrip.accentGradient && (
+                {/* Cover photo background */}
+                {featuredTrip.coverPhoto ? (
+                  <>
+                    <Image
+                      src={featuredTrip.coverPhoto.url}
+                      alt={featuredTrip.title}
+                      fill
+                      className="object-cover opacity-30"
+                      placeholder={featuredTrip.coverPhoto.blurData ? "blur" : undefined}
+                      blurDataURL={featuredTrip.coverPhoto.blurData ?? undefined}
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(8,8,8,0.15),rgba(8,8,8,0.80)_50%,rgba(8,8,8,0.97))]" />
+                  </>
+                ) : featuredTrip.accentGradient ? (
                   <div className={`absolute inset-0 bg-gradient-to-br ${featuredTrip.accentGradient}`} />
-                )}
+                ) : null}
                 <div className="relative z-10">
                   <div className="mb-8 flex items-start justify-between gap-4">
                     <div>
@@ -219,17 +230,29 @@ export const DiscoverTripsView = () => {
               </div>
             )}
 
-            <div className="grid gap-4">
-              {DISCOVER_NOTES.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-[1.75rem] border border-white/8 bg-white/[0.03] p-5 transition-colors hover:border-red-500/35 hover:bg-white/[0.05]"
-                >
-                  <item.icon size={18} className="text-red-400" />
-                  <h3 className="mt-4 text-lg font-bold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/50">{item.text}</p>
-                </div>
-              ))}
+            <div className="flex flex-col gap-2">
+              {DISCOVER_NOTES.map((item, i) => {
+                const scales = [
+                  { px: "px-4 py-3", icon: 15, title: "text-sm", text: "text-xs", opacity: "opacity-100" },
+                  { px: "px-3 py-2.5", icon: 13, title: "text-[13px]", text: "text-[11px]", opacity: "opacity-90" },
+                  { px: "px-3 py-2", icon: 11, title: "text-xs", text: "text-[10px]", opacity: "opacity-75" },
+                ];
+                const s = scales[i] ?? scales[2];
+                return (
+                  <div
+                    key={item.title}
+                    className={`flex items-start gap-3 rounded-xl border border-white/8 bg-white/[0.03] ${s.px} ${s.opacity} transition-colors hover:border-red-500/30 hover:bg-white/[0.05]`}
+                  >
+                    <div className="mt-0.5 shrink-0 rounded-md bg-red-500/15 p-1.5">
+                      <item.icon size={s.icon} className="text-red-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className={`${s.title} font-bold text-white leading-snug`}>{item.title}</p>
+                      <p className={`${s.text} text-white/45 leading-relaxed mt-0.5 line-clamp-2`}>{item.text}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -283,9 +306,17 @@ export const DiscoverTripsView = () => {
                         alt={trip.title}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        placeholder={trip.coverPhoto.blurData ? "blur" : undefined}
+                        blurDataURL={trip.coverPhoto.blurData ?? undefined}
                       />
                     ) : (
-                      <div className="h-full w-full bg-white/5" />
+                      <div
+                        className={`h-full w-full bg-gradient-to-br ${trip.accentGradient ?? "from-white/5 via-white/2 to-transparent"} bg-[#111]`}
+                      >
+                        <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                          <MapPin size={64} strokeWidth={0.75} />
+                        </div>
+                      </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
 

@@ -17,6 +17,7 @@ const page = async ({ params }: Props) => {
   const { id } = await params;
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.discover.getOne.queryOptions({ id }));
+  void queryClient.prefetchQuery(trpc.city.getMany.queryOptions());
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

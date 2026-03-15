@@ -133,6 +133,25 @@ export const discoverRouter = createTRPCRouter({
     }));
   }),
 
+  // Lightweight photo list for the cover photo picker — filtered by city
+  getPhotosForSelect: protectedProcedure
+    .input(z.object({ city: z.string() }))
+    .query(async ({ input }) => {
+      return db
+        .select({
+          id: photos.id,
+          url: photos.url,
+          title: photos.title,
+          blurData: photos.blurData,
+          city: photos.city,
+          country: photos.country,
+        })
+        .from(photos)
+        .where(eq(photos.city, input.city))
+        .orderBy(desc(photos.createdAt))
+        .limit(100);
+    }),
+
   // ── Protected (Dashboard) ────────────────────────────────────────────────
 
   getMany: protectedProcedure

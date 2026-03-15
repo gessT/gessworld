@@ -23,6 +23,7 @@ export const tripFormSchema = z.object({
     .int()
     .positive({ message: "Price is required (enter full dollars, e.g. 8800)" }),
   bestSeasonLabel: z.string().optional(),
+  coverPhotoId: z.string().uuid().optional().nullable(),
   departures: z.array(departureSchema).default([]),
   minGroupSize: z.number().int().min(1).optional(),
   maxGroupSize: z.number().int().min(1).optional(),
